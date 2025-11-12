@@ -1,9 +1,10 @@
 ---
 name: 기능 추가
 about: 새로운 기능 추가
-title: '[FEATURE] '
-labels: ['feature']
+title: "[FEATURE] "
+labels: feature
 assignees: ''
+
 ---
 
 ## 📝 설명
