@@ -1,0 +1,10 @@
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+/**
+ * className을 병합하는 유틸리티 함수
+ * clsx와 tailwind-merge를 결합하여 사용
+ */
+export function cn(...inputs: ClassValue[]) {
+	return twMerge(clsx(inputs));
+}
