@@ -5,7 +5,7 @@ import { CAROUSEL_CONSTANTS } from '../../constants/carouselConstants';
 
 interface RecordPlayerProps {
 	imageUrl: string;
-	onPause: () => void;
+	onPause: (e?: React.MouseEvent) => void;
 }
 
 export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
@@ -27,7 +27,7 @@ export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
 			<motion.div
 				onClick={(e) => {
 					e.stopPropagation();
-					onPause();
+					onPause(e);
 				}}
 				className="relative rounded-full overflow-visible cursor-pointer"
 				style={{

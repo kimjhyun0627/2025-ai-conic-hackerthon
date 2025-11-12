@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { useThemeStore } from '../../store/themeStore';
+import { useThemeStore } from '../../../store/themeStore';
 
 interface CarouselIndicatorsProps {
 	count: number;
