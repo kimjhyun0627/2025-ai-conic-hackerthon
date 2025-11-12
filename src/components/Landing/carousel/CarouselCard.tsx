@@ -262,7 +262,7 @@ const CarouselCard = ({
 						<div
 							className="w-[min(90vw,350px)] h-[min(90vw,350px)]"
 							style={{
-								filter: isActive ? (theme === 'light' ? 'blur(12px) brightness(1.5) contrast(0.35)' : 'blur(12px) brightness(0.2) contrast(0.9)') : 'none',
+								filter: isActive ? (theme === 'light' ? 'blur(15px) brightness(1.6) contrast(0.4)' : 'blur(15px) brightness(0.2) contrast(0.9)') : 'none',
 								transition: 'filter 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
 								transform: 'scale(1.05)',
 								position: 'absolute',
