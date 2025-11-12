@@ -1,6 +1,6 @@
 ---
 name: 버그 수정
-about: 버그를 수정합니다
+about: 버그 리포트&수정
 title: '[BUG FIX] '
 labels: bug fix
 assignees: ''
