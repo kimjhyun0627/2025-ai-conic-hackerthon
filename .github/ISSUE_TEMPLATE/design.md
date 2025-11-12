@@ -2,7 +2,7 @@
 name: 디자인
 about: UI/UX 디자인 관련
 title: '[DESIGN] '
-labels: design
+labels: ['design']
 assignees: ''
 ---
 

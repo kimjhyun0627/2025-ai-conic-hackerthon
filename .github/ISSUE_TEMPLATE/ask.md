@@ -2,7 +2,7 @@
 name: 질문
 about: 프로젝트 관련 질문
 title: '[QUESTION] '
-labels: ask
+labels: ['ask']
 assignees: ''
 ---
 

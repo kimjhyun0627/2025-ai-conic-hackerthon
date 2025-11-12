@@ -2,7 +2,7 @@
 name: 버그 수정
 about: 버그 리포트&수정
 title: '[BUG FIX] '
-labels: bug fix
+labels: ['bug fix']
 assignees: ''
 ---
 
