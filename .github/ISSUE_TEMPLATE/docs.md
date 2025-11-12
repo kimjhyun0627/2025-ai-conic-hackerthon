@@ -1,10 +1,9 @@
 ---
 name: 문서 수정
 about: 문서 추가 및 수정
-title: "[DOCS] "
-labels: ''
+title: '[DOCS] '
+labels: ['docs']
 assignees: ''
-
 ---
 
 ## 📝 설명

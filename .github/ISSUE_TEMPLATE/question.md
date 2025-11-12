@@ -1,10 +1,9 @@
 ---
 name: 질문 요청
 about: 프로젝트 관련 질문
-title: "[QUESTION] "
-labels: ''
+title: '[QUESTION] '
+labels: ['question']
 assignees: ''
-
 ---
 
 ## ❓ 질문 내용
