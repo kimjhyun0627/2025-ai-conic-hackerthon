@@ -7,15 +7,20 @@ export const getResponsiveTextSize = (windowWidth: number, type: 'heading' | 'su
 	const { BREAKPOINTS } = CAROUSEL_CONSTANTS;
 
 	if (type === 'heading') {
-		if (windowWidth >= BREAKPOINTS.DESKTOP) return '76px';
-		if (windowWidth >= 1280) return '64px';
-		if (windowWidth >= 1024) return '56px';
-		return '48px';
+		if (windowWidth >= BREAKPOINTS.DESKTOP) return '64px';
+		if (windowWidth >= 1280) return '56px';
+		if (windowWidth >= 1024) return '48px';
+		if (windowWidth >= 768) return '40px';
+		if (windowWidth >= 640) return '32px';
+		if (windowWidth >= 480) return '24px';
+		return '20px';
 	}
 
 	// subtitle
 	if (windowWidth >= BREAKPOINTS.DESKTOP) return '28px';
-	if (windowWidth >= 1280) return '20px';
+	if (windowWidth >= 1280) return '24px';
+	if (windowWidth >= 1024) return '20px';
 	if (windowWidth >= 1024) return '16px';
-	return '14px';
+	if (windowWidth >= 768) return '12px';
+	return '10px';
 };
