@@ -188,13 +188,13 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 		padding: showLabel ? '0.5rem 1rem' : '0.75rem',
 		borderRadius: '0.75rem',
 		border: `1px solid ${isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.5)'}`,
-		background: isHovered ? (isDark ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)') : isDark ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+		background: isHovered ? (isDark ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.9)') : isDark ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)',
 		backdropFilter: 'blur(12px)',
 		WebkitBackdropFilter: 'blur(12px)',
 		boxShadow: isHovered
 			? isDark
-				? '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(168, 85, 247, 0.1)'
-				: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(168, 85, 247, 0.2)'
+				? '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
+				: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.05)'
 			: isDark
 				? '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)'
 				: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
@@ -229,7 +229,7 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 					position: 'absolute',
 					inset: 0,
 					background: isHovered
-						? `linear-gradient(to bottom right, rgba(168, 85, 247, 0.1), rgba(217, 70, 239, 0.1))`
+						? `linear-gradient(to bottom right, ${isDark ? 'rgba(148, 163, 184, 0.08)' : 'rgba(148, 163, 184, 0.05)'}, ${isDark ? 'rgba(203, 213, 225, 0.05)' : 'rgba(203, 213, 225, 0.03)'})`
 						: `linear-gradient(to bottom right, rgba(168, 85, 247, 0), rgba(217, 70, 239, 0))`,
 					transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 					borderRadius: '0.75rem',
@@ -251,8 +251,9 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 						style={{
 							width: '1.25rem',
 							height: '1.25rem',
-							color: isHovered ? '#fbbf24' : '#eab308',
+							color: '#eab308',
 							transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+							opacity: isHovered ? 1 : 0.9,
 						}}
 					/>
 				) : (
@@ -260,8 +261,9 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 						style={{
 							width: '1.25rem',
 							height: '1.25rem',
-							color: isHovered ? '#e2e8f0' : '#cbd5e1',
+							color: '#cbd5e1',
 							transition: 'color 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+							opacity: isHovered ? 1 : 0.9,
 						}}
 					/>
 				)}
