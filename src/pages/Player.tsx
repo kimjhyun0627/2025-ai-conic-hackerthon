@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { usePlayerStore } from '../store/playerStore';
-import { ConfirmModal } from '../components/UI';
+import { ConfirmModal } from '../components/UI/index';
 import { PlayerTopBar, PlayerGenreInfo, PlayerCenterImage, PlayerControls, ParameterPanel } from '../components/Player';
 import { usePlayerParams } from '../hooks/usePlayerParams';
 import { useThemeColors } from '../hooks/useThemeColors';

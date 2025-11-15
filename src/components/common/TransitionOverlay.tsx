@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader } from '../UI';
+import { Loader } from '../UI/index';
 
 interface TransitionOverlayProps {
 	isVisible: boolean;

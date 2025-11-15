@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { CarouselButton, CarouselIndicators, CarouselCard, CardImage } from './carousel';
 import { CardContent } from './CardContent';
-import { Button } from '../UI';
+import { Button } from '../UI/index';
 import type { ThemeCategory } from '../../types';
 
 interface CarouselItem {
