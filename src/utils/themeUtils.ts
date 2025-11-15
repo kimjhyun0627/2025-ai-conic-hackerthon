@@ -19,4 +19,3 @@ export const findThemeByGenre = (genre: MusicGenre | null): MusicTheme | null =>
 
 	return theme || null;
 };
-

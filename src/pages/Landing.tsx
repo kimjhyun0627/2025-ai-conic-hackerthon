@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { getTimeGreeting } from '../utils/timeUtils';
 import { getResponsiveTextSize, getResponsiveNavTextSize } from '../utils/responsiveUtils';
 import { MUSIC_THEMES } from '../constants/themes';
-import { ThemeToggle } from '../components/UI/index';
+import { ThemeToggle } from '../components/UI';
 import { TransitionOverlay } from '../components/common';
 import { CategorySection, GenreSection } from '../components/Landing';
 import { usePlayerStore } from '../store/playerStore';

@@ -29,16 +29,12 @@ export const usePlayerParams = () => {
 	const themeAdditionalParams = useMemo(() => {
 		if (!selectedTheme) return [];
 		const baseParamIds = themeBaseParams.map((p) => p.id);
-		return selectedTheme.parameters.filter(
-			(param) => !baseParamIds.includes(param.id) && !hiddenThemeParams.includes(param.id)
-		);
+		return selectedTheme.parameters.filter((param) => !baseParamIds.includes(param.id) && !hiddenThemeParams.includes(param.id));
 	}, [selectedTheme, themeBaseParams, hiddenThemeParams]);
 
 	// 활성화된 공통 파라미터 (생성 순서 유지)
 	const activeCommonParamsList = useMemo(() => {
-		return activeCommonParams
-			.map((paramId) => COMMON_PARAMETERS.find((param) => param.id === paramId))
-			.filter((param): param is CategoryParameter => param !== undefined);
+		return activeCommonParams.map((paramId) => COMMON_PARAMETERS.find((param) => param.id === paramId)).filter((param): param is CategoryParameter => param !== undefined);
 	}, [activeCommonParams]);
 
 	// 사용 가능한 공통 파라미터 (아직 추가되지 않은 것들)
@@ -206,4 +202,3 @@ export const usePlayerParams = () => {
 		removeThemeParam,
 	};
 };
-

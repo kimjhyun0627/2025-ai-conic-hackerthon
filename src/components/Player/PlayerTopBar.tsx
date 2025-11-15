@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Maximize, Minimize } from 'lucide-react';
-import { Button, ThemeToggle } from '../UI/index';
+import { Button, ThemeToggle } from '../UI';
 import { useFullscreen } from '../../hooks/useFullscreen';
 import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants/playerConstants';
 import { useThemeStore } from '../../store/themeStore';
