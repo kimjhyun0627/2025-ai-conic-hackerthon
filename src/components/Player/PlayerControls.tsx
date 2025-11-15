@@ -46,7 +46,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 				{/* Track Info */}
 				<div className="text-center">
 					<p
-						className="text-sm md:text-base font-semibold"
+						className="text-xs sm:text-sm md:text-base lg:text-lg font-semibold"
 						style={{ color: colors.textMutedColor }}
 					>
 						{genre.nameKo}{' '}
@@ -61,9 +61,9 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 				</div>
 
 				{/* Progress Bar */}
-				<div className="flex items-center gap-3 md:gap-4">
+				<div className="flex items-center gap-2 sm:gap-3 md:gap-4">
 					<span
-						className="text-xs md:text-sm w-12 text-right font-mono"
+						className="text-[10px] sm:text-xs md:text-sm lg:text-base w-10 sm:w-12 text-right font-mono"
 						style={{ color: colors.textSecondaryColor }}
 					>
 						{formatTime(currentTime)}
@@ -94,7 +94,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 						/>
 					</div>
 					<span
-						className="text-xs md:text-sm w-12 font-mono"
+						className="text-[10px] sm:text-xs md:text-sm lg:text-base w-10 sm:w-12 font-mono"
 						style={{ color: colors.textSecondaryColor }}
 					>
 						{formatTime(duration)}
@@ -135,7 +135,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 								className="w-20 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb"
 							/>
 							<span
-								className="text-xs font-medium w-8 text-right"
+								className="text-xs md:text-sm lg:text-base font-medium w-8 text-right"
 								style={{ color: colors.textSecondaryColor }}
 							>
 								{volume}

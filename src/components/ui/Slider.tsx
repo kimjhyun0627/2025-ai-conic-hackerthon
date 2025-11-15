@@ -22,14 +22,14 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(({ label, showValue = t
 				<div className="mb-2">
 					<div className="flex items-center justify-between mb-1">
 						<label
-							className="text-sm font-medium"
+							className="text-xs sm:text-sm md:text-base font-medium"
 							style={{ color: labelColor }}
 						>
 							{label}
 						</label>
 						{showValue && (
 							<span
-								className="text-sm font-semibold"
+								className="text-xs sm:text-sm md:text-base font-semibold"
 								style={{ color: valueColor }}
 							>
 								{value}
@@ -39,7 +39,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(({ label, showValue = t
 					</div>
 					{description && (
 						<p
-							className="text-xs"
+							className="text-[10px] sm:text-xs md:text-sm"
 							style={{ color: descColor }}
 						>
 							{description}
