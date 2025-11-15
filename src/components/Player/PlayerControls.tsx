@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, ChevronUp } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, ChevronUp, ChevronDown } from 'lucide-react';
 import { usePlayerStore } from '../../store/playerStore';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants/playerConstants';
@@ -9,12 +9,14 @@ import type { MusicGenre } from '../../types';
 interface PlayerControlsProps {
 	genre: MusicGenre;
 	isExpanded: boolean;
+	isVisible: boolean;
 	onToggleExpand: () => void;
+	onToggleVisibility: () => void;
 	onPrev: () => void;
 	onNext: () => void;
 }
 
-export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNext }: PlayerControlsProps) => {
+export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, onToggleVisibility, onPrev, onNext }: PlayerControlsProps) => {
 	const { isPlaying, volume, currentTime, duration, setIsPlaying, setVolume, setCurrentTime } = usePlayerStore();
 	const colors = useThemeColors();
 
@@ -107,7 +109,7 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 				</div>
 
 				{/* Playback Controls */}
-				<div className="flex items-center justify-between gap-2 md:gap-4">
+				<div className="flex items-center gap-2 md:gap-4">
 					{/* Left Side: Volume Control */}
 					<div className="flex items-center gap-2 md:gap-3 shrink-0">
 						<button
@@ -152,8 +154,8 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 						</div>
 					</div>
 
-					{/* Center: Playback Controls */}
-					<div className="flex items-center justify-center gap-3 md:gap-4 flex-1">
+					{/* Center: Playback Controls - 정 중앙 배치 */}
+					<div className="flex-1 flex items-center justify-center gap-3 md:gap-4">
 						<button
 							onClick={onPrev}
 							className={PLAYER_STYLES.glassButton.controlButton}
@@ -227,8 +229,11 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 						</button>
 					</div>
 
-					{/* Right Side: Toggle Button */}
-					<div className="shrink-0">
+					{/* Right Side: Toggle Buttons */}
+					<div
+						className="flex items-center gap-2 shrink-0"
+						style={{ width: 'fit-content' }}
+					>
 						<button
 							onClick={onToggleExpand}
 							className={PLAYER_STYLES.glassButton.controlButton}
@@ -246,6 +251,28 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 								transition={PLAYER_ANIMATIONS.expandButton.transition}
 							>
 								<ChevronUp
+									className="w-5 h-5 md:w-6 md:h-6"
+									style={{ color: colors.iconColor }}
+								/>
+							</motion.div>
+						</button>
+						<button
+							onClick={onToggleVisibility}
+							className={PLAYER_STYLES.glassButton.controlButton}
+							style={buttonStyle}
+							onMouseEnter={(e) => {
+								Object.assign(e.currentTarget.style, buttonHoverStyle);
+							}}
+							onMouseLeave={(e) => {
+								Object.assign(e.currentTarget.style, buttonStyle);
+							}}
+							aria-label={isVisible ? '컨트롤러 숨기기' : '컨트롤러 보이기'}
+						>
+							<motion.div
+								animate={{ rotate: isVisible ? 0 : 180 }}
+								transition={PLAYER_ANIMATIONS.expandButton.transition}
+							>
+								<ChevronDown
 									className="w-5 h-5 md:w-6 md:h-6"
 									style={{ color: colors.iconColor }}
 								/>
