@@ -160,7 +160,7 @@ const Landing = () => {
 								exit={{ opacity: 0 }}
 								transition={{ delay: 0.2, duration: 0.6 }}
 							>
-								{!selectedCategory ? '마음에 드는 테마를 선택해보세요' : '원하는 장르를 선택해주세요'}
+								{!selectedCategory ? '마음에 드는 테마를 선택해보세요' : '마음에 드는 장르를 선택해보세요'}
 							</motion.p>
 							<motion.p
 								key="subtitle-caption"
