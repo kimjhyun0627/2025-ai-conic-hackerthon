@@ -1,14 +1,14 @@
-// 레코드판 컴포넌트 관련 상수
-export const RECORD_PLAYER_CONSTANTS = {
+// 미리듣기 컴포넌트 관련 상수
+export const PREPLAY_CONSTANTS = {
 	// 크기
 	SIZE: {
-		WIDTH: 'min(280px, 80vw)',
-		HEIGHT: 'min(280px, 80vw)',
-		MIN_WIDTH: '200px',
-		MIN_HEIGHT: '200px',
+		WIDTH: 'min(360px, 90vw)',
+		HEIGHT: 'min(360px, 90vw)',
+		MIN_WIDTH: '240px',
+		MIN_HEIGHT: '240px',
 		PADDING: '6px',
 		LABEL_SIZE: '28%',
-		HOLE_SIZE: '10%',
+		HOLE_SIZE: '16%',
 	},
 
 	// 그라데이션 색상
@@ -66,11 +66,11 @@ export const RECORD_PLAYER_CONSTANTS = {
 	},
 } as const;
 
-// 레코드판 그라데이션 생성 함수
-export const generateRecordGradients = () => {
-	const radialStops = RECORD_PLAYER_CONSTANTS.GRADIENT.RADIAL_STOPS.map((stop) => `${stop.color} ${stop.offset}`).join(', ');
+// 미리듣기 그라데이션 생성 함수
+export const generatePreplayGradients = () => {
+	const radialStops = PREPLAY_CONSTANTS.GRADIENT.RADIAL_STOPS.map((stop) => `${stop.color} ${stop.offset}`).join(', ');
 
-	const conicStops = RECORD_PLAYER_CONSTANTS.GRADIENT.CONIC_COLORS.map((color) => `${color.color} ${color.deg}deg`).join(', ');
+	const conicStops = PREPLAY_CONSTANTS.GRADIENT.CONIC_COLORS.map((color) => `${color.color} ${color.deg}deg`).join(', ');
 
 	return {
 		radial: `radial-gradient(circle at center, ${radialStops})`,

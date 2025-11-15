@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { RecordPlayer, SamplePlayButton } from '../RecordPlayer';
+import { Preplay, SamplePlayButton } from '../Preplay';
 import { CAROUSEL_CONSTANTS } from '../../constants/carouselConstants';
 
 interface CardContentData {
@@ -26,7 +26,7 @@ export const CardContent = ({ data, isPlaying, onPlayClick, onPauseClick, titleT
 		<AnimatePresence mode="wait">
 			{isPlaying ? (
 				<motion.div
-					key="record-player"
+					key="preplay"
 					className="w-full h-full flex items-center justify-center"
 					initial={{ opacity: 0, scale: 0.8 }}
 					animate={{ opacity: 1, scale: 1 }}
@@ -37,7 +37,7 @@ export const CardContent = ({ data, isPlaying, onPlayClick, onPauseClick, titleT
 						zIndex: CAROUSEL_CONSTANTS.Z_INDEX.RECORD_PLAYER_CONTAINER,
 					}}
 				>
-					<RecordPlayer
+					<Preplay
 						imageUrl={data.image || ''}
 						onPause={onPauseClick}
 					/>

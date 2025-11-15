@@ -1,9 +1,38 @@
-import type { MusicTheme } from '../types';
+import type { MusicTheme, CategoryParameter } from '../types';
 import mockup1 from '../assets/mockup1.png';
 import mockup2 from '../assets/mockup2.png';
 import mockup3 from '../assets/mockup3.png';
 import mockup4 from '../assets/mockup4.png';
 import mockup5 from '../assets/mockup5.png';
+
+// 공통 파라미터 (모든 카테고리에서 사용 가능)
+export const COMMON_PARAMETERS: CategoryParameter[] = [
+	{ id: 'reverb', name: 'Reverb', nameKo: '리버브', description: '공간감과 잔향 효과를 조절합니다. 높을수록 더 넓은 공간감을 느낄 수 있습니다.', min: 0, max: 100, default: 30, unit: '%' },
+	{ id: 'delay', name: 'Delay', nameKo: '딜레이', description: '음향의 반향 효과를 조절합니다. 에코와 깊이감을 추가할 수 있습니다.', min: 0, max: 100, default: 20, unit: '%' },
+	{
+		id: 'compressor',
+		name: 'Compressor',
+		nameKo: '컴프레서',
+		description: '다이나믹 레인지를 압축하여 음량의 균형을 맞춥니다. 사운드를 더 일관되게 만듭니다.',
+		min: 0,
+		max: 100,
+		default: 50,
+		unit: '%',
+	},
+	{ id: 'filter', name: 'Filter', nameKo: '필터', description: '주파수 필터링을 통해 특정 주파수 대역을 강조하거나 억제합니다.', min: 0, max: 100, default: 50, unit: '%' },
+	{ id: 'distortion', name: 'Distortion', nameKo: '왜곡도', description: '사운드에 왜곡 효과를 추가합니다. 강렬하고 거친 느낌을 만들 수 있습니다.', min: 0, max: 100, default: 0, unit: '%' },
+	{
+		id: 'stereo-width',
+		name: 'Stereo Width',
+		nameKo: '스테레오 폭',
+		description: '스테레오 이미지의 폭을 조절합니다. 넓을수록 더 입체적인 사운드를 만듭니다.',
+		min: 0,
+		max: 100,
+		default: 50,
+		unit: '%',
+	},
+	{ id: 'gain', name: 'Gain', nameKo: '게인', description: '전체 볼륨과 증폭을 조절합니다. 사운드의 전체적인 크기를 조정합니다.', min: 0, max: 100, default: 50, unit: '%' },
+];
 
 export const MUSIC_THEMES: MusicTheme[] = [
 	{
@@ -13,6 +42,20 @@ export const MUSIC_THEMES: MusicTheme[] = [
 		description: '깊은 집중력을 위한 차분한 사운드',
 		emoji: '🎯',
 		image: mockup1, // 카테고리 이미지 경로
+		parameters: [
+			{ id: 'tempo', name: '템포', nameKo: '템포', description: '음악의 속도를 조절합니다. 집중을 위해 적당한 템포를 유지하는 것이 좋습니다.', min: 60, max: 120, default: 80, unit: 'BPM' },
+			{ id: 'bass', name: '베이스', nameKo: '베이스', description: '저음역대의 강도를 조절합니다. 집중 음악에서는 과도하지 않은 베이스가 적합합니다.', min: 0, max: 100, default: 40, unit: '%' },
+			{
+				id: 'clarity',
+				name: '명확도',
+				nameKo: '명확도',
+				description: '사운드의 선명도와 명확성을 조절합니다. 높을수록 더 깔끔하고 뚜렷한 사운드가 됩니다.',
+				min: 0,
+				max: 100,
+				default: 70,
+				unit: '%',
+			},
+		],
 		genres: [
 			{
 				id: 'lofi-beats',
@@ -55,6 +98,20 @@ export const MUSIC_THEMES: MusicTheme[] = [
 		description: '에너지 넘치는 강렬한 비트',
 		emoji: '⚡',
 		image: mockup2, // 카테고리 이미지 경로
+		parameters: [
+			{
+				id: 'energy',
+				name: '에너지',
+				nameKo: '에너지',
+				description: '전체적인 에너지 레벨을 조절합니다. 높을수록 더 강렬하고 역동적인 사운드가 됩니다.',
+				min: 0,
+				max: 100,
+				default: 80,
+				unit: '%',
+			},
+			{ id: 'bass', name: '베이스', nameKo: '베이스', description: '저음역대의 강도를 조절합니다. 에너지 넘치는 음악에서는 강한 베이스가 핵심입니다.', min: 0, max: 100, default: 75, unit: '%' },
+			{ id: 'kick', name: '드럼 강도', nameKo: '드럼 강도', description: '드럼과 킥의 강도를 조절합니다. 리듬감과 박자를 강조합니다.', min: 0, max: 100, default: 85, unit: '%' },
+		],
 		genres: [
 			{
 				id: 'edm',
@@ -97,6 +154,29 @@ export const MUSIC_THEMES: MusicTheme[] = [
 		description: '편안한 휴식을 위한 감성적인 멜로디',
 		emoji: '🌙',
 		image: mockup3, // 카테고리 이미지 경로
+		parameters: [
+			{ id: 'tempo', name: '템포', nameKo: '템포', description: '음악의 속도를 조절합니다. 휴식 음악은 느린 템포가 편안함을 더해줍니다.', min: 50, max: 90, default: 65, unit: 'BPM' },
+			{
+				id: 'space',
+				name: '공간감',
+				nameKo: '공간감',
+				description: '사운드의 공간적 깊이와 넓이를 조절합니다. 높을수록 더 넓고 여유로운 느낌을 줍니다.',
+				min: 0,
+				max: 100,
+				default: 75,
+				unit: '%',
+			},
+			{
+				id: 'balance',
+				name: '음색 밸런스',
+				nameKo: '음색 밸런스',
+				description: '저음과 고음의 밸런스를 조절합니다. 균형잡힌 음색으로 편안함을 더합니다.',
+				min: 0,
+				max: 100,
+				default: 50,
+				unit: '%',
+			},
+		],
 		genres: [
 			{
 				id: 'downtempo',
@@ -139,6 +219,20 @@ export const MUSIC_THEMES: MusicTheme[] = [
 		description: '다양한 감성을 담은 독특한 사운드',
 		emoji: '🎨',
 		image: mockup4, // 카테고리 이미지 경로
+		parameters: [
+			{ id: 'mood', name: '감성', nameKo: '감성', description: '음악의 감성적 톤을 조절합니다. 높을수록 더 감성적이고 깊이 있는 사운드가 됩니다.', min: 0, max: 100, default: 60, unit: '%' },
+			{ id: 'bass', name: '베이스', nameKo: '베이스', description: '저음역대의 강도를 조절합니다. 무드 음악에서는 적절한 베이스가 분위기를 만듭니다.', min: 0, max: 100, default: 55, unit: '%' },
+			{
+				id: 'texture',
+				name: '사운드 텍스처',
+				nameKo: '사운드 텍스처',
+				description: '사운드의 질감과 텍스처를 조절합니다. 독특하고 개성 있는 사운드를 만들 수 있습니다.',
+				min: 0,
+				max: 100,
+				default: 50,
+				unit: '%',
+			},
+		],
 		genres: [
 			{
 				id: 'future-bass',
@@ -181,6 +275,29 @@ export const MUSIC_THEMES: MusicTheme[] = [
 		description: '역동적인 운동을 위한 파워풀한 리듬',
 		emoji: '💪',
 		image: mockup5, // 카테고리 이미지 경로
+		parameters: [
+			{
+				id: 'energy',
+				name: '에너지',
+				nameKo: '에너지',
+				description: '전체적인 에너지 레벨을 조절합니다. 운동 시 높은 에너지가 동기부여에 도움이 됩니다.',
+				min: 0,
+				max: 100,
+				default: 90,
+				unit: '%',
+			},
+			{ id: 'bass', name: '베이스', nameKo: '베이스', description: '저음역대의 강도를 조절합니다. 강한 베이스가 운동의 리듬감을 높여줍니다.', min: 0, max: 100, default: 85, unit: '%' },
+			{
+				id: 'beat',
+				name: '비트 강도',
+				nameKo: '비트 강도',
+				description: '비트와 리듬의 강도를 조절합니다. 강한 비트가 운동 페이스를 유지하는 데 도움이 됩니다.',
+				min: 0,
+				max: 100,
+				default: 90,
+				unit: '%',
+			},
+		],
 		genres: [
 			{
 				id: 'trap',

@@ -111,13 +111,13 @@ const CarouselCard = ({
 			return { x: 400, scale: 0.5, opacity: 0, zIndex: 0 };
 		}
 
-		if (isActive) return { x: 0, scale: 1, opacity: 1, zIndex: 20 };
+		if (isActive) return { x: 0, scale: 1, opacity: 1, zIndex: 40 };
 
 		// 반응형 위치 계산
 		// 5개가 보일 때 (effectiveRange = 2) baseOffset을 줄여서 카드들이 더 가깝게 배치
-		const baseOffset = effectiveRange === 2 ? 200 : 240;
+		const baseOffset = effectiveRange === 2 ? 260 : 310;
 		const scale = 0.8;
-		const zIndex = 10 - Math.abs(relativeIndex);
+		const zIndex = 30 - Math.abs(relativeIndex);
 
 		// zIndex에 따라 opacity 조절 (레이어 전환을 부드럽게)
 		// zIndex가 높을수록 opacity 높게, 낮을수록 낮게
@@ -125,8 +125,23 @@ const CarouselCard = ({
 
 		// 5개가 보일 때 가장자리 카드들(±2)의 위치를 더 조정
 		if (effectiveRange === 2 && Math.abs(relativeIndex) === 2) {
-			// 가장자리 카드들은 baseOffset보다 조금 더 가깝게
-			const adjustedOffset = baseOffset * 0.9; // 10% 더 가깝게
+			// 가장자리 카드들을 네비게이션 버튼 중앙에 모서리가 오도록 위치 조정
+			// 화면 크기에 따라 동적으로 계산
+			const inactiveCardMaxWidth = 380; // 비활성 카드 최대 너비
+			const inactiveCardWidth = windowWidth > 0 ? Math.min(windowWidth * 0.7, inactiveCardMaxWidth) : inactiveCardMaxWidth;
+			const cardHalfWidth = inactiveCardWidth / 2;
+
+			// gap: 모바일 16px (gap-4), 데스크톱 24px (md:gap-6)
+			const gap = windowWidth >= 768 ? 24 : 16;
+
+			// 버튼 크기: 모바일 p-2 + 아이콘 w-4 h-4, 데스크톱 p-3 + 아이콘 w-5 h-5
+			const buttonPadding = windowWidth >= 768 ? 12 : 8; // md:p-3 = 12px, p-2 = 8px
+			const iconSize = windowWidth >= 768 ? 20 : 16; // md:w-5 h-5 = 20px, w-4 h-4 = 16px
+			const buttonHalfSize = (buttonPadding * 2 + iconSize) / 2;
+
+			const targetOffset = cardHalfWidth + gap + buttonHalfSize;
+			const adjustedOffset = targetOffset * 0.85; // 더 안쪽으로 이동
+
 			if (relativeIndex < 0) {
 				return {
 					x: relativeIndex * adjustedOffset,
@@ -239,8 +254,8 @@ const CarouselCard = ({
 		>
 			<motion.button
 				onClick={onClick}
-				className={`rounded-[2rem] group cursor-pointer relative overflow-hidden ${
-					isActive ? 'glass-card w-[min(90vw,350px)] h-[min(90vw,350px)]' : 'p-0 w-[min(70vw,300px)] h-[min(70vw,300px)]'
+				className={`rounded-4xl group cursor-pointer relative overflow-hidden ${
+					isActive ? 'glass-card w-[min(90vw,450px)] h-[min(90vw,450px)]' : 'p-0 w-[min(70vw,380px)] h-[min(70vw,380px)]'
 				}`}
 				style={
 					!isActive
@@ -260,9 +275,9 @@ const CarouselCard = ({
 					<>
 						{/* 활성 카드 배경 이미지 - 꽉 채우기 (blur 효과로 텍스트 가독성 향상) */}
 						<div
-							className="w-[min(90vw,350px)] h-[min(90vw,350px)]"
+							className="w-[min(90vw,450px)] h-[min(90vw,450px)] rounded-4xl overflow-hidden"
 							style={{
-								filter: isActive ? (theme === 'light' ? 'blur(15px) brightness(1.6) contrast(0.4)' : 'blur(15px) brightness(0.2) contrast(0.9)') : 'none',
+								filter: isActive ? (theme === 'light' ? 'blur(15px) brightness(0.7) contrast(0.7)' : 'blur(15px) brightness(0.2) contrast(0.9)') : 'none',
 								transition: 'filter 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
 								transform: 'scale(1.05)',
 								position: 'absolute',
@@ -276,9 +291,9 @@ const CarouselCard = ({
 						{/* 반투명 레이어 - 이미지 위에 */}
 						{isActive && (
 							<div
-								className="absolute inset-0 z-[1]"
+								className="absolute inset-0 z-1 rounded-4xl"
 								style={{
-									background: theme === 'dark' ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.2)',
+									background: theme === 'dark' ? 'rgba(0, 0, 0, 0.4)' : 'rgba(0, 0, 0, 0.5)',
 								}}
 							/>
 						)}
@@ -287,9 +302,9 @@ const CarouselCard = ({
 					<>
 						{/* 비활성 카드 배경 - 이미지 꽉 채우기 */}
 						{backImage ? (
-							<div className="w-full h-full">{backImage}</div>
+							<div className="w-full h-full rounded-4xl overflow-hidden">{backImage}</div>
 						) : (
-							<div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700">
+							<div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-500 to-primary-700 rounded-4xl overflow-hidden">
 								<div className="text-6xl md:text-8xl opacity-80">🎵</div>
 							</div>
 						)}
@@ -302,7 +317,7 @@ const CarouselCard = ({
 					{showContent && isActive && (
 						<motion.div
 							key="card-content"
-							className="absolute flex items-center justify-center text-center text-white p-8 md:p-12 rounded-[2rem] cursor-pointer"
+							className="absolute flex items-center justify-center text-center p-8 md:p-12 rounded-4xl cursor-pointer"
 							initial={{ opacity: 0, y: 10 }}
 							animate={{ opacity: 1, y: 0 }}
 							exit={{ opacity: 0, y: -10 }}
@@ -312,14 +327,14 @@ const CarouselCard = ({
 							style={{
 								top: 0,
 								left: 0,
-								width: 'min(90vw, 350px)',
-								height: 'min(90vw, 350px)',
+								width: 'min(90vw, 450px)',
+								height: 'min(90vw, 450px)',
 								zIndex: 1000,
 								pointerEvents: 'auto',
 							}}
 						>
 							<div className="w-full">
-								<div className="text-white [&_*]:text-white">{children}</div>
+								<div>{children}</div>
 							</div>
 						</motion.div>
 					)}

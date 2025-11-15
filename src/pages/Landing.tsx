@@ -21,7 +21,6 @@ const Landing = () => {
 	const [playingCategory, setPlayingCategory] = useState<ThemeCategory | null>(null);
 	const [playingGenre, setPlayingGenre] = useState<string | null>(null);
 	const setSelectedGenre = usePlayerStore((state) => state.setSelectedGenre);
-	const theme = useThemeStore((state) => state.theme);
 
 	const windowWidth = useWindowWidth();
 	const visibleRange = useVisibleRange(windowWidth, 2);
@@ -31,11 +30,16 @@ const Landing = () => {
 	const selectedTheme = MUSIC_THEMES.find((musicTheme) => musicTheme.category === selectedCategory);
 	const genreCarousel = useCarousel(selectedTheme?.genres || []);
 
+	const theme = useThemeStore((state) => state.theme);
 	const greeting = getTimeGreeting();
 	const headingSize = getResponsiveTextSize(windowWidth, 'heading');
 	const subtitleSize = getResponsiveTextSize(windowWidth, 'subtitle');
 	const captionSize = getResponsiveTextSize(windowWidth, 'caption');
 	const navTextSize = getResponsiveNavTextSize(windowWidth);
+
+	// 다크 모드에 따른 색상 설정
+	const subtitleColor = theme === 'dark' ? '#cbd5e1' : '#334155'; // slate-300 : slate-700
+	const captionColor = theme === 'dark' ? '#94a3b8' : '#475569'; // slate-400 : slate-600
 
 	const handleGenreSelect = useCallback(
 		async (genre: MusicGenre) => {
@@ -153,8 +157,11 @@ const Landing = () => {
 						<AnimatePresence>
 							<motion.p
 								key="subtitle-main"
-								className="sm:block font-medium text-slate-700 dark:text-slate-300"
-								style={{ fontSize: subtitleSize }}
+								className="sm:block font-medium"
+								style={{
+									fontSize: subtitleSize,
+									color: subtitleColor,
+								}}
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}
 								exit={{ opacity: 0 }}
@@ -167,7 +174,7 @@ const Landing = () => {
 								className="sm:block font-medium"
 								style={{
 									fontSize: captionSize,
-									color: theme === 'dark' ? '#94a3b8' : '#475569', // dark: slate-400, light: slate-600
+									color: captionColor,
 								}}
 								initial={{ opacity: 0 }}
 								animate={{ opacity: 1 }}

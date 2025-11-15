@@ -15,7 +15,7 @@ export const CarouselButton = ({ onClick, direction }: CarouselButtonProps) => {
 	return (
 		<motion.button
 			onClick={onClick}
-			className="flex-shrink-0 btn-glass p-3 md:p-4 rounded-full hover:glow-primary transition-all shadow-lg z-30"
+			className="shrink-0 btn-glass p-2 md:p-3 rounded-full hover:glow-primary transition-all shadow-lg z-30"
 			aria-label={label}
 			whileHover={{ scale: 1.1, rotate: rotateValue }}
 			whileTap={{ scale: 0.95 }}
@@ -25,7 +25,7 @@ export const CarouselButton = ({ onClick, direction }: CarouselButtonProps) => {
 				whileHover={{ x: xValue }}
 				transition={{ type: 'spring', stiffness: 400, damping: 17 }}
 			>
-				<Icon className="w-5 h-5 md:w-6 md:h-6" />
+				<Icon className="w-4 h-4 md:w-5 md:h-5" />
 			</motion.div>
 		</motion.button>
 	);

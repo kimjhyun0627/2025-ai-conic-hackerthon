@@ -181,14 +181,32 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 
 	const isDark = theme === 'dark';
 
+	const isPlayerStyle = className?.includes('h-11') && className?.includes('rounded-2xl');
+
 	const buttonStyle: React.CSSProperties = {
 		position: 'relative',
 		overflow: 'hidden',
 		transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-		padding: showLabel ? '0.5rem 1rem' : '0.75rem',
-		borderRadius: '0.75rem',
-		border: `1px solid ${isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.5)'}`,
-		background: isHovered ? (isDark ? 'rgba(30, 41, 59, 0.85)' : 'rgba(255, 255, 255, 0.9)') : isDark ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+		padding: isPlayerStyle ? '0.6875rem' : showLabel ? '0.5rem 1rem' : '0.75rem',
+		borderRadius: className?.includes('rounded-2xl') ? '1rem' : '0.75rem',
+		border: className?.includes('border-white')
+			? `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`
+			: `1px solid ${isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.5)'}`,
+		background: className?.includes('bg-white/20')
+			? isHovered
+				? isDark
+					? 'rgba(30, 41, 59, 0.4)'
+					: 'rgba(255, 255, 255, 0.3)'
+				: isDark
+					? 'rgba(30, 41, 59, 0.3)'
+					: 'rgba(255, 255, 255, 0.2)'
+			: isHovered
+				? isDark
+					? 'rgba(30, 41, 59, 0.85)'
+					: 'rgba(255, 255, 255, 0.9)'
+				: isDark
+					? 'rgba(15, 23, 42, 0.8)'
+					: 'rgba(255, 255, 255, 0.8)',
 		backdropFilter: 'blur(12px)',
 		WebkitBackdropFilter: 'blur(12px)',
 		boxShadow: isHovered
@@ -205,6 +223,8 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 		gap: showLabel ? '0.5rem' : '0',
 		cursor: 'pointer',
 		outline: 'none',
+		height: className?.includes('h-11') ? '2.75rem' : undefined,
+		width: className?.includes('h-11') && !showLabel ? '2.75rem' : undefined,
 	};
 
 	return (
@@ -286,7 +306,11 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 	);
 };
 
-const ThemeToggle = () => {
+interface ThemeToggleProps {
+	className?: string;
+}
+
+const ThemeToggle = ({ className }: ThemeToggleProps = {}) => {
 	const { theme, toggleTheme, initTheme } = useThemeStore();
 	const [mounted, setMounted] = useState(false);
 
@@ -309,6 +333,7 @@ const ThemeToggle = () => {
 			onClick={handleThemeToggle}
 			variant="circle-blur"
 			start="top-right"
+			className={className}
 		/>
 	);
 };

@@ -62,12 +62,12 @@ export const BaseCarouselSection = <T extends CarouselItem>({
 
 				{/* Carousel Container */}
 				<div
-					className="relative flex items-center justify-center overflow-hidden rounded-3xl"
+					className="relative flex items-center justify-center overflow-visible rounded-3xl"
 					style={{
 						perspective: '1000px',
-						width: '80%',
-						maxWidth: '1200px',
-						height: 'min(50vh, min(90vw, 450px))',
+						width: '90%',
+						maxWidth: '1800px',
+						height: 'min(60vh, min(90vw, 550px))',
 						backdropFilter: 'blur(10px) saturate(120%)',
 						WebkitBackdropFilter: 'blur(10px) saturate(120%)',
 					}}

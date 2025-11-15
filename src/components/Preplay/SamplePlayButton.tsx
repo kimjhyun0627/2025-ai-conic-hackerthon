@@ -58,4 +58,3 @@ export const SamplePlayButton = ({ onClick }: SamplePlayButtonProps) => {
 		</motion.button>
 	);
 };
-

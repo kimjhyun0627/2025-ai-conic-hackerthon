@@ -1,8 +1,5 @@
 @import 'pretendard/dist/web/static/pretendard.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 @layer base {
 	:root {
@@ -377,12 +374,12 @@
 
 	/* 아이콘 색상 */
 	.play-icon {
-		color: #0f172a !important; /* slate-900 - 더 어둡게 */
+		color: #ffffff !important; /* white - 라이트 테마에서도 밝은색 */
 	}
 
 	.play-icon svg {
-		color: #0f172a !important;
-		fill: #0f172a !important;
+		color: #ffffff !important;
+		fill: #ffffff !important;
 	}
 
 	.dark .play-icon {

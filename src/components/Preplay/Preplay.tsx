@@ -1,19 +1,19 @@
 import { motion } from 'framer-motion';
 import { Pause } from 'lucide-react';
-import { RECORD_PLAYER_CONSTANTS, generateRecordGradients } from '../../constants/recordPlayerConstants';
+import { PREPLAY_CONSTANTS, generatePreplayGradients } from '../../constants/preplayConstants';
 import { CAROUSEL_CONSTANTS } from '../../constants/carouselConstants';
 
-interface RecordPlayerProps {
+interface PreplayProps {
 	imageUrl: string;
 	onPause: (e?: React.MouseEvent) => void;
 }
 
-export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
-	const gradients = generateRecordGradients();
+export const Preplay = ({ imageUrl, onPause }: PreplayProps) => {
+	const gradients = generatePreplayGradients();
 
 	return (
 		<motion.div
-			key="record-player"
+			key="preplay"
 			className="w-full h-full flex items-center justify-center"
 			initial={{ opacity: 0, scale: 0.8 }}
 			animate={{ opacity: 1, scale: 1 }}
@@ -31,16 +31,16 @@ export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
 				}}
 				className="relative rounded-full overflow-visible cursor-pointer"
 				style={{
-					width: RECORD_PLAYER_CONSTANTS.SIZE.WIDTH,
-					height: RECORD_PLAYER_CONSTANTS.SIZE.HEIGHT,
-					minWidth: RECORD_PLAYER_CONSTANTS.SIZE.MIN_WIDTH,
-					minHeight: RECORD_PLAYER_CONSTANTS.SIZE.MIN_HEIGHT,
+					width: PREPLAY_CONSTANTS.SIZE.WIDTH,
+					height: PREPLAY_CONSTANTS.SIZE.HEIGHT,
+					minWidth: PREPLAY_CONSTANTS.SIZE.MIN_WIDTH,
+					minHeight: PREPLAY_CONSTANTS.SIZE.MIN_HEIGHT,
 					aspectRatio: '1 / 1',
 					position: 'relative',
 					zIndex: CAROUSEL_CONSTANTS.Z_INDEX.RECORD_PLAYER,
 					isolation: 'isolate',
-					padding: RECORD_PLAYER_CONSTANTS.SIZE.PADDING,
-					background: RECORD_PLAYER_CONSTANTS.GRADIENT.BORDER,
+					padding: PREPLAY_CONSTANTS.SIZE.PADDING,
+					background: PREPLAY_CONSTANTS.GRADIENT.BORDER,
 					borderRadius: '50%',
 				}}
 				whileHover={{ scale: 1.05 }}
@@ -93,8 +93,8 @@ export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
 						style={{
 							transformOrigin: 'center center',
 							background: `${gradients.radial}, ${gradients.conic}`,
-							maskImage: RECORD_PLAYER_CONSTANTS.GRADIENT.MASK,
-							WebkitMaskImage: RECORD_PLAYER_CONSTANTS.GRADIENT.MASK,
+							maskImage: PREPLAY_CONSTANTS.GRADIENT.MASK,
+							WebkitMaskImage: PREPLAY_CONSTANTS.GRADIENT.MASK,
 							zIndex: CAROUSEL_CONSTANTS.Z_INDEX.RECORD_PATTERN,
 							position: 'absolute',
 							top: 0,
@@ -107,13 +107,13 @@ export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
 					<div
 						className="absolute rounded-full pointer-events-none"
 						style={{
-							width: RECORD_PLAYER_CONSTANTS.SIZE.LABEL_SIZE,
-							height: RECORD_PLAYER_CONSTANTS.SIZE.LABEL_SIZE,
+							width: PREPLAY_CONSTANTS.SIZE.LABEL_SIZE,
+							height: PREPLAY_CONSTANTS.SIZE.LABEL_SIZE,
 							top: '50%',
 							left: '50%',
 							transform: 'translate(-50%, -50%)',
-							background: RECORD_PLAYER_CONSTANTS.COLORS.LABEL_BG,
-							boxShadow: RECORD_PLAYER_CONSTANTS.COLORS.LABEL_SHADOW,
+							background: PREPLAY_CONSTANTS.COLORS.LABEL_BG,
+							boxShadow: PREPLAY_CONSTANTS.COLORS.LABEL_SHADOW,
 							zIndex: CAROUSEL_CONSTANTS.Z_INDEX.RECORD_LABEL,
 							position: 'absolute',
 						}}
@@ -122,13 +122,13 @@ export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
 					<div
 						className="absolute rounded-full pointer-events-none"
 						style={{
-							width: RECORD_PLAYER_CONSTANTS.SIZE.HOLE_SIZE,
-							height: RECORD_PLAYER_CONSTANTS.SIZE.HOLE_SIZE,
+							width: PREPLAY_CONSTANTS.SIZE.HOLE_SIZE,
+							height: PREPLAY_CONSTANTS.SIZE.HOLE_SIZE,
 							top: '50%',
 							left: '50%',
 							transform: 'translate(-50%, -50%)',
-							background: RECORD_PLAYER_CONSTANTS.COLORS.HOLE_BG,
-							boxShadow: RECORD_PLAYER_CONSTANTS.COLORS.HOLE_SHADOW,
+							background: PREPLAY_CONSTANTS.COLORS.HOLE_BG,
+							boxShadow: PREPLAY_CONSTANTS.COLORS.HOLE_SHADOW,
 							zIndex: CAROUSEL_CONSTANTS.Z_INDEX.RECORD_HOLE,
 							position: 'absolute',
 						}}
@@ -139,7 +139,7 @@ export const RecordPlayer = ({ imageUrl, onPause }: RecordPlayerProps) => {
 						style={{ zIndex: CAROUSEL_CONSTANTS.Z_INDEX.RECORD_PAUSE_ICON, position: 'absolute' }}
 					>
 						<Pause
-							className="w-16 h-16 md:w-20 md:h-20 text-slate-900 dark:text-white drop-shadow-2xl"
+							className="w-6 h-6 md:w-7 md:h-7 text-white drop-shadow-2xl"
 							fill="currentColor"
 						/>
 					</div>
