@@ -51,17 +51,17 @@ export const CardContent = ({ data, isPlaying, onPlayClick, onPauseClick, titleT
 					exit={{ opacity: 0, scale: 0.8 }}
 					transition={{ duration: CAROUSEL_CONSTANTS.ANIMATION.FADE_DURATION, ease: 'easeInOut' }}
 				>
-					<TitleTag className={`${titleSize} font-semibold text-slate-900 dark:text-white mb-4 drop-shadow-lg`}>{data.nameKo}</TitleTag>
+					<TitleTag className={`${titleSize} font-semibold text-slate-950 dark:text-white mb-4 drop-shadow-lg`}>{data.nameKo}</TitleTag>
 					<SamplePlayButton onClick={onPlayClick} />
 					<p
-						className={`${nameSize} font-medium text-slate-800 dark:text-white/90 drop-shadow-md uppercase mb-1`}
+						className={`${nameSize} font-medium text-slate-900 dark:text-white/90 drop-shadow-md uppercase mb-1`}
 						style={{ marginTop: 0, marginBottom: '2px' }}
 					>
 						{data.name}
 					</p>
 					{data.description && (
 						<p
-							className="text-sm md:text-base text-slate-700 dark:text-white/80 drop-shadow-sm"
+							className="text-sm md:text-base text-slate-800 dark:text-white/80 drop-shadow-sm"
 							style={{ marginTop: 0 }}
 						>
 							{data.description}

@@ -8,6 +8,7 @@ import { ThemeToggle } from '../components/UI';
 import { TransitionOverlay } from '../components/common';
 import { CategorySection, GenreSection } from '../components/Landing';
 import { usePlayerStore } from '../store/playerStore';
+import { useThemeStore } from '../store/themeStore';
 import { useWindowWidth } from '../hooks/useWindowWidth';
 import { useVisibleRange } from '../hooks/useVisibleRange';
 import { useCarousel } from '../hooks/useCarousel';
@@ -20,18 +21,20 @@ const Landing = () => {
 	const [playingCategory, setPlayingCategory] = useState<ThemeCategory | null>(null);
 	const [playingGenre, setPlayingGenre] = useState<string | null>(null);
 	const setSelectedGenre = usePlayerStore((state) => state.setSelectedGenre);
+	const theme = useThemeStore((state) => state.theme);
 
 	const windowWidth = useWindowWidth();
 	const visibleRange = useVisibleRange(windowWidth, 2);
 	const genreVisibleRange = useVisibleRange(windowWidth, 1);
 
 	const categoryCarousel = useCarousel(MUSIC_THEMES);
-	const selectedTheme = MUSIC_THEMES.find((theme) => theme.category === selectedCategory);
+	const selectedTheme = MUSIC_THEMES.find((musicTheme) => musicTheme.category === selectedCategory);
 	const genreCarousel = useCarousel(selectedTheme?.genres || []);
 
 	const greeting = getTimeGreeting();
 	const headingSize = getResponsiveTextSize(windowWidth, 'heading');
 	const subtitleSize = getResponsiveTextSize(windowWidth, 'subtitle');
+	const captionSize = getResponsiveTextSize(windowWidth, 'caption');
 	const navTextSize = getResponsiveNavTextSize(windowWidth);
 
 	const handleGenreSelect = useCallback(
@@ -147,9 +150,9 @@ const Landing = () => {
 								{selectedCategory ? `${selectedTheme?.categoryNameKo} 테마를 선택하셨어요` : greeting}
 							</motion.h1>
 						</AnimatePresence>
-						<AnimatePresence mode="wait">
+						<AnimatePresence>
 							<motion.p
-								key="subtitle-theme"
+								key="subtitle-main"
 								className="sm:block font-medium text-slate-700 dark:text-slate-300"
 								style={{ fontSize: subtitleSize }}
 								initial={{ opacity: 0 }}
@@ -158,6 +161,20 @@ const Landing = () => {
 								transition={{ delay: 0.2, duration: 0.6 }}
 							>
 								{!selectedCategory ? '마음에 드는 테마를 선택해보세요' : '원하는 장르를 선택해주세요'}
+							</motion.p>
+							<motion.p
+								key="subtitle-caption"
+								className="sm:block font-medium"
+								style={{
+									fontSize: captionSize,
+									color: theme === 'dark' ? '#94a3b8' : '#475569', // dark: slate-400, light: slate-600
+								}}
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ delay: 0.2, duration: 0.6 }}
+							>
+								재생 버튼을 눌러 어떤 음악이 나올지 확인해보세요
 							</motion.p>
 						</AnimatePresence>
 					</motion.div>
@@ -209,7 +226,7 @@ const Landing = () => {
 						className="text-slate-500 dark:text-slate-400 pointer-events-auto"
 						style={{ fontSize: navTextSize }}
 					>
-						AI가 생성하는 나만의 음악 경험, SERVICENAME
+						AI가 생성하는 나만의 음악 경험, MOODWAVE
 					</p>
 				</motion.div>
 			</div>

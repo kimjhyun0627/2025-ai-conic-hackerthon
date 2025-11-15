@@ -92,14 +92,7 @@
 
 	/* Text Gradient - Modern & Vibrant */
 	.text-gradient {
-		background: linear-gradient(
-			135deg,
-			#667eea 0%,
-			#764ba2 25%,
-			#f093fb 50%,
-			#4facfe 75%,
-			#00f2fe 100%
-		);
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
 		background-size: 200% 200%;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
@@ -120,15 +113,7 @@
 	}
 
 	.dark .text-gradient {
-		background: linear-gradient(
-			135deg,
-			#a78bfa 0%,
-			#c084fc 20%,
-			#e879f9 40%,
-			#f472b6 60%,
-			#fb7185 80%,
-			#fbbf24 100%
-		);
+		background: linear-gradient(135deg, #a78bfa 0%, #c084fc 20%, #e879f9 40%, #f472b6 60%, #fb7185 80%, #fbbf24 100%);
 		background-size: 200% 200%;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
@@ -368,12 +353,12 @@
 
 	/* 아이콘 색상 */
 	.play-icon {
-		color: #334155 !important; /* slate-700 - 주변 텍스트와 동일 */
+		color: #0f172a !important; /* slate-900 - 더 어둡게 */
 	}
 
 	.play-icon svg {
-		color: #334155 !important;
-		fill: #334155 !important;
+		color: #0f172a !important;
+		fill: #0f172a !important;
 	}
 
 	.dark .play-icon {

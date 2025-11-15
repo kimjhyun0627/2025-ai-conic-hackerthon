@@ -35,10 +35,10 @@ export const getTimeGreeting = (): string => {
 		return '활기찬 오후 보내고 계신가요?';
 	} else if (hour >= 18 && hour < 21) {
 		// 저녁 (18-20시)
-		return '편안한 저녁 되세요!';
+		return '편안한 저녁 보내고 계신가요?';
 	} else {
 		// 밤 (21-23시)
-		return '좋은 밤 되세요!';
+		return '몰입하기 좋은 밤이네요!';
 	}
 };
 
