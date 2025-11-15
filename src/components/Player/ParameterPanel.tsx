@@ -196,6 +196,15 @@ export const ParameterPanel = ({
 										layout
 										{...PLAYER_ANIMATIONS.commonParamPanel}
 										className="glass-card rounded-2xl p-4 md:p-5"
+										style={{
+											background: colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.5)',
+											backdropFilter: 'blur(30px) saturate(200%)',
+											WebkitBackdropFilter: 'blur(30px) saturate(200%)',
+											border: `1px solid ${colors.isDark ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.5)'}`,
+											boxShadow: colors.isDark
+												? 'inset 0 2px 8px 0 rgba(0, 0, 0, 0.4), inset 0 1px 2px 0 rgba(0, 0, 0, 0.3), inset 0 -2px 8px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.1)'
+												: 'inset 0 2px 8px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px 0 rgba(0, 0, 0, 0.1), inset 0 -2px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(31, 38, 135, 0.05)',
+										}}
 									>
 										<div className="flex flex-wrap gap-2">
 											<AnimatePresence mode="popLayout">
@@ -220,10 +229,15 @@ export const ParameterPanel = ({
 															}}
 															whileHover={isRemoving ? {} : { scale: 1.05 }}
 															whileTap={isRemoving ? {} : { scale: 0.95 }}
-															className="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-md border overflow-hidden"
+															className="flex items-center gap-2 px-3 py-2 rounded-lg overflow-hidden"
 															style={{
-																background: colors.parameterButtonBg,
-																borderColor: colors.glassBorder,
+																background: colors.isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(255, 255, 255, 0.6)',
+																backdropFilter: 'blur(20px) saturate(180%)',
+																WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+																border: `1px solid ${colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.4)'}`,
+																boxShadow: colors.isDark
+																	? '0 4px 16px 0 rgba(0, 0, 0, 0.3), inset 0 1px 0 0 rgba(255, 255, 255, 0.1)'
+																	: '0 4px 16px 0 rgba(31, 38, 135, 0.15), inset 0 1px 0 0 rgba(255, 255, 255, 0.5)',
 															}}
 														>
 															<Plus
