@@ -46,19 +46,19 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 	};
 
 	return (
-		<div
-			className={PLAYER_STYLES.playerBoard}
-			style={{
-				background: colors.glassBackground,
-				borderColor: colors.glassBorder,
-			}}
-		>
+		<div className="px-6 md:px-8 py-4 md:py-6 w-full">
 			<div className="space-y-4">
 				{/* Track Info */}
 				<div className="text-center">
-					<p className="text-sm md:text-base font-semibold" style={{ color: colors.textMutedColor }}>
+					<p
+						className="text-sm md:text-base font-semibold"
+						style={{ color: colors.textMutedColor }}
+					>
 						{genre.nameKo}{' '}
-						<span className="mx-2" style={{ color: colors.textSecondaryColor }}>
+						<span
+							className="mx-2"
+							style={{ color: colors.textSecondaryColor }}
+						>
 							•
 						</span>{' '}
 						Track 1
@@ -123,9 +123,15 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 							aria-label="음소거"
 						>
 							{volume === 0 ? (
-								<VolumeX className="w-4 h-4 md:w-5 md:h-5" style={{ color: colors.iconColor }} />
+								<VolumeX
+									className="w-4 h-4 md:w-5 md:h-5"
+									style={{ color: colors.iconColor }}
+								/>
 							) : (
-								<Volume2 className="w-4 h-4 md:w-5 md:h-5" style={{ color: colors.iconColor }} />
+								<Volume2
+									className="w-4 h-4 md:w-5 md:h-5"
+									style={{ color: colors.iconColor }}
+								/>
 							)}
 						</button>
 						<div className="hidden md:flex items-center gap-2">
@@ -160,7 +166,10 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 							}}
 							aria-label="이전 트랙"
 						>
-							<SkipBack className="w-5 h-5 md:w-6 md:h-6" style={{ color: colors.iconColor }} />
+							<SkipBack
+								className="w-5 h-5 md:w-6 md:h-6"
+								style={{ color: colors.iconColor }}
+							/>
 						</button>
 
 						<button
@@ -177,16 +186,22 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 									inset: 0,
 									background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
 								}}
-								animate={isPlaying ? PLAYER_ANIMATIONS.playButtonShine.animate : { x: '-100%' }}
+								animate={isPlaying ? { x: ['-100%', '200%'] } : { x: '-100%' }}
 								transition={PLAYER_ANIMATIONS.playButtonShine.transition}
 							/>
 							<AnimatePresence mode="wait">
 								{isPlaying ? (
-									<motion.div key="pause" {...PLAYER_ANIMATIONS.playButtonIcon}>
+									<motion.div
+										key="pause"
+										{...PLAYER_ANIMATIONS.playButtonIcon}
+									>
 										<Pause className="w-6 h-6 md:w-8 md:h-8 text-white fill-white relative z-10" />
 									</motion.div>
 								) : (
-									<motion.div key="play" {...PLAYER_ANIMATIONS.playButtonIcon}>
+									<motion.div
+										key="play"
+										{...PLAYER_ANIMATIONS.playButtonIcon}
+									>
 										<Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-white ml-1 relative z-10" />
 									</motion.div>
 								)}
@@ -205,7 +220,10 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 							}}
 							aria-label="다음 트랙"
 						>
-							<SkipForward className="w-5 h-5 md:w-6 md:h-6" style={{ color: colors.iconColor }} />
+							<SkipForward
+								className="w-5 h-5 md:w-6 md:h-6"
+								style={{ color: colors.iconColor }}
+							/>
 						</button>
 					</div>
 
@@ -227,7 +245,10 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 								animate={{ rotate: isExpanded ? 180 : 0 }}
 								transition={PLAYER_ANIMATIONS.expandButton.transition}
 							>
-								<ChevronUp className="w-5 h-5 md:w-6 md:h-6" style={{ color: colors.iconColor }} />
+								<ChevronUp
+									className="w-5 h-5 md:w-6 md:h-6"
+									style={{ color: colors.iconColor }}
+								/>
 							</motion.div>
 						</button>
 					</div>
@@ -236,4 +257,3 @@ export const PlayerControls = ({ genre, isExpanded, onToggleExpand, onPrev, onNe
 		</div>
 	);
 };
-

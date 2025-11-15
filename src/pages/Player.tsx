@@ -5,7 +5,7 @@ import { usePlayerStore } from '../store/playerStore';
 import { ConfirmModal } from '../components/UI';
 import { PlayerTopBar, PlayerGenreInfo, PlayerCenterImage, PlayerControls, ParameterPanel } from '../components/Player';
 import { usePlayerParams } from '../hooks/usePlayerParams';
-import { PLAYER_ANIMATIONS } from '../constants/playerConstants';
+import { useThemeColors } from '../hooks/useThemeColors';
 
 const Player = () => {
 	const navigate = useNavigate();
@@ -15,6 +15,7 @@ const Player = () => {
 	const { selectedGenre, isPlaying } = usePlayerStore();
 	const { selectedTheme, themeBaseParams, themeAdditionalParams, activeCommonParamsList, availableCommonParams, getParamValue, setParamValue, addCommonParam, removeCommonParam, removeThemeParam } =
 		usePlayerParams();
+	const colors = useThemeColors();
 
 	// 장르가 선택되지 않았으면 랜딩 페이지로 리다이렉트
 	useEffect(() => {
@@ -69,8 +70,38 @@ const Player = () => {
 				{/* Bottom - Player Board */}
 				<div className="fixed bottom-6 left-4 right-4 z-50 flex justify-center">
 					<motion.div
-						{...PLAYER_ANIMATIONS.playerBoard}
-						className="w-full max-w-[960px]"
+						initial="hidden"
+						animate="visible"
+						variants={{
+							hidden: { y: 100, opacity: 0, scale: 0.95 },
+							visible: {
+								y: 0,
+								opacity: 1,
+								scale: 1,
+								transition: {
+									delay: 0.4,
+									y: {
+										type: 'spring',
+										stiffness: 80,
+										damping: 20,
+									},
+									opacity: {
+										type: 'spring',
+										stiffness: 100,
+										damping: 25,
+									},
+									scale: {
+										duration: 0.7,
+										ease: [0.4, 0, 0.2, 1],
+									},
+								},
+							},
+						}}
+						style={{
+							background: colors.glassBackground,
+							borderColor: colors.glassBorder,
+						}}
+						className="w-full max-w-[960px] rounded-2xl backdrop-blur-xl border shadow-2xl"
 					>
 						{/* Expandable Detail Controls */}
 						<ParameterPanel
