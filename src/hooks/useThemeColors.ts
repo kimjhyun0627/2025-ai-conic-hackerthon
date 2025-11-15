@@ -1,10 +1,24 @@
 import { useMemo } from 'react';
 import { useThemeStore } from '../store/themeStore';
 
+export type ThemeColors = {
+	isDark: boolean;
+	iconColor: string;
+	textSecondaryColor: string;
+	textMutedColor: string;
+	glassBackground: string;
+	glassBorder: string;
+	glassButtonBg: string;
+	glassButtonBgHover: string;
+	playButtonGradient: string;
+	parameterPanelBg: string;
+	parameterButtonBg: string;
+};
+
 /**
  * 테마에 따른 색상 값을 반환하는 커스텀 훅
  */
-export const useThemeColors = () => {
+export const useThemeColors = (): ThemeColors => {
 	const theme = useThemeStore((state) => state.theme);
 	const isDark = theme === 'dark';
 

@@ -7,7 +7,7 @@ import { ConfirmModal } from '../components/UI';
 import { PlayerTopBar, PlayerGenreInfo, PlayerCenterImage, PlayerControls, ParameterPanel } from '../components/Player';
 import { usePlayerParams } from '../hooks/usePlayerParams';
 import { useThemeColors } from '../hooks/useThemeColors';
-import { PLAYER_STYLES } from '../constants/playerConstants';
+import { PLAYER_STYLES, PLAYER_ANIMATIONS } from '../constants/playerConstants';
 
 const Player = () => {
 	const navigate = useNavigate();
@@ -78,50 +78,7 @@ const Player = () => {
 							layout
 							initial="hidden"
 							animate={isControlsVisible ? 'visible' : 'hidden'}
-							variants={{
-								hidden: {
-									y: 200,
-									opacity: 0,
-									scale: 0.95,
-									transition: {
-										y: {
-											type: 'spring',
-											stiffness: 100,
-											damping: 25,
-										},
-										opacity: {
-											duration: 0.3,
-											ease: [0.4, 0, 0.2, 1],
-										},
-										scale: {
-											duration: 0.4,
-											ease: [0.4, 0, 0.2, 1],
-										},
-									},
-								},
-								visible: {
-									y: 0,
-									opacity: 1,
-									scale: 1,
-									transition: {
-										delay: 0.4,
-										y: {
-											type: 'spring',
-											stiffness: 80,
-											damping: 20,
-										},
-										opacity: {
-											type: 'spring',
-											stiffness: 100,
-											damping: 25,
-										},
-										scale: {
-											duration: 0.7,
-											ease: [0.4, 0, 0.2, 1],
-										},
-									},
-								},
-							}}
+							variants={PLAYER_ANIMATIONS.playerControls}
 							transition={{
 								layout: {
 									duration: 0.6,

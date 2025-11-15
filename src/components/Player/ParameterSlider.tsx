@@ -19,9 +19,7 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 			className={isRemovable ? 'glass-card rounded-2xl p-4 md:p-5 relative group' : 'glass-card rounded-2xl p-4 md:p-5'}
 			style={{
 				...(isRemovable ? { overflow: 'visible' } : {}),
-				background: colors.isDark
-					? 'rgba(30, 41, 59, 0.4)'
-					: 'rgba(255, 255, 255, 0.5)',
+				background: colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.5)',
 				backdropFilter: 'blur(30px) saturate(200%)',
 				WebkitBackdropFilter: 'blur(30px) saturate(200%)',
 				border: `1px solid ${colors.isDark ? 'rgba(255, 255, 255, 0.18)' : 'rgba(255, 255, 255, 0.5)'}`,
@@ -39,7 +37,10 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 					}}
 					aria-label="파라미터 제거"
 				>
-					<X className="w-4 h-4" style={{ color: colors.iconColor }} />
+					<X
+						className="w-4 h-4"
+						style={{ color: colors.iconColor }}
+					/>
 				</button>
 			)}
 			<Slider
@@ -55,4 +56,3 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 		</div>
 	);
 };
-

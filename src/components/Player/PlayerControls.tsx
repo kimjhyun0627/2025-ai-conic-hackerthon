@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, ChevronUp, ChevronDown } from 'lucide-react';
 import { usePlayerStore } from '../../store/playerStore';
 import { useThemeColors } from '../../hooks/useThemeColors';
+import { useGlassButton } from '../../hooks/useGlassButton';
 import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants/playerConstants';
 import { formatTime } from '../../utils/timeUtils';
 import type { MusicGenre } from '../../types';
@@ -19,6 +20,7 @@ interface PlayerControlsProps {
 export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, onToggleVisibility, onPrev, onNext }: PlayerControlsProps) => {
 	const { isPlaying, volume, currentTime, duration, setIsPlaying, setVolume, setCurrentTime } = usePlayerStore();
 	const colors = useThemeColors();
+	const { buttonStyle, handleMouseEnter, handleMouseLeave } = useGlassButton();
 
 	const handlePlayPause = () => {
 		setIsPlaying(!isPlaying);
@@ -37,15 +39,6 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 	};
 
 	const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
-
-	const buttonStyle = {
-		background: colors.glassButtonBg,
-		borderColor: colors.glassBorder,
-	};
-
-	const buttonHoverStyle = {
-		background: colors.glassButtonBgHover,
-	};
 
 	return (
 		<div className="px-6 md:px-8 py-4 md:py-6 w-full">
@@ -116,12 +109,8 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							onClick={toggleMute}
 							className={PLAYER_STYLES.glassButton.controlButton}
 							style={buttonStyle}
-							onMouseEnter={(e) => {
-								Object.assign(e.currentTarget.style, buttonHoverStyle);
-							}}
-							onMouseLeave={(e) => {
-								Object.assign(e.currentTarget.style, buttonStyle);
-							}}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
 							aria-label="음소거"
 						>
 							{volume === 0 ? (
@@ -160,12 +149,8 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							onClick={onPrev}
 							className={PLAYER_STYLES.glassButton.controlButton}
 							style={buttonStyle}
-							onMouseEnter={(e) => {
-								Object.assign(e.currentTarget.style, buttonHoverStyle);
-							}}
-							onMouseLeave={(e) => {
-								Object.assign(e.currentTarget.style, buttonStyle);
-							}}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
 							aria-label="이전 트랙"
 						>
 							<SkipBack
@@ -214,12 +199,8 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							onClick={onNext}
 							className={PLAYER_STYLES.glassButton.controlButton}
 							style={buttonStyle}
-							onMouseEnter={(e) => {
-								Object.assign(e.currentTarget.style, buttonHoverStyle);
-							}}
-							onMouseLeave={(e) => {
-								Object.assign(e.currentTarget.style, buttonStyle);
-							}}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
 							aria-label="다음 트랙"
 						>
 							<SkipForward
@@ -238,12 +219,8 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							onClick={onToggleExpand}
 							className={PLAYER_STYLES.glassButton.controlButton}
 							style={buttonStyle}
-							onMouseEnter={(e) => {
-								Object.assign(e.currentTarget.style, buttonHoverStyle);
-							}}
-							onMouseLeave={(e) => {
-								Object.assign(e.currentTarget.style, buttonStyle);
-							}}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
 							aria-label={isExpanded ? '세부조정 닫기' : '세부조정 열기'}
 						>
 							<motion.div
@@ -260,12 +237,8 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							onClick={onToggleVisibility}
 							className={PLAYER_STYLES.glassButton.controlButton}
 							style={buttonStyle}
-							onMouseEnter={(e) => {
-								Object.assign(e.currentTarget.style, buttonHoverStyle);
-							}}
-							onMouseLeave={(e) => {
-								Object.assign(e.currentTarget.style, buttonStyle);
-							}}
+							onMouseEnter={handleMouseEnter}
+							onMouseLeave={handleMouseLeave}
 							aria-label={isVisible ? '컨트롤러 숨기기' : '컨트롤러 보이기'}
 						>
 							<motion.div

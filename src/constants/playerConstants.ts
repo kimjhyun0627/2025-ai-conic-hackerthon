@@ -160,6 +160,50 @@ export const PLAYER_ANIMATIONS = {
 			y: { duration: 0.3 },
 		},
 	},
+	playerControls: {
+		hidden: {
+			y: 200,
+			opacity: 0,
+			scale: 0.95,
+			transition: {
+				y: {
+					type: 'spring' as const,
+					stiffness: 100,
+					damping: 25,
+				},
+				opacity: {
+					duration: 0.3,
+					ease: [0.4, 0, 0.2, 1],
+				},
+				scale: {
+					duration: 0.4,
+					ease: [0.4, 0, 0.2, 1],
+				},
+			},
+		},
+		visible: {
+			y: 0,
+			opacity: 1,
+			scale: 1,
+			transition: {
+				delay: 0.4,
+				y: {
+					type: 'spring' as const,
+					stiffness: 80,
+					damping: 20,
+				},
+				opacity: {
+					type: 'spring' as const,
+					stiffness: 100,
+					damping: 25,
+				},
+				scale: {
+					duration: 0.7,
+					ease: [0.4, 0, 0.2, 1],
+				},
+			},
+		},
+	},
 } as const;
 
 /**
@@ -175,5 +219,5 @@ export const PLAYER_STYLES = {
 	},
 	glassCard: 'glass-card rounded-2xl p-4 md:p-5 backdrop-blur-md bg-white/20 dark:bg-slate-800/30 border border-white/30 dark:border-white/20 shadow-lg',
 	playerBoard: 'rounded-2xl backdrop-blur-xl border shadow-2xl px-6 md:px-8 py-4 md:py-6 w-full max-w-[960px]',
-	parameterPanel: 'rounded-2xl backdrop-blur-xl border shadow-2xl w-full overflow-hidden',
+	parameterPanel: 'rounded-2xl backdrop-blur-xl border shadow-2xl w-full overflow-hidden py-6 md:py-8',
 } as const;
