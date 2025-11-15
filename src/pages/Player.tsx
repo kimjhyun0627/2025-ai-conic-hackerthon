@@ -70,6 +70,7 @@ const Player = () => {
 				{/* Bottom - Player Board */}
 				<div className="fixed bottom-6 left-4 right-4 z-50 flex justify-center">
 					<motion.div
+						layout
 						initial="hidden"
 						animate="visible"
 						variants={{
@@ -95,6 +96,16 @@ const Player = () => {
 										ease: [0.4, 0, 0.2, 1],
 									},
 								},
+							},
+						}}
+						transition={{
+							layout: {
+								duration: 0.6,
+								ease: [0.4, 0, 0.2, 1],
+							},
+							default: {
+								duration: 0.6,
+								ease: [0.4, 0, 0.2, 1],
 							},
 						}}
 						style={{
