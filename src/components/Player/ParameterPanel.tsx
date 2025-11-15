@@ -64,21 +64,20 @@ export const ParameterPanel = ({
 						background: colors.parameterPanelBg,
 						borderColor: colors.glassBorder,
 						padding: '1rem 1.5rem',
+						position: 'absolute',
+						bottom: '100%',
+						left: 0,
+						right: 0,
+						zIndex: 0,
 					}}
 					initial={PLAYER_ANIMATIONS.parameterPanel.initial}
 					animate={PLAYER_ANIMATIONS.parameterPanel.animate}
 					exit={PLAYER_ANIMATIONS.parameterPanel.exit}
 					transition={{
+						...PLAYER_ANIMATIONS.parameterPanel.transition,
 						layout: {
-							duration: 0.6,
+							duration: 0.5,
 							ease: [0.4, 0, 0.2, 1],
-						},
-						height: {
-							duration: 0.6,
-							ease: [0.4, 0, 0.2, 1],
-						},
-						opacity: {
-							duration: 0.3,
 						},
 					}}
 				>

@@ -50,13 +50,12 @@ export const PLAYER_ANIMATIONS = {
 		},
 	},
 	parameterPanel: {
-		initial: { height: 0, opacity: 0 },
-		animate: { height: 'auto', opacity: 1 },
-		exit: { height: 0, opacity: 0 },
+		initial: { y: 20, opacity: 0 },
+		animate: { y: 0, opacity: 1 },
+		exit: { y: 20, opacity: 0 },
 		transition: {
-			height: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
-			opacity: { duration: 0.3 },
-			layout: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+			y: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
+			opacity: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
 		},
 	},
 	parameterItem: {
@@ -176,5 +175,5 @@ export const PLAYER_STYLES = {
 	},
 	glassCard: 'glass-card rounded-2xl p-4 md:p-5 backdrop-blur-md bg-white/20 dark:bg-slate-800/30 border border-white/30 dark:border-white/20 shadow-lg',
 	playerBoard: 'rounded-2xl backdrop-blur-xl border shadow-2xl px-6 md:px-8 py-4 md:py-6 w-full max-w-[960px]',
-	parameterPanel: 'mb-4 rounded-2xl backdrop-blur-xl border shadow-2xl w-full max-w-[960px] overflow-hidden',
+	parameterPanel: 'rounded-2xl backdrop-blur-xl border shadow-2xl w-full overflow-hidden',
 } as const;
