@@ -29,18 +29,47 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 						/>
 					) : (
 						<div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-500/20 to-primary-700/20">
-							<motion.div className="text-8xl" {...(isPlaying ? PLAYER_ANIMATIONS.emojiAnimation : {})}>
+							<motion.div
+								className="text-8xl"
+								{...(isPlaying
+									? {
+											animate: {
+												scale: [1, 1.1, 1],
+												rotate: [0, 5, -5, 0],
+											},
+											transition: {
+												duration: 2,
+												repeat: Infinity,
+												ease: 'easeInOut',
+											},
+										}
+									: {})}
+							>
 								🎵
 							</motion.div>
 						</div>
 					)}
 					{/* Animated Background Gradient Overlay */}
 					{isPlaying && (
-						<motion.div className="absolute inset-0 opacity-30" {...PLAYER_ANIMATIONS.gradientOverlay} />
+						<motion.div
+							className="absolute inset-0 opacity-30"
+							animate={{
+								background: [
+									'radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.3), transparent 50%)',
+									'radial-gradient(circle at 80% 50%, rgba(6, 182, 212, 0.3), transparent 50%)',
+									'radial-gradient(circle at 50% 20%, rgba(236, 72, 153, 0.3), transparent 50%)',
+									'radial-gradient(circle at 20% 50%, rgba(168, 85, 247, 0.3), transparent 50%)',
+								],
+							}}
+							transition={{
+								duration: 4,
+								repeat: Infinity,
+								ease: 'easeInOut',
+							}}
+						/>
 					)}
 				</motion.div>
 			</div>
 		</div>
 	);
 };
-

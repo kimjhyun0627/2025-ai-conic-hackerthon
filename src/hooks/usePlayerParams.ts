@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { usePlayerStore } from '../store/playerStore';
-import { MUSIC_THEMES, DEFAULT_AUDIO_PARAMS } from '../constants/themes';
+import { DEFAULT_AUDIO_PARAMS } from '../constants/themes';
 import { COMMON_PARAMETERS } from '../constants/musicThemes';
 import { findThemeByGenre } from '../utils/themeUtils';
 import type { CategoryParameter } from '../types';

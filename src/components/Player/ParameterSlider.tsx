@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import type { ChangeEvent } from 'react';
 import { Slider } from '../UI';
 import type { CategoryParameter } from '../../types';
 import { useThemeColors } from '../../hooks/useThemeColors';
@@ -51,7 +52,7 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 				max={param.max}
 				step={param.unit === 'BPM' ? 5 : 1}
 				unit={param.unit ? ` ${param.unit}` : ''}
-				onChange={(e) => onChange(Number(e.target.value))}
+				onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.target.value))}
 			/>
 		</div>
 	);
