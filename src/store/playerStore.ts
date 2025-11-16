@@ -9,6 +9,7 @@ interface PlayerState {
 	currentTime: number;
 	duration: number;
 	isMuted: boolean;
+	previousVolume: number; // 음소거 전 볼륨 값 저장
 
 	// Queue
 	queue: AudioQueue;
@@ -55,6 +56,7 @@ const initialState = {
 	currentTime: 0,
 	duration: 0,
 	isMuted: false,
+	previousVolume: 70,
 	queue: {
 		current: null,
 		next: null,
@@ -73,7 +75,15 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
 	setVolume: (volume: number) => {
 		const clampedVolume = Math.max(0, Math.min(100, volume));
-		set({ volume: clampedVolume, isMuted: clampedVolume === 0 });
+		const { previousVolume } = get();
+		// 볼륨이 0이 아닐 때만 이전 볼륨 값 업데이트
+		const newPreviousVolume = clampedVolume > 0 ? clampedVolume : previousVolume;
+		const newIsMuted = clampedVolume === 0;
+		set({
+			volume: clampedVolume,
+			isMuted: newIsMuted,
+			previousVolume: newPreviousVolume,
+		});
 	},
 
 	setCurrentTime: (time: number) => set({ currentTime: time }),
@@ -81,11 +91,14 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 	setDuration: (duration: number) => set({ duration }),
 
 	toggleMute: () => {
-		const { isMuted, volume } = get();
+		const { isMuted, volume, previousVolume } = get();
 		if (isMuted) {
-			set({ isMuted: false, volume: volume || 70 });
+			// 음소거 해제: 이전 볼륨 값으로 복원
+			const restoreVolume = previousVolume > 0 ? previousVolume : 70;
+			set({ isMuted: false, volume: restoreVolume });
 		} else {
-			set({ isMuted: true });
+			// 음소거: 현재 볼륨 값을 저장하고 0으로 설정
+			set({ isMuted: true, previousVolume: volume > 0 ? volume : previousVolume, volume: 0 });
 		}
 	},
 

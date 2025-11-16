@@ -18,7 +18,7 @@ interface PlayerControlsProps {
 }
 
 export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, onToggleVisibility, onPrev, onNext }: PlayerControlsProps) => {
-	const { isPlaying, volume, currentTime, duration, setIsPlaying, setVolume, setCurrentTime } = usePlayerStore();
+	const { isPlaying, volume, currentTime, duration, setIsPlaying, setVolume, setCurrentTime, toggleMute } = usePlayerStore();
 	const colors = useThemeColors();
 	const { buttonStyle, handleMouseEnter, handleMouseLeave } = useGlassButton();
 
@@ -32,10 +32,6 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 
 	const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setVolume(Number(e.target.value));
-	};
-
-	const toggleMute = () => {
-		setVolume(volume === 0 ? 50 : 0);
 	};
 
 	const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -102,9 +98,9 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 				</div>
 
 				{/* Playback Controls */}
-				<div className="flex items-center gap-2 md:gap-4">
+				<div className="relative flex items-center gap-2 md:gap-4">
 					{/* Left Side: Volume Control */}
-					<div className="flex items-center gap-2 md:gap-3 shrink-0">
+					<div className="flex-1 flex items-center gap-2 md:gap-3 justify-start">
 						<button
 							onClick={toggleMute}
 							className={PLAYER_STYLES.glassButton.controlButton}
@@ -143,8 +139,8 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 						</div>
 					</div>
 
-					{/* Center: Playback Controls - 정 중앙 배치 */}
-					<div className="flex-1 flex items-center justify-center gap-3 md:gap-4">
+					{/* Center: Playback Controls - 절대 중앙 배치 */}
+					<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-3 md:gap-4">
 						<button
 							onClick={onPrev}
 							className={PLAYER_STYLES.glassButton.controlButton}
@@ -211,10 +207,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 					</div>
 
 					{/* Right Side: Toggle Buttons */}
-					<div
-						className="flex items-center gap-2 shrink-0"
-						style={{ width: 'fit-content' }}
-					>
+					<div className="flex-1 flex items-center gap-2 justify-end">
 						<button
 							onClick={onToggleExpand}
 							className={PLAYER_STYLES.glassButton.controlButton}
