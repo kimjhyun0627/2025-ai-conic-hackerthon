@@ -16,6 +16,12 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(({ label, showValue = t
 	const valueColor = isDark ? '#c084fc' : '#7e22ce'; // primary-400 : primary-700
 	const descColor = isDark ? '#94a3b8' : '#64748b'; // slate-400 : slate-500
 
+	// 프로그래스 퍼센티지 계산 (썸의 중앙 위치에 맞춤)
+	const numValue = Number(value);
+	const numMin = Number(min);
+	const numMax = Number(max);
+	const percentage = ((numValue - numMin) / (numMax - numMin)) * 100;
+
 	return (
 		<div className={`w-full ${className}`}>
 			{label && (
@@ -54,6 +60,11 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(({ label, showValue = t
 				max={max}
 				value={value}
 				className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb"
+				style={
+					{
+						'--progress': `${percentage}%`,
+					} as React.CSSProperties
+				}
 				{...props}
 			/>
 		</div>

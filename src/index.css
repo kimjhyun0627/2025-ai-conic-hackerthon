@@ -158,6 +158,12 @@
 	}
 
 	/* Slider Thumb - Apple style */
+	.slider-thumb {
+		height: 22px; /* 썸 높이에 맞춰 슬라이더 높이 설정 */
+		padding: 0;
+		background: transparent;
+	}
+
 	.slider-thumb::-webkit-slider-thumb {
 		appearance: none;
 		width: 22px;
@@ -169,6 +175,7 @@
 		box-shadow:
 			0 2px 8px rgba(168, 85, 247, 0.4),
 			0 1px 2px rgba(0, 0, 0, 0.1);
+		margin-top: -8px; /* 썸을 트랙 중앙에 정렬: (22px 썸 - 6px 트랙) / 2 = 8px */
 	}
 
 	.slider-thumb::-webkit-slider-thumb:hover {
@@ -209,14 +216,19 @@
 	}
 
 	/* Slider Track */
-	.slider-thumb {
-		background: transparent;
-	}
 
 	.slider-thumb::-webkit-slider-runnable-track {
 		background: linear-gradient(to right, #a855f7 0%, #a855f7 var(--progress, 50%), rgba(148, 163, 184, 0.2) var(--progress, 50%), rgba(148, 163, 184, 0.2) 100%);
 		height: 6px;
 		border-radius: 3px;
+	}
+
+	/* Firefox용 트랙 스타일 */
+	.slider-thumb::-moz-range-track {
+		background: linear-gradient(to right, #a855f7 0%, #a855f7 var(--progress, 50%), rgba(148, 163, 184, 0.2) var(--progress, 50%), rgba(148, 163, 184, 0.2) 100%);
+		height: 6px;
+		border-radius: 3px;
+		border: none;
 	}
 
 	/* Button Enhancements */

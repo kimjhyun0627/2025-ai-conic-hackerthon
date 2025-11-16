@@ -72,6 +72,11 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							value={currentTime}
 							onChange={handleProgressChange}
 							className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb transition-all duration-200"
+							style={
+								{
+									'--progress': `${progressPercentage}%`,
+								} as React.CSSProperties
+							}
 						/>
 						<motion.div
 							style={{
@@ -93,7 +98,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 						className="text-[10px] sm:text-xs md:text-sm lg:text-base w-10 sm:w-12 font-mono"
 						style={{ color: colors.textSecondaryColor }}
 					>
-						{formatTime(duration)}
+						{formatTime(duration || 100)}
 					</span>
 				</div>
 
@@ -129,6 +134,11 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 								value={volume}
 								onChange={handleVolumeChange}
 								className="w-20 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb"
+								style={
+									{
+										'--progress': `${volume}%`,
+									} as React.CSSProperties
+								}
 							/>
 							<span
 								className="text-xs md:text-sm lg:text-base font-medium w-8 text-right"
