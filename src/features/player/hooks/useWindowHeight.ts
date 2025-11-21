@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useWindowSize } from '@/shared/hooks';
-import { HORIZONTAL_MAX_WIDTH_RATIO, DEFAULT_HORIZONTAL_MAX_WIDTH } from '../constants';
+import { PLAYER_CONSTANTS } from '../constants';
 
 /**
  * 윈도우 높이 추적 및 가로 모드 최대 너비 계산 커스텀 훅
@@ -13,8 +13,8 @@ export const useWindowHeight = () => {
 	// 화면 "높이"가 아닌 "너비"에 기반해서 계산해야
 	// landscape 모드에서 높이가 줄어들어도 폭이 같이 줄어들지 않는다.
 	const horizontalMaxWidth = useMemo(() => {
-		if (!windowWidth) return DEFAULT_HORIZONTAL_MAX_WIDTH;
-		return windowWidth * HORIZONTAL_MAX_WIDTH_RATIO;
+		if (!windowWidth) return PLAYER_CONSTANTS.PARAMETER.DEFAULT_HORIZONTAL_MAX_WIDTH;
+		return windowWidth * PLAYER_CONSTANTS.PARAMETER.HORIZONTAL_MAX_WIDTH_RATIO;
 	}, [windowWidth]);
 
 	return {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import type { CategoryParameter } from '@/shared/types';
-import { VISIBLE_COUNT_BREAKPOINTS, type NavigationDirection } from '../constants';
+import { PLAYER_CONSTANTS, type NavigationDirection } from '../constants';
 
 interface UseParameterCarouselProps {
 	allParams: CategoryParameter[];
@@ -34,8 +34,8 @@ export const useParameterCarousel = ({ allParams, themeBaseParams, themeAddition
 	const getVisibleCount = (height: number): number => {
 		if (height === 0) return 3; // 초기값
 		// 높이에 따른 구간별 표시 개수
-		if (height < VISIBLE_COUNT_BREAKPOINTS.VERY_SMALL) return 1; // 매우 작은 화면
-		if (height < VISIBLE_COUNT_BREAKPOINTS.SMALL) return 2; // 작은 화면
+		if (height < PLAYER_CONSTANTS.PARAMETER.VISIBLE_COUNT_BREAKPOINTS.VERY_SMALL) return 1; // 매우 작은 화면
+		if (height < PLAYER_CONSTANTS.PARAMETER.VISIBLE_COUNT_BREAKPOINTS.SMALL) return 2; // 작은 화면
 		return 3; // 중간 이상 화면
 	};
 

@@ -6,7 +6,7 @@ import { ParameterCarousel } from '../ParameterCarousel';
 import { ParameterIndicator } from '../ParameterIndicator';
 import { CommonParamButtons } from '../CommonParamButtons';
 import type { CategoryParameter } from '@/shared/types';
-import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../constants';
 import { useThemeColors } from '@/shared/hooks';
 import { useWindowHeight } from '../../hooks';
 import { useIndicatorPosition } from '../../hooks';
@@ -107,7 +107,7 @@ export const ParameterPanel = ({
 					<motion.div
 						ref={panelRef}
 						layout
-						className={PLAYER_STYLES.parameterPanel}
+						className={PLAYER_CONSTANTS.STYLES.parameterPanel}
 						style={{
 							// 패널 자체는 가로/세로 모드 모두 동일한 위치/폭을 유지
 							...getParameterPanelStyle(colors),
@@ -115,14 +115,14 @@ export const ParameterPanel = ({
 							paddingBottom: '1.125rem',
 						}}
 						initial={{
-							...PLAYER_ANIMATIONS.parameterPanel.initial,
+							...PLAYER_CONSTANTS.ANIMATIONS.parameterPanel.initial,
 						}}
 						animate={{
-							...PLAYER_ANIMATIONS.parameterPanel.animate,
+							...PLAYER_CONSTANTS.ANIMATIONS.parameterPanel.animate,
 						}}
-						exit={PLAYER_ANIMATIONS.parameterPanel.exit}
+						exit={PLAYER_CONSTANTS.ANIMATIONS.parameterPanel.exit}
 						transition={{
-							...PLAYER_ANIMATIONS.parameterPanel.transition,
+							...PLAYER_CONSTANTS.ANIMATIONS.parameterPanel.transition,
 							layout: {
 								duration: 0.6,
 								ease: [0.4, 0, 0.2, 1],
@@ -225,9 +225,9 @@ export const ParameterPanel = ({
 											gap: '0.75rem',
 											width: '100%',
 										}}
-										initial={PLAYER_ANIMATIONS.parameterGrid.initial}
-										animate={PLAYER_ANIMATIONS.parameterGrid.animate}
-										exit={PLAYER_ANIMATIONS.parameterGrid.exit}
+										initial={PLAYER_CONSTANTS.ANIMATIONS.parameterGrid.initial}
+										animate={PLAYER_CONSTANTS.ANIMATIONS.parameterGrid.animate}
+										exit={PLAYER_CONSTANTS.ANIMATIONS.parameterGrid.exit}
 										transition={{
 											layout: {
 												duration: 0.6,
@@ -335,20 +335,20 @@ export const ParameterPanel = ({
 													background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
 												}}
 												animate={{ x: ['-100%', '200%'] }}
-												transition={PLAYER_ANIMATIONS.playButtonShine.transition}
+												transition={PLAYER_CONSTANTS.ANIMATIONS.playButtonShine.transition}
 											/>
 											<AnimatePresence mode="wait">
 												{orientation === 'horizontal' ? (
 													<motion.div
 														key="grid"
-														{...PLAYER_ANIMATIONS.playButtonIcon}
+														{...PLAYER_CONSTANTS.ANIMATIONS.playButtonIcon}
 													>
 														<LayoutGrid className="w-4 h-4 md:w-5 md:h-5 text-white fill-white relative z-10" />
 													</motion.div>
 												) : (
 													<motion.div
 														key="list"
-														{...PLAYER_ANIMATIONS.playButtonIcon}
+														{...PLAYER_CONSTANTS.ANIMATIONS.playButtonIcon}
 													>
 														<LayoutList className="w-4 h-4 md:w-5 md:h-5 text-white fill-white relative z-10" />
 													</motion.div>

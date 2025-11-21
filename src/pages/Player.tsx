@@ -7,7 +7,7 @@ import { ConfirmModal } from '@/shared/components/ui';
 import { PlayerTopBar, PlayerGenreInfo, PlayerCenterImage, PlayerControls, ParameterPanel } from '@/features/player/components';
 import { usePlayerParams } from '@/features/player/hooks';
 import { useThemeColors } from '@/shared/hooks';
-import { PLAYER_STYLES, PLAYER_ANIMATIONS } from '@/features/player/constants';
+import { PLAYER_CONSTANTS } from '@/features/player/constants';
 
 const Player = () => {
 	const navigate = useNavigate();
@@ -85,7 +85,7 @@ const Player = () => {
 							layout
 							initial="hidden"
 							animate={isControlsVisible ? 'visible' : 'hidden'}
-							variants={PLAYER_ANIMATIONS.playerControls}
+							variants={PLAYER_CONSTANTS.ANIMATIONS.playerControls}
 							transition={{
 								layout: {
 									duration: 0.6,
@@ -152,7 +152,7 @@ const Player = () => {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 							onClick={() => setIsControlsVisible(true)}
-							className={PLAYER_STYLES.glassButton.controlButton}
+							className={PLAYER_CONSTANTS.STYLES.glassButton.controlButton}
 							style={{
 								background: colors.glassButtonBg,
 								borderColor: colors.glassBorder,

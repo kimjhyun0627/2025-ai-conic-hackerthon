@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { RefObject } from 'react';
-import { INDICATOR_OFFSET_FROM_PANEL } from '../constants';
+import { PLAYER_CONSTANTS } from '../constants';
 
 interface UseIndicatorPositionProps {
 	panelRef: RefObject<HTMLDivElement | null>;
@@ -27,7 +27,7 @@ export const useIndicatorPosition = ({ panelRef, carouselRef, orientation, isExp
 					const panelRight = panelRect.right;
 					// 패널 오른쪽 바깥에서 INDICATOR_OFFSET_FROM_PANEL만큼 떨어진 위치
 					// getBoundingClientRect()는 viewport 기준이므로 fixed 포지션에서 바로 사용 가능
-					const indicatorLeftPosition = panelRight + INDICATOR_OFFSET_FROM_PANEL;
+					const indicatorLeftPosition = panelRight + PLAYER_CONSTANTS.PARAMETER.INDICATOR_OFFSET_FROM_PANEL;
 					setIndicatorLeft(indicatorLeftPosition); // 숫자로 저장하여 애니메이션 가능하게 함
 				}
 			};

@@ -1,4 +1,4 @@
-import { VERTICAL_TWO_ROWS_THRESHOLD } from '../constants';
+import { PLAYER_CONSTANTS } from '../constants';
 
 /**
  * 세로 모드에서 2행 레이아웃일 때 상단/하단 분할 계산
@@ -19,5 +19,5 @@ export const getRowSplit = (count: number): [number, number] => {
  * 세로 모드에서 2행 레이아웃 사용 여부 결정
  */
 export const shouldUseTwoRows = (totalParamsCount: number): boolean => {
-	return totalParamsCount >= VERTICAL_TWO_ROWS_THRESHOLD;
+	return totalParamsCount >= PLAYER_CONSTANTS.PARAMETER.VERTICAL_TWO_ROWS_THRESHOLD;
 };

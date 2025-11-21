@@ -24,22 +24,22 @@ export const DEFAULT_AUDIO_PARAMS = {
 // Parameter Ranges
 export const PARAM_RANGES = {
 	// 공통 파라미터
-	reverb: { min: 0, max: 100, step: 1 },
-	delay: { min: 0, max: 100, step: 1 },
-	compressor: { min: 0, max: 100, step: 1 },
-	filter: { min: 0, max: 100, step: 1 },
-	distortion: { min: 0, max: 100, step: 1 },
-	'stereo-width': { min: 0, max: 100, step: 1 },
-	gain: { min: 0, max: 100, step: 1 },
+	reverb: { min: 0, max: 100, step: 5 },
+	delay: { min: 0, max: 100, step: 5 },
+	compressor: { min: 0, max: 100, step: 5 },
+	filter: { min: 0, max: 100, step: 5 },
+	distortion: { min: 0, max: 100, step: 5 },
+	'stereo-width': { min: 0, max: 100, step: 5 },
+	gain: { min: 0, max: 100, step: 5 },
 	// 카테고리별 파라미터
-	tempo: { min: 50, max: 120, step: 1 }, // focus: 60-120, relax: 50-90 -> 전체 범위 통합
-	bass: { min: 0, max: 100, step: 1 },
-	clarity: { min: 0, max: 100, step: 1 },
-	energy: { min: 0, max: 100, step: 1 },
-	kick: { min: 0, max: 100, step: 1 },
-	space: { min: 0, max: 100, step: 1 },
-	balance: { min: 0, max: 100, step: 1 },
-	mood: { min: 0, max: 100, step: 1 },
-	texture: { min: 0, max: 100, step: 1 },
-	beat: { min: 0, max: 100, step: 1 },
+	tempo: { min: 50, max: 120, step: 5 }, // focus: 60-120, relax: 50-90 -> 전체 범위 통합
+	bass: { min: 0, max: 100, step: 5 },
+	clarity: { min: 0, max: 100, step: 5 },
+	energy: { min: 0, max: 100, step: 5 },
+	kick: { min: 0, max: 100, step: 5 },
+	space: { min: 0, max: 100, step: 5 },
+	balance: { min: 0, max: 100, step: 5 },
+	mood: { min: 0, max: 100, step: 5 },
+	texture: { min: 0, max: 100, step: 5 },
+	beat: { min: 0, max: 100, step: 5 },
 };
