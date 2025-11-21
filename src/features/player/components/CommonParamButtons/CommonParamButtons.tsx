@@ -4,7 +4,7 @@ import { Plus } from 'lucide-react';
 import type { CategoryParameter } from '@/shared/types';
 import { useThemeColors } from '@/shared/hooks';
 import { getCommonParamPanelStyle, getCommonParamButtonStyle } from '../../utils';
-import { ANIMATION_DURATIONS, COMMON_PARAM_BUTTON_ANIMATION, COMMON_PARAM_PANEL_ANIMATION } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../constants';
 
 interface CommonParamButtonsProps {
 	availableCommonParams: CategoryParameter[];
@@ -29,16 +29,16 @@ export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, or
 				setTimeout(() => {
 					onAddCommonParam(param.id);
 					// exit 애니메이션이 완료된 후 상태 리셋
-					setTimeout(() => {
-						setRemovingButtonIds((prev) => {
-							const next = new Set(prev);
-							next.delete(param.id);
-							return next;
-						});
-						setShouldHidePanel(false);
-					}, ANIMATION_DURATIONS.PANEL_EXIT);
+			setTimeout(() => {
+				setRemovingButtonIds((prev) => {
+					const next = new Set(prev);
+					next.delete(param.id);
+					return next;
+				});
+				setShouldHidePanel(false);
+			}, PLAYER_CONSTANTS.PARAMETER.ANIMATION_DURATIONS.PANEL_EXIT);
 				}, 50);
-			}, ANIMATION_DURATIONS.BUTTON_REMOVE);
+			}, PLAYER_CONSTANTS.PARAMETER.ANIMATION_DURATIONS.BUTTON_REMOVE);
 		} else {
 			onAddCommonParam(param.id);
 			setTimeout(() => {
@@ -47,7 +47,7 @@ export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, or
 					next.delete(param.id);
 					return next;
 				});
-			}, ANIMATION_DURATIONS.BUTTON_REMOVE);
+			}, PLAYER_CONSTANTS.PARAMETER.ANIMATION_DURATIONS.BUTTON_REMOVE);
 		}
 	};
 
@@ -56,9 +56,9 @@ export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, or
 			{availableCommonParams.length > 0 && !shouldHidePanel && (
 				<motion.div
 					layout="size"
-					initial={COMMON_PARAM_PANEL_ANIMATION.initial}
-					animate={COMMON_PARAM_PANEL_ANIMATION.animate}
-					exit={COMMON_PARAM_PANEL_ANIMATION.exit}
+					initial={PLAYER_CONSTANTS.PARAMETER.COMMON_PARAM_PANEL_ANIMATION.initial}
+					animate={PLAYER_CONSTANTS.PARAMETER.COMMON_PARAM_PANEL_ANIMATION.animate}
+					exit={PLAYER_CONSTANTS.PARAMETER.COMMON_PARAM_PANEL_ANIMATION.exit}
 					className="glass-card rounded-2xl overflow-hidden"
 					style={{
 						...getCommonParamPanelStyle(colors),
@@ -71,7 +71,7 @@ export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, or
 								}
 							: {}),
 					}}
-					transition={COMMON_PARAM_PANEL_ANIMATION.transition}
+					transition={PLAYER_CONSTANTS.PARAMETER.COMMON_PARAM_PANEL_ANIMATION.transition}
 				>
 					<div className="flex flex-wrap gap-2">
 						<AnimatePresence mode="popLayout">
@@ -83,9 +83,9 @@ export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, or
 										layout
 										onClick={() => handleButtonClick(param)}
 										initial={{ opacity: 0, scale: 0.9 }}
-										animate={isRemoving ? COMMON_PARAM_BUTTON_ANIMATION.removing : { opacity: 1, scale: 1 }}
-										exit={COMMON_PARAM_BUTTON_ANIMATION.removing}
-										transition={COMMON_PARAM_BUTTON_ANIMATION}
+										animate={isRemoving ? PLAYER_CONSTANTS.PARAMETER.COMMON_PARAM_BUTTON_ANIMATION.removing : { opacity: 1, scale: 1 }}
+										exit={PLAYER_CONSTANTS.PARAMETER.COMMON_PARAM_BUTTON_ANIMATION.removing}
+										transition={PLAYER_CONSTANTS.PARAMETER.COMMON_PARAM_BUTTON_ANIMATION}
 										whileHover={isRemoving ? {} : { scale: 1.05 }}
 										whileTap={isRemoving ? {} : { scale: 0.95 }}
 										className="flex items-center gap-2 px-3 py-2 rounded-lg overflow-hidden"

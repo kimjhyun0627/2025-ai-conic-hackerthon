@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import type { MusicGenre } from '@/shared/types';
-import { PLAYER_ANIMATIONS } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../constants';
 
 interface PlayerCenterImageProps {
 	genre: MusicGenre;
@@ -12,7 +12,7 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 		<div className="flex-1 flex items-center justify-center p-6 md:p-8 pt-32 pb-40 relative">
 			<div className="w-full max-w-4xl aspect-square glass-card rounded-4xl md:rounded-[2.5rem] overflow-hidden shadow-2xl relative">
 				<motion.div
-					{...PLAYER_ANIMATIONS.centerImage}
+					{...PLAYER_CONSTANTS.ANIMATIONS.centerImage}
 					style={{
 						width: '100%',
 						height: '100%',

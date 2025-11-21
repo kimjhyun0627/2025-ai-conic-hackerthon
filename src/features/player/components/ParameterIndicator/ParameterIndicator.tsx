@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { CategoryParameter } from '@/shared/types';
 import { useThemeColors } from '@/shared/hooks';
-import { INDICATOR_ANIMATION } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../constants';
 
 interface ParameterIndicatorProps {
 	allParams: CategoryParameter[];
@@ -65,21 +65,21 @@ export const ParameterIndicator = ({ allParams, currentStartIndex, visibleCount,
 							layout
 							initial={{
 								opacity: 0,
-								scale: INDICATOR_ANIMATION.scale.initial,
-								y: INDICATOR_ANIMATION.y.initial,
+								scale: PLAYER_CONSTANTS.PARAMETER.INDICATOR_ANIMATION.scale.initial,
+								y: PLAYER_CONSTANTS.PARAMETER.INDICATOR_ANIMATION.y.initial,
 							}}
 							animate={{
 								opacity: 1,
-								scale: INDICATOR_ANIMATION.scale.animate,
-								y: INDICATOR_ANIMATION.y.animate,
+								scale: PLAYER_CONSTANTS.PARAMETER.INDICATOR_ANIMATION.scale.animate,
+								y: PLAYER_CONSTANTS.PARAMETER.INDICATOR_ANIMATION.y.animate,
 							}}
 							exit={{
 								opacity: 0,
-								scale: INDICATOR_ANIMATION.scale.exit,
-								y: INDICATOR_ANIMATION.y.exit,
+								scale: PLAYER_CONSTANTS.PARAMETER.INDICATOR_ANIMATION.scale.exit,
+								y: PLAYER_CONSTANTS.PARAMETER.INDICATOR_ANIMATION.y.exit,
 							}}
 							transition={{
-								...INDICATOR_ANIMATION.spring,
+								...PLAYER_CONSTANTS.PARAMETER.INDICATOR_ANIMATION.spring,
 								delay: paramIndex * 0.03, // 순차적으로 나타나도록
 								layout: {
 									duration: 0.6,

@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { usePlayerStore } from '@/store/playerStore';
 import { useThemeColors, useGlassButton } from '@/shared/hooks';
-import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../constants';
 import { formatTime } from '@/shared/utils';
 import { Slider } from '@/shared/components/ui';
 import type { MusicGenre } from '@/shared/types';
@@ -108,7 +108,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 					<div className="flex-1 flex items-center gap-2 md:gap-3 justify-start">
 						<button
 							onClick={toggleMute}
-							className={PLAYER_STYLES.glassButton.controlButton}
+							className={PLAYER_CONSTANTS.STYLES.glassButton.controlButton}
 							style={buttonStyle}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}
@@ -152,7 +152,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 					<div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center gap-3 md:gap-4">
 						<button
 							onClick={onPrev}
-							className={PLAYER_STYLES.glassButton.controlButton}
+							className={PLAYER_CONSTANTS.STYLES.glassButton.controlButton}
 							style={buttonStyle}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}
@@ -166,7 +166,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 
 						<button
 							onClick={handlePlayPause}
-							className={PLAYER_STYLES.glassButton.playButton}
+							className={PLAYER_CONSTANTS.STYLES.glassButton.playButton}
 							style={{
 								background: colors.playButtonGradient,
 							}}
@@ -179,20 +179,20 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 									background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
 								}}
 								animate={isPlaying ? { x: ['-100%', '200%'] } : { x: '-100%' }}
-								transition={PLAYER_ANIMATIONS.playButtonShine.transition}
+								transition={PLAYER_CONSTANTS.ANIMATIONS.playButtonShine.transition}
 							/>
 							<AnimatePresence mode="wait">
 								{isPlaying ? (
 									<motion.div
 										key="pause"
-										{...PLAYER_ANIMATIONS.playButtonIcon}
+										{...PLAYER_CONSTANTS.ANIMATIONS.playButtonIcon}
 									>
 										<Pause className="w-6 h-6 md:w-8 md:h-8 text-white fill-white relative z-10" />
 									</motion.div>
 								) : (
 									<motion.div
 										key="play"
-										{...PLAYER_ANIMATIONS.playButtonIcon}
+										{...PLAYER_CONSTANTS.ANIMATIONS.playButtonIcon}
 									>
 										<Play className="w-6 h-6 md:w-8 md:h-8 text-white fill-white ml-1 relative z-10" />
 									</motion.div>
@@ -202,7 +202,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 
 						<button
 							onClick={onNext}
-							className={PLAYER_STYLES.glassButton.controlButton}
+							className={PLAYER_CONSTANTS.STYLES.glassButton.controlButton}
 							style={buttonStyle}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}
@@ -219,7 +219,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 					<div className="flex-1 flex items-center gap-2 justify-end">
 						<button
 							onClick={onToggleExpand}
-							className={PLAYER_STYLES.glassButton.controlButton}
+							className={PLAYER_CONSTANTS.STYLES.glassButton.controlButton}
 							style={buttonStyle}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}
@@ -227,7 +227,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 						>
 							<motion.div
 								animate={{ rotate: isExpanded ? 180 : 0 }}
-								transition={PLAYER_ANIMATIONS.expandButton.transition}
+								transition={PLAYER_CONSTANTS.ANIMATIONS.expandButton.transition}
 							>
 								<SlidersHorizontal
 									className="w-5 h-5 md:w-6 md:h-6"
@@ -237,7 +237,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 						</button>
 						<button
 							onClick={onToggleVisibility}
-							className={PLAYER_STYLES.glassButton.controlButton}
+							className={PLAYER_CONSTANTS.STYLES.glassButton.controlButton}
 							style={buttonStyle}
 							onMouseEnter={handleMouseEnter}
 							onMouseLeave={handleMouseLeave}
@@ -245,7 +245,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 						>
 							<motion.div
 								animate={{ rotate: isVisible ? 0 : 180 }}
-								transition={PLAYER_ANIMATIONS.expandButton.transition}
+								transition={PLAYER_CONSTANTS.ANIMATIONS.expandButton.transition}
 							>
 								<ChevronDown
 									className="w-5 h-5 md:w-6 md:h-6"

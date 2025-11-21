@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import type { MusicGenre, MusicTheme } from '@/shared/types';
-import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../constants';
 
 interface PlayerGenreInfoProps {
 	genre: MusicGenre;
@@ -21,27 +21,16 @@ export const PlayerGenreInfo = ({ genre, theme, isVisible = true }: PlayerGenreI
 							hidden: {
 								opacity: 0,
 								y: -20,
-								transition: {
-									opacity: {
-										duration: 0.3,
-										ease: [0.4, 0, 0.2, 1],
-									},
-									y: {
-										duration: 0.3,
-										ease: [0.4, 0, 0.2, 1],
-									},
-								},
+								transition: PLAYER_CONSTANTS.ANIMATIONS.genreInfo.transition,
 							},
 							visible: {
 								opacity: 1,
 								y: 0,
-								transition: {
-									...PLAYER_ANIMATIONS.genreInfo.transition,
-								},
+								transition: PLAYER_CONSTANTS.ANIMATIONS.genreInfo.transition,
 							},
 						}}
 					>
-						<div className={PLAYER_STYLES.glassCard}>
+						<div className={PLAYER_CONSTANTS.STYLES.glassCard}>
 							{theme && (
 								<div className="flex items-center gap-2 mb-2">
 									<span className="text-sm md:text-base font-medium text-slate-600 dark:text-slate-400">{theme.categoryNameKo}</span>

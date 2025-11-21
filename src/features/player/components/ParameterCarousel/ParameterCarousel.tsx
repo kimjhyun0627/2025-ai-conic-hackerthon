@@ -4,7 +4,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import type { CategoryParameter } from '@/shared/types';
 import { ParameterSlider } from '../ParameterSlider';
 import { useThemeColors } from '@/shared/hooks';
-import { CAROUSEL_ANIMATION, type NavigationDirection } from '../../constants';
+import { PLAYER_CONSTANTS, type NavigationDirection } from '../../constants';
 
 interface ParameterCarouselProps {
 	carouselRef: RefObject<HTMLDivElement | null>;
@@ -129,9 +129,9 @@ export const ParameterCarousel = ({
 										y: (() => {
 											const dir = navigationDirectionRef.current;
 											// 위 버튼(up): 새 블록이 위에서 내려옴, 아래 버튼(down): 새 블록이 아래에서 올라옴
-											if (dir === 'up') return CAROUSEL_ANIMATION.initialY.up;
-											if (dir === 'down') return CAROUSEL_ANIMATION.initialY.down;
-											return CAROUSEL_ANIMATION.initialY.default;
+											if (dir === 'up') return PLAYER_CONSTANTS.PARAMETER.CAROUSEL_ANIMATION.initialY.up;
+											if (dir === 'down') return PLAYER_CONSTANTS.PARAMETER.CAROUSEL_ANIMATION.initialY.down;
+											return PLAYER_CONSTANTS.PARAMETER.CAROUSEL_ANIMATION.initialY.default;
 										})(),
 									}}
 									animate={{
@@ -143,12 +143,12 @@ export const ParameterCarousel = ({
 										y: (() => {
 											const dir = navigationDirectionRef.current;
 											// 위 버튼(up): 기존 블록이 아래로 사라짐, 아래 버튼(down): 기존 블록이 위로 사라짐
-											if (dir === 'up') return CAROUSEL_ANIMATION.exitY.up;
-											if (dir === 'down') return CAROUSEL_ANIMATION.exitY.down;
-											return CAROUSEL_ANIMATION.exitY.default;
+											if (dir === 'up') return PLAYER_CONSTANTS.PARAMETER.CAROUSEL_ANIMATION.exitY.up;
+											if (dir === 'down') return PLAYER_CONSTANTS.PARAMETER.CAROUSEL_ANIMATION.exitY.down;
+											return PLAYER_CONSTANTS.PARAMETER.CAROUSEL_ANIMATION.exitY.default;
 										})(),
 									}}
-									transition={CAROUSEL_ANIMATION.spring}
+									transition={PLAYER_CONSTANTS.PARAMETER.CAROUSEL_ANIMATION.spring}
 									className="w-full flex flex-col gap-4"
 								>
 									{currentParams.map((param, index) => {

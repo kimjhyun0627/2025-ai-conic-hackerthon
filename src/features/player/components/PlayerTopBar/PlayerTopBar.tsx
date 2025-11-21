@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Maximize, Minimize } from 'lucide-react';
 import { Button, ThemeToggle } from '@/shared/components/ui';
 import { useFullscreen } from '@/shared/hooks';
-import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../constants';
 import { useThemeStore } from '@/store/themeStore';
 
 interface PlayerTopBarProps {
@@ -42,7 +42,7 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 									opacity: 1,
 									y: 0,
 									transition: {
-										...PLAYER_ANIMATIONS.topBar.transition,
+										...PLAYER_CONSTANTS.ANIMATIONS.topBar.transition,
 									},
 								},
 							}}
@@ -51,7 +51,7 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 								variant="ghost"
 								size="sm"
 								onClick={onHomeClick}
-								className={PLAYER_STYLES.glassButton.homeButton}
+								className={PLAYER_CONSTANTS.STYLES.glassButton.homeButton}
 							>
 								<Home className="w-5 h-5 mr-2" />
 								홈으로
@@ -81,7 +81,7 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 									opacity: 1,
 									y: 0,
 									transition: {
-										...PLAYER_ANIMATIONS.topBarDelayed.transition,
+										...PLAYER_CONSTANTS.ANIMATIONS.topBarDelayed.transition,
 									},
 								},
 							}}
@@ -93,10 +93,10 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 			</AnimatePresence>
 
 			{/* 전체화면 버튼 */}
-			<motion.div {...PLAYER_ANIMATIONS.topBar}>
+			<motion.div {...PLAYER_CONSTANTS.ANIMATIONS.topBar}>
 				<button
 					onClick={toggleFullscreen}
-					className={PLAYER_STYLES.glassButton.base}
+					className={PLAYER_CONSTANTS.STYLES.glassButton.base}
 					aria-label={isFullscreen ? '전체화면 해제' : '전체화면'}
 				>
 					{isFullscreen ? (
