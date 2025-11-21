@@ -5,6 +5,7 @@ import { useThemeColors } from '../../hooks/useThemeColors';
 import { useGlassButton } from '../../hooks/useGlassButton';
 import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants/playerConstants';
 import { formatTime } from '../../utils/timeUtils';
+import Slider from '../ui/Slider';
 import type { MusicGenre } from '../../types';
 
 interface PlayerControlsProps {
@@ -127,19 +128,18 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							)}
 						</button>
 						<div className="hidden md:flex items-center gap-2">
-							<input
-								type="range"
-								min={0}
-								max={100}
-								value={volume}
-								onChange={handleVolumeChange}
-								className="w-20 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb"
-								style={
-									{
-										'--progress': `${volume}%`,
-									} as React.CSSProperties
-								}
-							/>
+							<div className="w-20">
+								<Slider
+									min={0}
+									max={100}
+									step={1}
+									value={volume}
+									onChange={handleVolumeChange}
+									showValue={false}
+									tickInterval={20}
+									className="w-full"
+								/>
+							</div>
 							<span
 								className="text-xs md:text-sm lg:text-base font-medium w-8 text-right"
 								style={{ color: colors.textSecondaryColor }}
