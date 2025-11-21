@@ -97,7 +97,9 @@
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		animation: gradient-shift 8s ease infinite;
+		animation:
+			gradient-shift 8s ease infinite,
+			shadow-pulse 3s ease-in-out infinite;
 	}
 
 	@keyframes gradient-shift {
@@ -112,13 +114,35 @@
 		}
 	}
 
+	@keyframes shadow-pulse {
+		0%,
+		100% {
+			filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.06)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.04));
+		}
+		50% {
+			filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
+		}
+	}
+
+	@keyframes shadow-pulse-dark {
+		0%,
+		100% {
+			filter: drop-shadow(0 2px 3px rgba(255, 255, 255, 0.08)) drop-shadow(0 1px 2px rgba(255, 255, 255, 0.05));
+		}
+		50% {
+			filter: drop-shadow(0 4px 6px rgba(255, 255, 255, 0.12)) drop-shadow(0 2px 4px rgba(255, 255, 255, 0.08));
+		}
+	}
+
 	.dark .text-gradient {
 		background: linear-gradient(135deg, #a78bfa 0%, #c084fc 20%, #e879f9 40%, #f472b6 60%, #fb7185 80%, #fbbf24 100%);
 		background-size: 200% 200%;
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
-		animation: gradient-shift 8s ease infinite;
+		animation:
+			gradient-shift 8s ease infinite,
+			shadow-pulse-dark 3s ease-in-out infinite;
 	}
 
 	/* Glow Effect */
