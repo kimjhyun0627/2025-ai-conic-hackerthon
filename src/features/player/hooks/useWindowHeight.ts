@@ -1,35 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
+import { useWindowSize } from '@/shared/hooks';
 import { HORIZONTAL_MAX_WIDTH_RATIO, DEFAULT_HORIZONTAL_MAX_WIDTH } from '../constants';
 
 /**
  * 윈도우 높이 추적 및 가로 모드 최대 너비 계산 커스텀 훅
+ * - 내부적으로 shared/hooks/useWindowSize 를 사용해 창 크기를 일관되게 관리
  */
 export const useWindowHeight = () => {
-	const [initialWindowHeight, setInitialWindowHeight] = useState(0);
-	const [windowHeight, setWindowHeight] = useState(0);
+	const { height: windowHeight } = useWindowSize();
 
-	// 초기 화면 높이 추적 (너비 계산용, 한 번만 설정)
-	useEffect(() => {
-		if (initialWindowHeight === 0) {
-			setInitialWindowHeight(window.innerHeight);
-		}
-	}, [initialWindowHeight]);
-
-	// 현재 화면 높이 추적 (반응형)
-	useEffect(() => {
-		const handleResize = () => {
-			setWindowHeight(window.innerHeight);
-		};
-		handleResize();
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
-	}, []);
-
-	// 가로 모드에서 초기 화면 높이에 비례한 maxWidth 계산 (초기 높이의 80% 정도, 이후 고정)
-	const horizontalMaxWidth = initialWindowHeight > 0 ? initialWindowHeight * HORIZONTAL_MAX_WIDTH_RATIO : DEFAULT_HORIZONTAL_MAX_WIDTH;
+	// 초기 화면 높이에 비례한 maxWidth 계산 (초기 높이의 80% 정도, 이후 고정)
+	const horizontalMaxWidth = useMemo(() => {
+		if (!windowHeight) return DEFAULT_HORIZONTAL_MAX_WIDTH;
+		return windowHeight * HORIZONTAL_MAX_WIDTH_RATIO;
+	}, [windowHeight]);
 
 	return {
-		initialWindowHeight,
+		initialWindowHeight: windowHeight,
 		windowHeight,
 		horizontalMaxWidth,
 	};
