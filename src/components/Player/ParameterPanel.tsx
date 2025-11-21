@@ -164,7 +164,7 @@ export const ParameterPanel = ({
 																style={{ color: colors.iconColor }}
 															/>
 															<span
-																className="text-sm font-medium whitespace-nowrap"
+																className="text-xs sm:text-sm md:text-base font-medium whitespace-nowrap"
 																style={{ color: colors.textMutedColor }}
 															>
 																{param.nameKo}

@@ -10,7 +10,7 @@ interface PlayerGenreInfoProps {
 
 export const PlayerGenreInfo = ({ genre, theme, isVisible = true }: PlayerGenreInfoProps) => {
 	return (
-		<div className="absolute top-6 left-6 z-10 max-w-xs">
+		<div className="absolute top-6 left-6 z-10 max-w-sm md:max-w-md">
 			<AnimatePresence>
 				{isVisible && (
 					<motion.div
@@ -44,13 +44,12 @@ export const PlayerGenreInfo = ({ genre, theme, isVisible = true }: PlayerGenreI
 						<div className={PLAYER_STYLES.glassCard}>
 							{theme && (
 								<div className="flex items-center gap-2 mb-2">
-									<span className="text-2xl">{theme.emoji}</span>
-									<span className="text-sm font-medium text-slate-600 dark:text-slate-400">{theme.categoryNameKo}</span>
+									<span className="text-sm md:text-base font-medium text-slate-600 dark:text-slate-400">{theme.categoryNameKo}</span>
 								</div>
 							)}
-							<h2 className="text-xl md:text-2xl font-semibold text-gradient mb-1">{genre.nameKo}</h2>
-							<p className="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-2">{genre.name}</p>
-							{genre.description && <p className="text-xs md:text-sm text-slate-500 dark:text-slate-500">{genre.description}</p>}
+							<h2 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gradient mb-1">{genre.nameKo}</h2>
+							<p className="text-sm md:text-base lg:text-lg text-slate-600 dark:text-slate-400 mb-2">{genre.name}</p>
+							{genre.description && <p className="text-xs md:text-sm lg:text-base text-slate-500 dark:text-slate-500">{genre.description}</p>}
 						</div>
 					</motion.div>
 				)}
