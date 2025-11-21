@@ -43,6 +43,7 @@ export const ParameterPanel = ({
 	const [indicatorLeft, setIndicatorLeft] = useState<string>('auto');
 	const [indicatorTop, setIndicatorTop] = useState<string>('50%');
 	const [hoveredParamIndex, setHoveredParamIndex] = useState<number | null>(null);
+	const navigationDirectionRef = useRef<'up' | 'down' | null>(null); // 버튼 클릭 방향 저장
 	const panelRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 	const carouselRef = useRef<HTMLDivElement>(null);
@@ -216,6 +217,7 @@ export const ParameterPanel = ({
 	// 캐러셀 네비게이션 함수 (화면 크기에 따라 페이지 단위로 이동, 무한 순환)
 	const nextParam = () => {
 		if (allParams.length === 0) return;
+		navigationDirectionRef.current = 'down'; // 아래 버튼: 새 블록이 아래에서 올라옴
 		setCurrentStartIndex((prev) => {
 			setPrevStartIndex(prev);
 			return (prev + visibleCount) % allParams.length;
@@ -224,6 +226,7 @@ export const ParameterPanel = ({
 
 	const prevParam = () => {
 		if (allParams.length === 0) return;
+		navigationDirectionRef.current = 'up'; // 위 버튼: 새 블록이 위에서 내려옴
 		setCurrentStartIndex((prev) => {
 			setPrevStartIndex(prev);
 			return (prev - visibleCount + allParams.length) % allParams.length;
@@ -454,12 +457,11 @@ export const ParameterPanel = ({
 															initial={{
 																opacity: 0,
 																y: (() => {
-																	const direction = currentStartIndex - prevStartIndex;
-																	// 원형 구조 고려
-																	if (Math.abs(direction) > allParams.length / 2) {
-																		return direction > 0 ? -50 : 50;
-																	}
-																	return direction > 0 ? 50 : -50;
+																	const dir = navigationDirectionRef.current;
+																	// 위 버튼(up): 새 블록이 위에서 내려옴, 아래 버튼(down): 새 블록이 아래에서 올라옴
+																	if (dir === 'up') return -50; // 위에서 내려옴
+																	if (dir === 'down') return 50; // 아래에서 올라옴
+																	return 0;
 																})(),
 															}}
 															animate={{
@@ -469,12 +471,11 @@ export const ParameterPanel = ({
 															exit={{
 																opacity: 0,
 																y: (() => {
-																	const direction = currentStartIndex - prevStartIndex;
-																	// 원형 구조 고려
-																	if (Math.abs(direction) > allParams.length / 2) {
-																		return direction > 0 ? 50 : -50;
-																	}
-																	return direction > 0 ? -50 : 50;
+																	const dir = navigationDirectionRef.current;
+																	// 위 버튼(up): 기존 블록이 아래로 사라짐, 아래 버튼(down): 기존 블록이 위로 사라짐
+																	if (dir === 'up') return 50; // 아래로 사라짐
+																	if (dir === 'down') return -50; // 위로 사라짐
+																	return 0;
 																})(),
 															}}
 															transition={{
