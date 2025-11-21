@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { CarouselButton, CarouselIndicators, CarouselCard, CardImage } from '../carousel';
+import { CarouselButton, CarouselIndicators, CarouselCard, CardImage } from '../Carousel';
 import { CardContent } from '../CardContent';
 import { Button } from '@/shared/components/ui';
 import type { ThemeCategory } from '@/shared/types';
