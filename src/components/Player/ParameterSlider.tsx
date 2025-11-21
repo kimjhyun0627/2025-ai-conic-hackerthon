@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import type { ChangeEvent } from 'react';
-import Slider from '../UI/Slider';
+import Slider from '../ui/Slider';
 import type { CategoryParameter } from '../../types';
 import { useThemeColors } from '../../hooks/useThemeColors';
 
