@@ -231,6 +231,43 @@
 		border: none;
 	}
 
+	/* 세로 슬라이더 스타일 */
+	.slider-vertical {
+		width: 6px;
+		height: 200px;
+		writing-mode: vertical-lr;
+		direction: rtl;
+		appearance: none;
+		-webkit-appearance: none;
+	}
+
+	.slider-vertical::-webkit-slider-thumb {
+		width: 22px;
+		height: 22px;
+		margin-left: -8px;
+		margin-right: -8px;
+	}
+
+	.slider-vertical::-webkit-slider-runnable-track {
+		width: 6px;
+		background: linear-gradient(to top, #a855f7 0%, #a855f7 var(--progress, 50%), rgba(148, 163, 184, 0.2) var(--progress, 50%), rgba(148, 163, 184, 0.2) 100%);
+		height: 100%;
+		border-radius: 3px;
+	}
+
+	.slider-vertical::-moz-range-thumb {
+		width: 22px;
+		height: 22px;
+	}
+
+	.slider-vertical::-moz-range-track {
+		width: 6px;
+		background: linear-gradient(to top, #a855f7 0%, #a855f7 var(--progress, 50%), rgba(148, 163, 184, 0.2) var(--progress, 50%), rgba(148, 163, 184, 0.2) 100%);
+		height: 100%;
+		border-radius: 3px;
+		border: none;
+	}
+
 	/* Button Enhancements */
 	.btn-glass {
 		background: rgba(255, 255, 255, 0.15);

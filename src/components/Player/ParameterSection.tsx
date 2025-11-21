@@ -10,17 +10,27 @@ interface ParameterSectionProps {
 	onRemove?: (paramId: string) => void;
 	isRemovable?: boolean;
 	useLayoutAnimation?: boolean;
+	orientation?: 'horizontal' | 'vertical';
 }
 
-export const ParameterSection = ({ params, getParamValue, setParamValue, onRemove, isRemovable = false, useLayoutAnimation = true }: ParameterSectionProps) => {
+export const ParameterSection = ({ params, getParamValue, setParamValue, onRemove, isRemovable = false, useLayoutAnimation = true, orientation = 'horizontal' }: ParameterSectionProps) => {
 	if (params.length === 0) {
 		return null;
 	}
 
+	const isVertical = orientation === 'vertical';
 	const content = params.map((param) => (
 		<motion.div
 			key={param.id}
 			layout={useLayoutAnimation}
+			style={{
+				...(isVertical
+					? {
+							minWidth: '150px',
+							flex: '1 0 150px',
+						}
+					: {}),
+			}}
 			{...(isRemovable
 				? {
 						initial: PLAYER_ANIMATIONS.parameterItem.initial,
@@ -59,6 +69,7 @@ export const ParameterSection = ({ params, getParamValue, setParamValue, onRemov
 				onChange={(value) => setParamValue(param.id, value)}
 				onRemove={onRemove ? () => onRemove(param.id) : undefined}
 				isRemovable={isRemovable}
+				orientation={orientation}
 			/>
 		</motion.div>
 	));

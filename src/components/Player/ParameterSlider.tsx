@@ -10,10 +10,12 @@ interface ParameterSliderProps {
 	onChange: (value: number) => void;
 	onRemove?: () => void;
 	isRemovable?: boolean;
+	orientation?: 'horizontal' | 'vertical';
 }
 
-export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable = false }: ParameterSliderProps) => {
+export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable = false, orientation = 'horizontal' }: ParameterSliderProps) => {
 	const colors = useThemeColors();
+	const isVertical = orientation === 'vertical';
 
 	return (
 		<div
@@ -27,6 +29,7 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 				boxShadow: colors.isDark
 					? 'inset 0 2px 8px 0 rgba(0, 0, 0, 0.4), inset 0 1px 2px 0 rgba(0, 0, 0, 0.3), inset 0 -2px 8px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.1)'
 					: 'inset 0 2px 8px 0 rgba(0, 0, 0, 0.15), inset 0 1px 2px 0 rgba(0, 0, 0, 0.1), inset 0 -2px 8px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(31, 38, 135, 0.05)',
+				...(isVertical ? { display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '250px' } : {}),
 			}}
 		>
 			{isRemovable && onRemove && (
@@ -46,12 +49,13 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 			)}
 			<Slider
 				label={param.nameKo}
-				description={param.description}
+				description={isVertical ? undefined : param.description}
 				value={value}
 				min={param.min}
 				max={param.max}
 				step={param.unit === 'BPM' ? 5 : 1}
 				unit={param.unit ? ` ${param.unit}` : ''}
+				orientation={orientation}
 				onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.target.value))}
 			/>
 		</div>
