@@ -165,6 +165,7 @@ export const BaseCarouselSection = <T extends CarouselItem>({
 				count={items.length}
 				currentIndex={currentIndex}
 				onSelect={onGoTo}
+				labels={items.map((item) => item.nameKo)}
 			/>
 
 			{/* Back Button */}

@@ -1,14 +1,17 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useThemeStore } from '@/store/themeStore';
 
 interface CarouselIndicatorsProps {
 	count: number;
 	currentIndex: number;
 	onSelect: (index: number) => void;
+	labels?: string[];
 }
 
-export const CarouselIndicators = ({ count, currentIndex, onSelect }: CarouselIndicatorsProps) => {
+export const CarouselIndicators = ({ count, currentIndex, onSelect, labels }: CarouselIndicatorsProps) => {
 	const isDarkMode = useThemeStore((state) => state.theme === 'dark');
+	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
 	const getIndicatorColor = (isActive: boolean) => {
 		if (isActive) {
@@ -28,13 +31,34 @@ export const CarouselIndicators = ({ count, currentIndex, onSelect }: CarouselIn
 		<div className="flex items-center justify-center gap-1.5 pt-12 pb-4">
 			{Array.from({ length: count }).map((_, index) => {
 				const isActive = index === currentIndex;
+				const label = labels?.[index] ?? `${index + 1}`;
 				return (
 					<button
 						key={index}
 						onClick={() => onSelect(index)}
+						onMouseEnter={() => setHoveredIndex(index)}
+						onMouseLeave={() => setHoveredIndex(null)}
 						className="relative group px-0.5 py-3 border-0 outline-none focus:outline-none bg-transparent cursor-pointer min-h-[32px] flex items-center justify-center"
 						aria-label={`${index + 1}번째 항목`}
 					>
+						<AnimatePresence>
+							{hoveredIndex === index && (
+								<motion.div
+									key={`tooltip-${index}`}
+									initial={{ opacity: 0, y: 6 }}
+									animate={{ opacity: 1, y: 0 }}
+									exit={{ opacity: 0, y: 6 }}
+									transition={{ duration: 0.18 }}
+									className="absolute -top-1 -translate-y-full whitespace-nowrap px-2 py-0.5 text-xs font-semibold"
+									style={{
+										color: isDarkMode ? '#f8fafc' : getIndicatorColor(true),
+										textShadow: isDarkMode ? '0 1px 6px rgba(15, 23, 42, 0.8)' : '0 1px 4px rgba(148, 163, 184, 0.8)',
+									}}
+								>
+									{label}
+								</motion.div>
+							)}
+						</AnimatePresence>
 						<motion.div
 							className="rounded-full transition-all"
 							style={{
@@ -47,9 +71,7 @@ export const CarouselIndicators = ({ count, currentIndex, onSelect }: CarouselIn
 							}}
 							whileHover={{
 								backgroundColor: getHoverColor(isActive),
-								scale: 1.3,
-								height: '8px',
-								width: isActive ? 24 : 8,
+								opacity: 0.9,
 							}}
 							initial={{
 								width: isActive ? 20 : 6,
