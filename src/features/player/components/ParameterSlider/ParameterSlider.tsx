@@ -53,7 +53,8 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 				value={value}
 				min={param.min}
 				max={param.max}
-				step={param.unit === 'BPM' ? 5 : 1}
+				step={param.unit === 'BPM' ? 5 : param.unit === '%' ? 5 : 1}
+				tickInterval={isVertical && param.unit === '%' ? 10 : undefined}
 				unit={param.unit ? ` ${param.unit}` : ''}
 				orientation={orientation}
 				onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.target.value))}

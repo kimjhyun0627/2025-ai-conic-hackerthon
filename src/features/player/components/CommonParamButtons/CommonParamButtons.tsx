@@ -9,9 +9,10 @@ import { PLAYER_CONSTANTS } from '../../constants';
 interface CommonParamButtonsProps {
 	availableCommonParams: CategoryParameter[];
 	onAddCommonParam: (paramId: string) => void;
+	orientation?: 'horizontal' | 'vertical';
 }
 
-export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam }: CommonParamButtonsProps) => {
+export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, orientation = 'horizontal' }: CommonParamButtonsProps) => {
 	const colors = useThemeColors();
 	const [removingButtonIds, setRemovingButtonIds] = useState<Set<string>>(new Set());
 	const [shouldHidePanel, setShouldHidePanel] = useState(false);
@@ -62,7 +63,7 @@ export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam }: 
 					style={{
 						...getCommonParamPanelStyle(colors),
 						padding: '1rem 1.25rem',
-						marginTop: '2.5rem',
+						marginTop: orientation === 'vertical' ? '0' : '2rem',
 						// 가로/세로 모드 모두에서 패널의 너비를 100%로 고정해
 						// 아래 가로선 및 토글 버튼 영역과 일관된 폭을 유지
 						width: '100%',

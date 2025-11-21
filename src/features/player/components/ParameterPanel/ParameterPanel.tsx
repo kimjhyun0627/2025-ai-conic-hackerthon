@@ -206,6 +206,7 @@ export const ParameterPanel = ({
 								<CommonParamButtons
 									availableCommonParams={availableCommonParams}
 									onAddCommonParam={onAddCommonParam}
+									orientation={orientation}
 								/>
 
 								{/* 모드 토글 버튼 */}
