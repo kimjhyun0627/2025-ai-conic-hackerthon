@@ -1,0 +1,44 @@
+@layer base {
+	:root {
+		/* Colors */
+		--color-primary: #a855f7;
+		--color-secondary: #06b6d4;
+		--color-tertiary: #d946ef;
+
+		/* Glass Effects */
+		--glass-bg-light: rgba(255, 255, 255, 0.7);
+		--glass-bg-dark: rgba(30, 41, 59, 0.6);
+		--glass-bg-card-light: rgba(255, 255, 255, 0.8);
+		--glass-bg-card-dark: rgba(30, 41, 59, 0.7);
+		--glass-blur: blur(20px) saturate(180%);
+		--glass-blur-card: blur(24px) saturate(200%);
+		--glass-border-light: rgba(255, 255, 255, 0.3);
+		--glass-border-dark: rgba(255, 255, 255, 0.15);
+
+		/* Background Colors */
+		--bg-light: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+		--bg-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+		--text-light: #1e293b;
+		--text-dark: #f1f5f9;
+
+		/* Spacing */
+		--spacing-xs: 0.25rem;
+		--spacing-sm: 0.5rem;
+		--spacing-md: 1rem;
+		--spacing-lg: 1.5rem;
+		--spacing-xl: 2rem;
+	}
+
+	body {
+		background: var(--bg-light);
+		color: var(--text-light);
+		transition:
+			background-color 0.3s ease,
+			color 0.3s ease;
+	}
+
+	.dark body {
+		background: var(--bg-dark);
+		color: var(--text-dark);
+	}
+}

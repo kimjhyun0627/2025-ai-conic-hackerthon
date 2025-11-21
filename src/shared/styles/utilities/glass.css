@@ -1,0 +1,43 @@
+@layer utilities {
+	/* Apple-style Glass Effect */
+	.glass-effect {
+		background: var(--glass-bg-light);
+		backdrop-filter: var(--glass-blur);
+		-webkit-backdrop-filter: var(--glass-blur);
+		border: 0.5px solid var(--glass-border-light);
+		box-shadow:
+			0 8px 32px 0 rgba(31, 38, 135, 0.15),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+	}
+
+	.dark .glass-effect {
+		background: var(--glass-bg-dark);
+		backdrop-filter: var(--glass-blur);
+		-webkit-backdrop-filter: var(--glass-blur);
+		border: 0.5px solid var(--glass-border-dark);
+		box-shadow:
+			0 8px 32px 0 rgba(0, 0, 0, 0.4),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+	}
+
+	/* Enhanced Glass Effect for Cards */
+	.glass-card {
+		background: var(--glass-bg-card-light);
+		backdrop-filter: var(--glass-blur-card);
+		-webkit-backdrop-filter: var(--glass-blur-card);
+		border: 0.5px solid rgba(255, 255, 255, 0.4);
+		box-shadow:
+			0 10px 30px 0 rgba(31, 38, 135, 0.45),
+			inset 0 2px 4px 0 rgba(255, 255, 255, 0.5);
+	}
+
+	.dark .glass-card {
+		background: var(--glass-bg-card-dark);
+		backdrop-filter: var(--glass-blur-card);
+		-webkit-backdrop-filter: var(--glass-blur-card);
+		border: 0.5px solid rgba(255, 255, 255, 0.2);
+		box-shadow:
+			0 10px 30px 0 rgba(0, 0, 0, 0.35),
+			inset 0 2px 4px 0 rgba(255, 255, 255, 0.15);
+	}
+}

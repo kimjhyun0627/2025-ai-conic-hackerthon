@@ -1,0 +1,22 @@
+@layer base {
+	:root {
+		font-family:
+			'Noto Sans KR',
+			'Pretendard',
+			-apple-system,
+			BlinkMacSystemFont,
+			system-ui,
+			'Roboto',
+			'Helvetica Neue',
+			'Segoe UI',
+			'Apple SD Gothic Neo',
+			sans-serif;
+		line-height: 1.5;
+		font-weight: 400;
+
+		font-synthesis: none;
+		text-rendering: optimizeLegibility;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}

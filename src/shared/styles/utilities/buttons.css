@@ -1,0 +1,185 @@
+@layer utilities {
+	/* Button Enhancements */
+	.btn-glass {
+		background: rgba(255, 255, 255, 0.15);
+		backdrop-filter: blur(10px);
+		-webkit-backdrop-filter: blur(10px);
+		border: 0.5px solid rgba(255, 255, 255, 0.25);
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		color: #1e293b !important; /* slate-800 for light mode */
+	}
+
+	.btn-glass:hover {
+		background: rgba(255, 255, 255, 0.25);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+		transform: translateY(-2px);
+	}
+
+	.btn-glass:active {
+		transform: translateY(0);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
+
+	.dark .btn-glass {
+		background: rgba(255, 255, 255, 0.08);
+		border: 0.5px solid rgba(255, 255, 255, 0.15);
+		color: #f1f5f9 !important; /* slate-100 for dark mode */
+	}
+
+	.dark .btn-glass:hover {
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	/* Play Button Glassmorphism Styles */
+	.play-button {
+		position: relative !important;
+		background: rgba(255, 255, 255, 0.15) !important;
+		backdrop-filter: blur(20px) saturate(180%) !important;
+		-webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+		border: none !important;
+		transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+		isolation: isolate !important;
+		box-shadow:
+			0 2px 8px 0 rgba(31, 38, 135, 0.1),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.4),
+			inset 0 -1px 0 0 rgba(255, 255, 255, 0.1) !important;
+		overflow: hidden !important;
+	}
+
+	/* 다크모드 스타일 */
+	.dark .play-button {
+		background: rgba(30, 41, 59, 0.4) !important;
+		border: none !important;
+		box-shadow:
+			0 8px 32px 0 rgba(0, 0, 0, 0.3),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+			inset 0 -1px 0 0 rgba(255, 255, 255, 0.05) !important;
+	}
+
+	/* 호버 시 반짝이는 효과를 위한 오버레이 */
+	.play-button::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+		background-size: 200% 200%;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+		pointer-events: none;
+	}
+
+	.play-button:hover {
+		background: rgba(255, 255, 255, 0.3) !important;
+		border: none !important;
+		box-shadow:
+			0 8px 24px 0 rgba(31, 38, 135, 0.2),
+			0 0 30px rgba(148, 163, 184, 0.3),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.6),
+			inset 0 -1px 0 0 rgba(255, 255, 255, 0.2) !important;
+		transform: translateY(-3px) scale(1.05) !important;
+	}
+
+	.dark .play-button:hover {
+		background: rgba(30, 41, 59, 0.6) !important;
+		border: none !important;
+		box-shadow:
+			0 12px 40px 0 rgba(0, 0, 0, 0.4),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.2),
+			inset 0 -1px 0 0 rgba(255, 255, 255, 0.1),
+			0 0 20px rgba(255, 255, 255, 0.15) !important;
+	}
+
+	.play-button:hover::before {
+		opacity: 1;
+		animation: play-button-shimmer 2s ease-in-out infinite;
+	}
+
+	.play-button:active {
+		transform: translateY(0) scale(0.95) !important;
+		box-shadow:
+			0 4px 16px 0 rgba(31, 38, 135, 0.2),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.3),
+			inset 0 -1px 0 0 rgba(255, 255, 255, 0.1) !important;
+	}
+
+	.dark .play-button:active {
+		box-shadow:
+			0 4px 16px 0 rgba(0, 0, 0, 0.3),
+			inset 0 1px 0 0 rgba(255, 255, 255, 0.15),
+			inset 0 -1px 0 0 rgba(255, 255, 255, 0.05) !important;
+	}
+
+	/* 아이콘 색상 */
+	.play-icon {
+		color: #ffffff !important; /* white - 라이트 테마에서도 밝은색 */
+	}
+
+	.play-icon svg {
+		color: #ffffff !important;
+		fill: #ffffff !important;
+	}
+
+	.dark .play-icon {
+		color: #ffffff !important; /* white */
+	}
+
+	.dark .play-icon svg {
+		color: #ffffff !important;
+		fill: #ffffff !important;
+	}
+
+	/* 호버 시 아이콘 글로우 효과 */
+	.play-button:hover .play-icon,
+	.play-button.is-hovered .play-icon {
+		animation: play-icon-glow 1.5s ease-in-out infinite !important;
+		transform: scale(1.1) !important;
+		transition: transform 0.3s ease !important;
+	}
+
+	.dark .play-button:hover .play-icon,
+	.dark .play-button.is-hovered .play-icon {
+		animation: play-icon-glow-dark 1.5s ease-in-out infinite !important;
+		transform: scale(1.1) !important;
+		transition: transform 0.3s ease !important;
+	}
+
+	/* 글라스모피즘 배경 오버레이 - 미묘한 그라데이션 */
+	.play-button-overlay {
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(255, 255, 255, 0.05) 100%) !important;
+		position: absolute !important;
+		inset: 0 !important;
+		border-radius: 50% !important;
+		pointer-events: none !important;
+		opacity: 0.6 !important;
+	}
+
+	/* 테두리 글로우 효과 */
+	.play-button-glow {
+		position: absolute !important;
+		inset: -2px !important;
+		border-radius: 50% !important;
+		background: linear-gradient(135deg, rgba(148, 163, 184, 0.3), rgba(203, 213, 225, 0.2), rgba(148, 163, 184, 0.3)) !important;
+		opacity: 0 !important;
+		transition: opacity 0.3s ease !important;
+		z-index: -1 !important;
+		pointer-events: none !important;
+		filter: blur(8px) !important;
+	}
+
+	.play-button:hover .play-button-glow,
+	.play-button.is-hovered .play-button-glow {
+		opacity: 0.8 !important;
+		animation: play-button-pulse 2s ease-in-out infinite !important;
+	}
+
+	/* 커스텀 스크롤바 - 파라미터 패널용 (숨김 처리) */
+	.parameter-panel-scroll {
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE and Edge */
+	}
+
+	.parameter-panel-scroll::-webkit-scrollbar {
+		display: none; /* Chrome, Safari, Opera */
+	}
+}

@@ -1,0 +1,21 @@
+/* Main Styles Entry Point */
+
+/* External Dependencies */
+@import 'pretendard/dist/web/static/pretendard.css';
+@import 'tailwindcss';
+
+/* Base Styles */
+@import './base/reset.css';
+@import './base/typography.css';
+@import './base/variables.css';
+
+/* Utilities */
+@import './utilities/glass.css';
+@import './utilities/gradients.css';
+@import './utilities/buttons.css';
+@import './utilities/sliders.css';
+
+/* Animations */
+@import './animations/keyframes.css';
+@import './animations/transitions.css';
+

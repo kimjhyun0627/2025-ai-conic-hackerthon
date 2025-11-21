@@ -1,0 +1,73 @@
+@keyframes gradient-shift {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+@keyframes shadow-pulse {
+	0%,
+	100% {
+		filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.06)) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.04));
+	}
+	50% {
+		filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1)) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
+	}
+}
+
+@keyframes shadow-pulse-dark {
+	0%,
+	100% {
+		filter: drop-shadow(0 2px 3px rgba(255, 255, 255, 0.08)) drop-shadow(0 1px 2px rgba(255, 255, 255, 0.05));
+	}
+	50% {
+		filter: drop-shadow(0 4px 6px rgba(255, 255, 255, 0.12)) drop-shadow(0 2px 4px rgba(255, 255, 255, 0.08));
+	}
+}
+
+/* Play Button Glassmorphism Animations */
+@keyframes play-button-shimmer {
+	0% {
+		background-position: -200% center;
+	}
+	100% {
+		background-position: 200% center;
+	}
+}
+
+@keyframes play-button-pulse {
+	0%,
+	100% {
+		opacity: 0.6;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 1;
+		transform: scale(1.05);
+	}
+}
+
+@keyframes play-icon-glow {
+	0%,
+	100% {
+		filter: drop-shadow(0 0 4px rgba(71, 85, 105, 0.4));
+	}
+	50% {
+		filter: drop-shadow(0 0 12px rgba(71, 85, 105, 0.6));
+	}
+}
+
+@keyframes play-icon-glow-dark {
+	0%,
+	100% {
+		filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+	}
+	50% {
+		filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8));
+	}
+}
