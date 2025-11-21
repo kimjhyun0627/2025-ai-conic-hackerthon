@@ -1,8 +1,11 @@
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
+import type { CSSProperties } from 'react';
 import { CarouselButton, CarouselIndicators, CarouselCard, CardImage } from '../Carousel';
 import { CardContent } from '../CardContent';
 import { Button } from '@/shared/components/ui';
 import type { ThemeCategory } from '@/shared/types';
+import { useWindowWidth } from '@/shared/hooks';
 
 interface CarouselItem {
 	id: string;
@@ -49,17 +52,72 @@ export const BaseCarouselSection = <T extends CarouselItem>({
 	nameSize = 'text-lg md:text-xl',
 	getPlayingId,
 }: CarouselSectionProps<T>) => {
-	if (items.length === 0) return null;
+	const windowWidth = useWindowWidth();
+	const effectiveRange = Math.max(0, visibleRange);
+	const hasItems = items.length > 0;
+
+	const buttonOffsetPx = useMemo(() => {
+		const safeWidth = windowWidth || 1280;
+		const spacing = safeWidth >= 1280 ? 72 : safeWidth >= 1024 ? 56 : safeWidth >= 768 ? 40 : 28;
+
+		const clampOffset = (value: number) => {
+			if (!windowWidth) return value;
+			const maxOffset = Math.max(windowWidth / 2 - 40, 120);
+			return Math.min(value, maxOffset);
+		};
+
+		if (effectiveRange <= 0) {
+			const activeWidth = Math.min(safeWidth * 0.9, 450);
+			return clampOffset(activeWidth / 2 + spacing);
+		}
+
+		const inactiveBaseWidth = Math.min(safeWidth * 0.7, 380);
+
+		if (effectiveRange === 1) {
+			const baseOffset = 310;
+			const sideScale = 0.7;
+			const sideHalfWidth = (inactiveBaseWidth * sideScale) / 2;
+			return clampOffset(baseOffset + sideHalfWidth + spacing);
+		}
+
+		const gap = safeWidth >= 768 ? 24 : 16;
+		const buttonPadding = safeWidth >= 768 ? 12 : 8;
+		const iconSize = safeWidth >= 768 ? 20 : 16;
+		const buttonHalfSize = (buttonPadding * 2 + iconSize) / 2;
+		const cardHalfWidth = inactiveBaseWidth / 2;
+		const targetOffset = cardHalfWidth + gap + buttonHalfSize;
+		const adjustedOffset = targetOffset * 0.85;
+		const farSideHalfWidth = (inactiveBaseWidth * 0.6) / 2;
+
+		return clampOffset(adjustedOffset * 2 + farSideHalfWidth + spacing);
+	}, [effectiveRange, windowWidth]);
+
+	const buttonOffsetValue = `${Math.round(buttonOffsetPx)}px`;
+
+	const baseButtonWrapperStyle: CSSProperties = {
+		position: 'absolute',
+		top: '50%',
+		transform: 'translate(-50%, -50%)',
+		zIndex: 40,
+		transition: 'left 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+	};
+
+	const prevButtonWrapperStyle: CSSProperties = {
+		...baseButtonWrapperStyle,
+		left: `calc(50% - ${buttonOffsetValue})`,
+	};
+
+	const nextButtonWrapperStyle: CSSProperties = {
+		...baseButtonWrapperStyle,
+		left: `calc(50% + ${buttonOffsetValue})`,
+	};
+
+	if (!hasItems) return null;
 
 	return (
 		<div className="w-full flex-1 flex flex-col justify-start">
 			{/* Carousel with Navigation Buttons */}
-			<div className="flex items-center justify-center gap-4 md:gap-6">
-				<CarouselButton
-					onClick={onPrev}
-					direction="prev"
-				/>
-
+			<div className="relative flex items-center justify-center w-full">
 				{/* Carousel Container */}
 				<div
 					className="relative flex items-center justify-center overflow-visible rounded-3xl"
@@ -119,10 +177,19 @@ export const BaseCarouselSection = <T extends CarouselItem>({
 					})}
 				</div>
 
-				<CarouselButton
-					onClick={onNext}
-					direction="next"
-				/>
+				<div style={prevButtonWrapperStyle}>
+					<CarouselButton
+						onClick={onPrev}
+						direction="prev"
+					/>
+				</div>
+
+				<div style={nextButtonWrapperStyle}>
+					<CarouselButton
+						onClick={onNext}
+						direction="next"
+					/>
+				</div>
 			</div>
 
 			{/* Indicator Dots - Centered */}
