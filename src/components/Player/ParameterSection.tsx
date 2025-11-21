@@ -1,7 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ParameterSlider } from './ParameterSlider';
 import type { CategoryParameter } from '../../types';
-import { PLAYER_ANIMATIONS } from '../../constants/playerConstants';
 
 interface ParameterSectionProps {
 	params: CategoryParameter[];
@@ -26,41 +25,70 @@ export const ParameterSection = ({ params, getParamValue, setParamValue, onRemov
 			style={{
 				...(isVertical
 					? {
-							minWidth: '150px',
+							minWidth: '60px',
 							flex: '1 1 0',
 						}
 					: {}),
 			}}
 			{...(isRemovable
 				? {
-						initial: PLAYER_ANIMATIONS.parameterItem.initial,
-						animate: PLAYER_ANIMATIONS.parameterItem.animate,
-						exit: PLAYER_ANIMATIONS.parameterItem.exit,
+						initial: { opacity: 0, scale: 0.9, width: isVertical ? 0 : undefined },
+						animate: { opacity: 1, scale: 1, width: isVertical ? 'auto' : undefined },
+						exit: {
+							opacity: 0,
+							scale: 0.9,
+							width: isVertical ? 0 : undefined,
+							marginRight: isVertical ? 0 : undefined,
+							paddingLeft: isVertical ? 0 : undefined,
+							paddingRight: isVertical ? 0 : undefined,
+						},
 						transition: {
 							layout: {
 								duration: 0.6,
 								ease: [0.4, 0, 0.2, 1],
 							},
 							opacity: {
-								duration: 0.5,
-								ease: 'easeOut',
-							},
-							height: {
-								duration: 0.6,
+								duration: 0.3,
 								ease: [0.4, 0, 0.2, 1],
 							},
-							y: {
-								duration: 0.5,
-								ease: 'easeOut',
-							},
 							scale: {
-								duration: 0.5,
-								ease: 'easeOut',
+								duration: 0.3,
+								ease: [0.4, 0, 0.2, 1],
 							},
+							width: isVertical
+								? {
+										duration: 0.4,
+										ease: [0.4, 0, 0.2, 1],
+									}
+								: undefined,
+							paddingLeft: isVertical
+								? {
+										duration: 0.4,
+										ease: [0.4, 0, 0.2, 1],
+									}
+								: undefined,
+							paddingRight: isVertical
+								? {
+										duration: 0.4,
+										ease: [0.4, 0, 0.2, 1],
+									}
+								: undefined,
+							marginRight: isVertical
+								? {
+										duration: 0.4,
+										ease: [0.4, 0, 0.2, 1],
+									}
+								: undefined,
 						},
 					}
 				: {
-						transition: { layout: { duration: 0.5, ease: [0.4, 0, 0.2, 1] } },
+						initial: { opacity: 0, scale: 0.95 },
+						animate: { opacity: 1, scale: 1 },
+						transition: {
+							layout: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+							opacity: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+							scale: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+						},
 					})}
 		>
 			<ParameterSlider

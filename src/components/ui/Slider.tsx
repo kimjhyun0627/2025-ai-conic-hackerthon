@@ -30,16 +30,16 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 			return (
 				<div className={`flex flex-col items-center gap-2 ${className}`}>
 					{label && (
-						<div className="flex flex-col items-center gap-1">
+						<div className="flex flex-col items-center gap-0.5 sm:gap-1">
 							<label
-								className="text-xs sm:text-sm md:text-base font-medium"
+								className="text-[10px] xs:text-xs sm:text-sm md:text-base font-medium"
 								style={{ color: labelColor }}
 							>
 								{label}
 							</label>
 							{showValue && (
 								<span
-									className="text-xs sm:text-sm md:text-base font-semibold"
+									className="text-[10px] xs:text-xs sm:text-sm md:text-base font-semibold"
 									style={{ color: valueColor }}
 								>
 									{value}
@@ -71,17 +71,17 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 		return (
 			<div className={`w-full ${className}`}>
 				{label && (
-					<div className="mb-2">
-						<div className="flex items-center justify-between mb-1">
+					<div className="mb-1.5 sm:mb-2">
+						<div className="flex items-center justify-between mb-0.5 sm:mb-1">
 							<label
-								className="text-xs sm:text-sm md:text-base font-medium"
+								className="text-[10px] xs:text-xs sm:text-sm md:text-base font-medium"
 								style={{ color: labelColor }}
 							>
 								{label}
 							</label>
 							{showValue && (
 								<span
-									className="text-xs sm:text-sm md:text-base font-semibold"
+									className="text-[10px] xs:text-xs sm:text-sm md:text-base font-semibold"
 									style={{ color: valueColor }}
 								>
 									{value}
@@ -91,7 +91,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 						</div>
 						{description && (
 							<p
-								className="text-[10px] sm:text-xs md:text-sm"
+								className="text-[9px] xs:text-[10px] sm:text-xs md:text-sm"
 								style={{ color: descColor }}
 							>
 								{description}

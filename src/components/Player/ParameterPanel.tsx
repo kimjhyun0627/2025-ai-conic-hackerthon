@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, LayoutGrid, LayoutList } from 'lucide-react';
 import { ParameterSection } from './ParameterSection';
+import { ParameterSlider } from './ParameterSlider';
 import type { CategoryParameter } from '../../types';
 import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants/playerConstants';
 import { useThemeColors } from '../../hooks/useThemeColors';
@@ -40,6 +41,26 @@ export const ParameterPanel = ({
 	const panelRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 
+	// 세로 모드에서 모든 파라미터 합치기
+	const allParams = [...themeBaseParams, ...themeAdditionalParams, ...activeCommonParams];
+	const totalParamsCount = allParams.length;
+	const shouldUseTwoRows = orientation === 'vertical' && totalParamsCount >= 6;
+
+	// 2행일 때 상단/하단 분할
+	const getRowSplit = (count: number): [number, number] => {
+		if (count <= 5) return [count, 0];
+		if (count === 6) return [3, 3];
+		if (count === 7) return [4, 3];
+		if (count === 8) return [4, 4];
+		if (count === 9) return [5, 4];
+		if (count === 10) return [5, 5];
+		// 10개 이상
+		const topCount = Math.ceil(count / 2);
+		return [topCount, count - topCount];
+	};
+
+	const [topRowCount] = shouldUseTwoRows ? getRowSplit(totalParamsCount) : [totalParamsCount, 0];
+
 	const handleButtonClick = (param: CategoryParameter) => {
 		setRemovingButtonIds((prev) => new Set(prev).add(param.id));
 		onAddCommonParam(param.id);
@@ -57,16 +78,16 @@ export const ParameterPanel = ({
 			{isExpanded && (
 				<motion.div
 					ref={panelRef}
-					layout={orientation === 'vertical' ? false : true}
+					layout={orientation === 'vertical' ? 'size' : true}
 					className={PLAYER_STYLES.parameterPanel}
 					style={{
 						...getParameterPanelStyle(colors, orientation),
 						...(orientation === 'vertical'
 							? {
-									width: 'max-content',
-									minWidth: '100%',
-									left: '50%',
+									width: '100%',
 									right: undefined,
+									transform: 'translateX(-50%)',
+									x: 0, // Framer Motion x를 0으로 설정하여 transform과 분리
 								}
 							: {}),
 					}}
@@ -74,8 +95,7 @@ export const ParameterPanel = ({
 						...PLAYER_ANIMATIONS.parameterPanel.initial,
 						...(orientation === 'vertical'
 							? {
-									x: '-50%',
-									y: 0,
+									x: 0,
 								}
 							: {}),
 					}}
@@ -83,23 +103,14 @@ export const ParameterPanel = ({
 						...PLAYER_ANIMATIONS.parameterPanel.animate,
 						...(orientation === 'vertical'
 							? {
-									x: '-50%',
-									y: 0,
+									x: 0,
 								}
 							: {}),
 					}}
 					exit={PLAYER_ANIMATIONS.parameterPanel.exit}
 					transition={{
 						...PLAYER_ANIMATIONS.parameterPanel.transition,
-						...(orientation === 'vertical'
-							? {}
-							: {
-									layout: {
-										duration: 0.6,
-										ease: [0.4, 0, 0.2, 1],
-									},
-								}),
-						width: {
+						layout: {
 							duration: 0.6,
 							ease: [0.4, 0, 0.2, 1],
 						},
@@ -107,29 +118,23 @@ export const ParameterPanel = ({
 							duration: 0.6,
 							ease: [0.4, 0, 0.2, 1],
 						},
-						x:
-							orientation === 'vertical'
-								? {
+						...(orientation === 'vertical'
+							? {
+									x: {
 										duration: 0,
-									}
-								: undefined,
-						y:
-							orientation === 'vertical'
-								? {
-										duration: 0,
-									}
-								: undefined,
+									},
+								}
+							: {}),
 					}}
 				>
 					<motion.div
 						ref={contentRef}
-						layout
+						layout={orientation === 'vertical' ? 'size' : true}
 						className={orientation === 'vertical' ? '' : 'w-full max-w-[960px] mx-auto'}
 						style={{
 							...(orientation === 'vertical'
 								? {
-										width: 'max-content',
-										minWidth: '100%',
+										width: '100%',
 									}
 								: {}),
 						}}
@@ -138,102 +143,160 @@ export const ParameterPanel = ({
 								duration: 0.6,
 								ease: [0.4, 0, 0.2, 1],
 							},
-							width: {
-								duration: 0.6,
-								ease: [0.4, 0, 0.2, 1],
-							},
-							height: {
-								duration: 0.6,
-								ease: [0.4, 0, 0.2, 1],
-							},
 						}}
 					>
 						<motion.div
-							layout
+							layout={orientation === 'vertical' ? 'size' : true}
 							className="flex flex-col gap-4"
 							style={{
-								width: orientation === 'vertical' ? 'max-content' : undefined,
-								minWidth: orientation === 'vertical' ? '100%' : undefined,
+								width: orientation === 'vertical' ? '100%' : undefined,
 							}}
 							transition={{
 								layout: {
 									duration: 0.6,
 									ease: [0.4, 0, 0.2, 1],
 								},
-								width: {
-									duration: 0.6,
-									ease: [0.4, 0, 0.2, 1],
-								},
-								height: {
-									duration: 0.6,
-									ease: [0.4, 0, 0.2, 1],
-								},
 							}}
 						>
 							{/* 파라미터 그리드 */}
-							<motion.div
-								layout
-								style={{
-									display: orientation === 'vertical' ? 'flex' : 'grid',
-									flexWrap: orientation === 'vertical' ? 'nowrap' : undefined,
-									gap: '1rem',
-									gridTemplateColumns: orientation === 'vertical' ? undefined : 'repeat(1, minmax(0, 1fr))',
-									width: orientation === 'vertical' ? 'max-content' : undefined,
-									minWidth: orientation === 'vertical' ? '100%' : undefined,
-								}}
-								initial={PLAYER_ANIMATIONS.parameterGrid.initial}
-								animate={PLAYER_ANIMATIONS.parameterGrid.animate}
-								exit={PLAYER_ANIMATIONS.parameterGrid.exit}
-								transition={{
-									layout: {
-										duration: 0.6,
-										ease: [0.4, 0, 0.2, 1],
-									},
-									width: {
-										duration: 0.6,
-										ease: [0.4, 0, 0.2, 1],
-									},
-									height: {
-										duration: 0.6,
-										ease: [0.4, 0, 0.2, 1],
-									},
-									opacity: {
-										duration: 0.3,
-										delay: 0.1,
-									},
-								}}
-							>
-								{/* 기본 파라미터 (테마별 처음 3개) */}
-								<ParameterSection
-									params={themeBaseParams}
-									getParamValue={getParamValue}
-									setParamValue={setParamValue}
-									useLayoutAnimation={true}
-									orientation={orientation}
-								/>
+							{orientation === 'vertical' ? (
+								<motion.div
+									layout="size"
+									style={{
+										display: 'grid',
+										gridTemplateColumns: shouldUseTwoRows ? `repeat(${topRowCount}, minmax(0, 1fr))` : `repeat(${totalParamsCount}, minmax(0, 1fr))`,
+										gridTemplateRows: shouldUseTwoRows ? 'repeat(2, auto)' : 'repeat(1, auto)',
+										gridAutoFlow: 'column',
+										gap: '1rem',
+										width: '100%',
+									}}
+									initial={PLAYER_ANIMATIONS.parameterGrid.initial}
+									animate={PLAYER_ANIMATIONS.parameterGrid.animate}
+									exit={PLAYER_ANIMATIONS.parameterGrid.exit}
+									transition={{
+										layout: {
+											duration: 0.6,
+											ease: [0.4, 0, 0.2, 1],
+										},
+										gridTemplateColumns: {
+											duration: 0.6,
+											ease: [0.4, 0, 0.2, 1],
+										},
+										gridTemplateRows: {
+											duration: 0.6,
+											ease: [0.4, 0, 0.2, 1],
+										},
+										opacity: {
+											duration: 0.3,
+											delay: 0.1,
+										},
+									}}
+								>
+									<AnimatePresence mode="popLayout">
+										{allParams.map((param) => {
+											const isRemovable = themeAdditionalParams.some((p) => p.id === param.id) || activeCommonParams.some((p) => p.id === param.id);
+											return (
+												<motion.div
+													key={param.id}
+													layout
+													initial={{ opacity: 0, scale: 0.9 }}
+													animate={{ opacity: 1, scale: 1 }}
+													exit={{ opacity: 0, scale: 0.9 }}
+													style={{
+														minWidth: '70px',
+													}}
+													transition={{
+														layout: {
+															duration: 0.6,
+															ease: [0.4, 0, 0.2, 1],
+														},
+														opacity: {
+															duration: 0.3,
+															ease: [0.4, 0, 0.2, 1],
+														},
+														scale: {
+															duration: 0.3,
+															ease: [0.4, 0, 0.2, 1],
+														},
+													}}
+												>
+													<ParameterSlider
+														param={param}
+														value={getParamValue(param.id)}
+														onChange={(value: number) => setParamValue(param.id, value)}
+														onRemove={
+															isRemovable
+																? themeAdditionalParams.some((p) => p.id === param.id)
+																	? () => onRemoveThemeParam(param.id)
+																	: () => onRemoveCommonParam(param.id)
+																: undefined
+														}
+														isRemovable={isRemovable}
+														orientation={orientation}
+													/>
+												</motion.div>
+											);
+										})}
+									</AnimatePresence>
+								</motion.div>
+							) : (
+								<motion.div
+									layout
+									style={{
+										display: 'grid',
+										gap: '1rem',
+										gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+									}}
+									initial={PLAYER_ANIMATIONS.parameterGrid.initial}
+									animate={PLAYER_ANIMATIONS.parameterGrid.animate}
+									exit={PLAYER_ANIMATIONS.parameterGrid.exit}
+									transition={{
+										layout: {
+											duration: 0.6,
+											ease: [0.4, 0, 0.2, 1],
+										},
+										height: {
+											duration: 0.6,
+											ease: [0.4, 0, 0.2, 1],
+										},
+										opacity: {
+											duration: 0.3,
+											delay: 0.1,
+										},
+									}}
+								>
+									{/* 기본 파라미터 (테마별 처음 3개) */}
+									<ParameterSection
+										params={themeBaseParams}
+										getParamValue={getParamValue}
+										setParamValue={setParamValue}
+										useLayoutAnimation={true}
+										orientation={orientation}
+									/>
 
-								{/* 테마별 추가 파라미터 */}
-								<ParameterSection
-									params={themeAdditionalParams}
-									getParamValue={getParamValue}
-									setParamValue={setParamValue}
-									onRemove={onRemoveThemeParam}
-									isRemovable={true}
-									useLayoutAnimation={true}
-									orientation={orientation}
-								/>
+									{/* 테마별 추가 파라미터 */}
+									<ParameterSection
+										params={themeAdditionalParams}
+										getParamValue={getParamValue}
+										setParamValue={setParamValue}
+										onRemove={onRemoveThemeParam}
+										isRemovable={true}
+										useLayoutAnimation={true}
+										orientation={orientation}
+									/>
 
-								{/* 활성화된 공통 파라미터 */}
-								<ParameterSection
-									params={activeCommonParams}
-									getParamValue={getParamValue}
-									setParamValue={setParamValue}
-									onRemove={onRemoveCommonParam}
-									isRemovable={true}
-									useLayoutAnimation={true}
-									orientation={orientation}
-								/>
-							</motion.div>
+									{/* 활성화된 공통 파라미터 */}
+									<ParameterSection
+										params={activeCommonParams}
+										getParamValue={getParamValue}
+										setParamValue={setParamValue}
+										onRemove={onRemoveCommonParam}
+										isRemovable={true}
+										useLayoutAnimation={true}
+										orientation={orientation}
+									/>
+								</motion.div>
+							)}
 
 							{/* 공통 파라미터 추가 버튼 - 항상 하단에 배치 */}
 							<AnimatePresence>
