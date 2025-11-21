@@ -254,9 +254,7 @@ const CarouselCard = ({
 		>
 			<motion.button
 				onClick={onClick}
-				className={`rounded-4xl group cursor-pointer relative overflow-hidden ${
-					isActive ? 'glass-card w-[min(90vw,450px)] h-[min(90vw,450px)]' : 'p-0 w-[min(70vw,380px)] h-[min(70vw,380px)]'
-				}`}
+				className={`rounded-4xl group cursor-pointer relative overflow-hidden ${isActive ? 'glass-card w-[min(90vw,450px)] h-[min(90vw,450px)]' : 'p-0 w-[min(70vw,380px)] h-[min(70vw,380px)]'}`}
 				style={
 					!isActive
 						? {

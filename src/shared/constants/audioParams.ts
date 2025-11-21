@@ -32,7 +32,7 @@ export const PARAM_RANGES = {
 	'stereo-width': { min: 0, max: 100, step: 5 },
 	gain: { min: 0, max: 100, step: 5 },
 	// 카테고리별 파라미터
-	tempo: { min: 50, max: 120, step: 5 }, // focus: 60-120, relax: 50-90 -> 전체 범위 통합
+	tempo: { min: 50, max: 180, step: 5 }, // focus: 60-120, relax: 50-90 -> 전체 범위 통합
 	bass: { min: 0, max: 100, step: 5 },
 	clarity: { min: 0, max: 100, step: 5 },
 	energy: { min: 0, max: 100, step: 5 },

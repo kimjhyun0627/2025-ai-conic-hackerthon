@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ParameterCarousel } from '../ParameterCarousel';
 import { CommonParamButtons } from '../CommonParamButtons';
@@ -58,6 +58,31 @@ export const ParameterPanel = ({
 		activeCommonParams,
 		orientation,
 	});
+
+	// 추가된 파라미터 ID를 추적하기 위한 ref
+	const addedParamIdRef = useRef<string | null>(null);
+
+	// 파라미터 추가 시 해당 파라미터로 이동하는 래퍼 함수
+	const handleAddCommonParam = useCallback(
+		(paramId: string) => {
+			addedParamIdRef.current = paramId;
+			onAddCommonParam(paramId);
+		},
+		[onAddCommonParam]
+	);
+
+	// themeAdditionalParams가 변경되었을 때 추가된 파라미터로 이동
+	useEffect(() => {
+		if (addedParamIdRef.current && orientation === 'horizontal') {
+			const paramId = addedParamIdRef.current;
+			const updatedAllParams = [...themeBaseParams, ...themeAdditionalParams, ...activeCommonParams];
+			const paramIndex = updatedAllParams.findIndex((p) => p.id === paramId);
+			if (paramIndex !== -1) {
+				goToIndex(paramIndex);
+			}
+			addedParamIdRef.current = null; // 처리 완료 후 리셋
+		}
+	}, [themeAdditionalParams, themeBaseParams, activeCommonParams, orientation, goToIndex]);
 
 	// 인디케이터 위치 계산
 	const { indicatorLeft, indicatorTop } = useIndicatorPosition({
@@ -205,7 +230,7 @@ export const ParameterPanel = ({
 								{/* 공통 파라미터 추가 버튼 - 항상 하단에 배치 */}
 								<CommonParamButtons
 									availableCommonParams={availableCommonParams}
-									onAddCommonParam={onAddCommonParam}
+									onAddCommonParam={handleAddCommonParam}
 									orientation={orientation}
 								/>
 

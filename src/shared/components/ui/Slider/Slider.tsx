@@ -9,10 +9,11 @@ interface SliderProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'
 	description?: string;
 	orientation?: 'horizontal' | 'vertical';
 	tickInterval?: number; // 눈금 간격 (예: 20이면 20% 단위로 눈금 표시)
+	tickStep?: number; // 눈금 단위 (예: 5이면 5 단위로 눈금 표시, BPM의 경우 5BPM 단위)
 }
 
 const Slider = forwardRef<HTMLInputElement, SliderProps>(
-	({ label, showValue = true, unit = '', description, value, min = 0, max = 100, step = 1, className = '', orientation = 'horizontal', tickInterval, ...props }, ref) => {
+	({ label, showValue = true, unit = '', description, value, min = 0, max = 100, step = 1, className = '', orientation = 'horizontal', tickInterval, tickStep, ...props }, ref) => {
 		const theme = useThemeStore((state) => state.theme);
 		const isDark = theme === 'dark';
 		const labelColor = isDark ? '#cbd5e1' : '#0f172a'; // slate-300 : slate-900
@@ -73,7 +74,28 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 		const generateTicks = () => {
 			const ticks: number[] = [];
 
-			if (tickInterval !== undefined) {
+			if (tickStep !== undefined) {
+				// tickStep 기반: 지정된 단위로 눈금 생성 (예: 5BPM 단위)
+				// min을 tickStep의 배수로 올림
+				const startTick = Math.ceil(numMin / tickStep) * tickStep;
+				// max를 tickStep의 배수로 내림
+				const endTick = Math.floor(numMax / tickStep) * tickStep;
+
+				// min이 tickStep의 배수가 아니면 min도 포함
+				if (startTick > numMin) {
+					ticks.push(numMin);
+				}
+
+				// tickStep 단위로 눈금 생성
+				for (let tick = startTick; tick <= endTick; tick += tickStep) {
+					ticks.push(tick);
+				}
+
+				// max가 tickStep의 배수가 아니면 max도 포함
+				if (endTick < numMax && ticks[ticks.length - 1] !== numMax) {
+					ticks.push(numMax);
+				}
+			} else if (tickInterval !== undefined) {
 				// tickInterval 기반: 눈금 개수를 먼저 계산
 				const range = numMax - numMin;
 				const interval = (range / 100) * tickInterval;
@@ -90,9 +112,9 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 			} else {
 				// 기본 로직: 최대 21개 눈금
 				const tickCount = Math.min(21, Math.floor((numMax - numMin) / numStep) + 1);
-				const tickStep = (numMax - numMin) / (tickCount - 1);
+				const calculatedTickStep = (numMax - numMin) / (tickCount - 1);
 				for (let i = 0; i < tickCount; i++) {
-					ticks.push(numMin + i * tickStep);
+					ticks.push(numMin + i * calculatedTickStep);
 				}
 			}
 			return ticks;

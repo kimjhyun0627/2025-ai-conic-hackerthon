@@ -3,6 +3,7 @@ import type { ChangeEvent } from 'react';
 import { Slider } from '@/shared/components/ui';
 import type { CategoryParameter } from '@/shared/types';
 import { useThemeColors } from '@/shared/hooks';
+import { mergeParamWithDefaults } from '@/shared/utils/paramUtils';
 
 interface ParameterSliderProps {
 	param: CategoryParameter;
@@ -16,6 +17,7 @@ interface ParameterSliderProps {
 export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable = false, orientation = 'horizontal' }: ParameterSliderProps) => {
 	const colors = useThemeColors();
 	const isVertical = orientation === 'vertical';
+	const mergedParam = mergeParamWithDefaults(param);
 
 	return (
 		<div
@@ -48,14 +50,15 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 				</button>
 			)}
 			<Slider
-				label={param.nameKo}
-				description={isVertical ? undefined : param.description}
+				label={mergedParam.nameKo}
+				description={isVertical ? undefined : mergedParam.description}
 				value={value}
-				min={param.min}
-				max={param.max}
-				step={param.unit === 'BPM' ? 5 : param.unit === '%' ? 5 : 1}
-				tickInterval={isVertical && param.unit === '%' ? 10 : undefined}
-				unit={param.unit ? ` ${param.unit}` : ''}
+				min={mergedParam.min}
+				max={mergedParam.max}
+				step={mergedParam.unit === 'BPM' ? 5 : mergedParam.unit === '%' ? 5 : 1}
+				tickStep={mergedParam.unit === 'BPM' ? 5 : undefined}
+				tickInterval={isVertical && mergedParam.unit === '%' ? 10 : undefined}
+				unit={mergedParam.unit ? ` ${mergedParam.unit}` : ''}
 				orientation={orientation}
 				onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.target.value))}
 			/>
