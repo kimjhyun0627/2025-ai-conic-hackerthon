@@ -56,12 +56,16 @@ const Player = () => {
 		<>
 			<div className="min-h-screen flex flex-col relative overflow-hidden">
 				{/* Top Bar */}
-				<PlayerTopBar onHomeClick={handleHomeClick} />
+				<PlayerTopBar
+					onHomeClick={handleHomeClick}
+					isVisible={isControlsVisible}
+				/>
 
 				{/* Genre Info */}
 				<PlayerGenreInfo
 					genre={selectedGenre}
 					theme={selectedTheme}
+					isVisible={isControlsVisible}
 				/>
 
 				{/* Center Image */}
