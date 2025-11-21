@@ -24,3 +24,17 @@ export const getResponsiveTextSize = (windowWidth: number, type: 'heading' | 'su
 	if (windowWidth >= 768) return '12px';
 	return '10px';
 };
+
+/**
+ * 반응형 nav/footer 텍스트 크기 계산
+ */
+export const getResponsiveNavTextSize = (windowWidth: number) => {
+	const { BREAKPOINTS } = CAROUSEL_CONSTANTS;
+
+	if (windowWidth >= BREAKPOINTS.DESKTOP) return '16px';
+	if (windowWidth >= 1280) return '15px';
+	if (windowWidth >= 1024) return '14px';
+	if (windowWidth >= 768) return '13px';
+	if (windowWidth >= 640) return '12px';
+	return '10px';
+};

@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getTimeGreeting } from '../utils/timeUtils';
-import { getResponsiveTextSize } from '../utils/responsiveUtils';
+import { getResponsiveTextSize, getResponsiveNavTextSize } from '../utils/responsiveUtils';
 import { MUSIC_THEMES } from '../constants/themes';
 import { ThemeToggle } from '../components/UI';
 import { TransitionOverlay } from '../components/common';
@@ -32,6 +32,7 @@ const Landing = () => {
 	const greeting = getTimeGreeting();
 	const headingSize = getResponsiveTextSize(windowWidth, 'heading');
 	const subtitleSize = getResponsiveTextSize(windowWidth, 'subtitle');
+	const navTextSize = getResponsiveNavTextSize(windowWidth);
 
 	const handleGenreSelect = useCallback(
 		async (genre: MusicGenre) => {
@@ -124,11 +125,7 @@ const Landing = () => {
 				<TransitionOverlay isVisible={isTransitioning} />
 
 				{/* Main Content */}
-				<div
-					className={`max-w-6xl w-full mx-auto px-4 md:px-6 lg:px-8 h-full flex flex-col ${
-						selectedCategory ? 'pb-16 md:pb-24 lg:pb-32 xl:pb-40' : ''
-					}`}
-				>
+				<div className={`max-w-6xl w-full mx-auto px-4 md:px-6 lg:px-8 h-full flex flex-col ${selectedCategory ? 'pb-16 md:pb-24 lg:pb-32 xl:pb-40' : ''}`}>
 					{/* Greeting Section */}
 					<motion.div
 						className="text-center space-y-2 md:space-y-3"
@@ -208,7 +205,12 @@ const Landing = () => {
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.8 }}
 				>
-					<p className="text-sm text-slate-500 dark:text-slate-400 pointer-events-auto">AI가 생성하는 나만의 음악 경험, SERVICENAME</p>
+					<p
+						className="text-slate-500 dark:text-slate-400 pointer-events-auto"
+						style={{ fontSize: navTextSize }}
+					>
+						AI가 생성하는 나만의 음악 경험, SERVICENAME
+					</p>
 				</motion.div>
 			</div>
 		</>
