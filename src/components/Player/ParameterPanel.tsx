@@ -67,28 +67,40 @@ export const ParameterPanel = ({
 	const INDICATOR_OFFSET_FROM_PANEL = 28; // px 단위 - 이 값을 조정하여 패널 오른쪽 바깥에서의 거리 변경
 	useEffect(() => {
 		if (panelRef.current && carouselRef.current && orientation === 'horizontal' && isExpanded) {
-			const updateIndicatorPosition = () => {
+			// 수평 위치는 한 번만 계산 (높이 변경에 반응하지 않음)
+			const updateIndicatorRight = () => {
 				const panelRect = panelRef.current?.getBoundingClientRect();
-				const carouselRect = carouselRef.current?.getBoundingClientRect();
-				if (panelRect && carouselRect) {
+				if (panelRect) {
 					const panelRight = panelRect.right;
 					// 패널 오른쪽 바깥에서 INDICATOR_OFFSET_FROM_PANEL만큼 떨어진 위치
 					const indicatorRightPosition = window.innerWidth - panelRight - INDICATOR_OFFSET_FROM_PANEL;
 					setIndicatorRight(`${indicatorRightPosition}px`);
+				}
+			};
 
-					// 캐러셀 영역의 수직 가운데 위치 계산 (정확한 중앙)
+			// 수직 위치만 업데이트 (캐러셀 영역의 중앙)
+			const updateIndicatorTop = () => {
+				const carouselRect = carouselRef.current?.getBoundingClientRect();
+				if (carouselRect) {
+					// 캐러셀 영역의 수직 중앙 위치 계산
 					const carouselCenter = carouselRect.top + carouselRect.height / 2;
 					setIndicatorTop(`${carouselCenter}px`);
 				}
 			};
-			updateIndicatorPosition();
 
-			// 위치 업데이트를 위한 이벤트 리스너
-			window.addEventListener('resize', updateIndicatorPosition);
-			window.addEventListener('scroll', updateIndicatorPosition);
+			// 초기 위치 설정
+			updateIndicatorRight();
+			updateIndicatorTop();
 
-			// 캐러셀 내용 변경 시에도 위치 업데이트
-			const observer = new MutationObserver(updateIndicatorPosition);
+			// 수평 위치 업데이트: 창 크기 변경 시에만
+			window.addEventListener('resize', updateIndicatorRight);
+
+			// 수직 위치 업데이트: 스크롤, 리사이즈, 캐러셀 내용 변경 시
+			window.addEventListener('resize', updateIndicatorTop);
+			window.addEventListener('scroll', updateIndicatorTop);
+
+			// 캐러셀 내용 변경 시에도 수직 위치 업데이트
+			const observer = new MutationObserver(updateIndicatorTop);
 			if (carouselRef.current) {
 				observer.observe(carouselRef.current, {
 					childList: true,
@@ -98,21 +110,22 @@ export const ParameterPanel = ({
 				});
 			}
 
-			// requestAnimationFrame을 사용하여 더 부드러운 업데이트
+			// requestAnimationFrame을 사용하여 더 부드러운 수직 위치 업데이트
 			let rafId: number;
-			const scheduleUpdate = () => {
+			const scheduleTopUpdate = () => {
 				if (rafId) cancelAnimationFrame(rafId);
-				rafId = requestAnimationFrame(updateIndicatorPosition);
+				rafId = requestAnimationFrame(updateIndicatorTop);
 			};
 
-			window.addEventListener('resize', scheduleUpdate);
-			window.addEventListener('scroll', scheduleUpdate);
+			window.addEventListener('resize', scheduleTopUpdate);
+			window.addEventListener('scroll', scheduleTopUpdate);
 
 			return () => {
-				window.removeEventListener('resize', updateIndicatorPosition);
-				window.removeEventListener('scroll', updateIndicatorPosition);
-				window.removeEventListener('resize', scheduleUpdate);
-				window.removeEventListener('scroll', scheduleUpdate);
+				window.removeEventListener('resize', updateIndicatorRight);
+				window.removeEventListener('resize', updateIndicatorTop);
+				window.removeEventListener('scroll', updateIndicatorTop);
+				window.removeEventListener('resize', scheduleTopUpdate);
+				window.removeEventListener('scroll', scheduleTopUpdate);
 				observer.disconnect();
 				if (rafId) cancelAnimationFrame(rafId);
 			};
@@ -127,23 +140,23 @@ export const ParameterPanel = ({
 	const totalParamsCount = allParams.length;
 	const shouldUseTwoRows = orientation === 'vertical' && totalParamsCount >= 6;
 
-	// 화면 높이에 따른 표시 개수 결정 (최대 3개)
+	// 화면 높이에 따른 표시 개수 결정 (반응형: 3개, 2개, 1개)
 	const getVisibleCount = (height: number): number => {
-		if (height === 0) return 1; // 초기값
-		// 높이에 따른 구간별 표시 개수 (최대 3개)
-		if (height < 600) return 1; // 매우 작은 화면
-		if (height < 800) return 2; // 작은 화면
-		return 3; // 중간 이상 화면 (최대 3개)
+		if (height === 0) return 3; // 초기값
+		// 높이에 따른 구간별 표시 개수
+		if (height < 840) return 1; // 매우 작은 화면
+		if (height < 1000) return 2; // 작은 화면
+		return 3; // 중간 이상 화면
 	};
 
 	const visibleCount = getVisibleCount(windowHeight);
 
-	// 캐러셀 네비게이션 함수 (한 칸씩 이동, 무한 순환)
+	// 캐러셀 네비게이션 함수 (화면 크기에 따라 페이지 단위로 이동, 무한 순환)
 	const nextParam = () => {
 		if (allParams.length === 0) return;
 		setCurrentStartIndex((prev) => {
 			setPrevStartIndex(prev);
-			return (prev + 1) % allParams.length;
+			return (prev + visibleCount) % allParams.length;
 		});
 	};
 
@@ -151,11 +164,11 @@ export const ParameterPanel = ({
 		if (allParams.length === 0) return;
 		setCurrentStartIndex((prev) => {
 			setPrevStartIndex(prev);
-			return (prev - 1 + allParams.length) % allParams.length;
+			return (prev - visibleCount + allParams.length) % allParams.length;
 		});
 	};
 
-	// 현재 표시할 파라미터들 (슬라이딩 윈도우)
+	// 현재 표시할 파라미터들 (반응형으로 표시)
 	const getCurrentParams = () => {
 		if (allParams.length === 0) return [];
 		const params: CategoryParameter[] = [];
@@ -294,149 +307,153 @@ export const ParameterPanel = ({
 						>
 							{/* 캐러셀 파라미터 영역 (가로 모드만) */}
 							{orientation === 'horizontal' && allParams.length > 0 && (
-								<motion.div
-									layout
-									className="flex flex-col items-center gap-4 mb-4"
-									style={{
-										width: '100%',
-										maxWidth: `${horizontalMaxWidth}px`,
-										margin: '0 auto',
-									}}
-									transition={{
-										layout: {
-											duration: 0.6,
-											ease: [0.4, 0, 0.2, 1],
-										},
-									}}
+								<div
+									className="relative flex flex-col items-center gap-4 mb-4"
+									style={{ width: '100%', maxWidth: `${horizontalMaxWidth}px`, margin: '0 auto' }}
 								>
-									{/* 캐러셀 컨테이너와 인디케이터를 나란히 배치 */}
-									<div className="relative flex items-start justify-center w-full">
-										{/* 상단 네비게이션 버튼 (절반 겹침) */}
-										{allParams.length > 0 && (
-											<motion.button
-												onClick={prevParam}
-												className="absolute btn-glass p-2 md:p-3 rounded-full hover:glow-primary transition-all shadow-lg z-10"
-												aria-label="이전 파라미터"
-												whileHover={{ scale: 1.1, rotate: -5 }}
-												whileTap={{ scale: 0.95 }}
-												transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+									<motion.div
+										layout
+										className="flex flex-col items-center gap-4 w-full"
+										style={{
+											maxWidth: `${horizontalMaxWidth}px`,
+											margin: '0 auto',
+										}}
+										transition={{
+											layout: {
+												duration: 0.6,
+												ease: [0.4, 0, 0.2, 1],
+											},
+										}}
+									>
+										{/* 캐러셀 컨테이너와 인디케이터를 나란히 배치 */}
+										<div className="relative flex items-start justify-center w-full">
+											{/* 캐러셀 컨테이너 */}
+											<div
+												ref={carouselRef}
+												className="relative flex flex-col items-center justify-center overflow-visible rounded-2xl gap-4 w-full"
 												style={{
-													color: colors.isDark ? '#f1f5f9' : '#1e293b',
-													top: '-20px', // 절반 겹치도록
-													left: '50%',
-													transform: 'translateX(-50%)',
+													minHeight: '200px',
+													// 파라미터 추가 블록과 너비 맞추기
+													// 파라미터 추가 블록: 세로 모드 컨테이너(0.5rem) + 블록 자체(1.25rem) = 1.75rem
+													// 캐러셀 컨테이너: 파라미터 패널(1rem) + 컨테이너 자체 = 1.75rem이 되려면 0.75rem 필요
+													padding: '1rem 0.7rem', // 상하 1rem, 좌우 0.7rem
 												}}
 											>
-												<ChevronUp
-													className="w-4 h-4 md:w-5 md:h-5"
-													style={{ color: 'inherit' }}
-												/>
-											</motion.button>
-										)}
-
-										{/* 캐러셀 컨테이너 */}
-										<div
-											ref={carouselRef}
-											className="relative flex flex-col items-center justify-center overflow-visible rounded-2xl gap-4 w-full"
-											style={{
-												minHeight: '200px',
-												// 파라미터 추가 블록과 너비 맞추기
-												// 파라미터 추가 블록: 세로 모드 컨테이너(0.5rem) + 블록 자체(1.25rem) = 1.75rem
-												// 캐러셀 컨테이너: 파라미터 패널(1rem) + 컨테이너 자체 = 1.75rem이 되려면 0.75rem 필요
-												padding: '1rem 0.7rem', // 상하 1rem, 좌우 0.7rem
-											}}
-										>
-											<div className="relative w-full overflow-hidden">
-												<AnimatePresence mode="wait">
-													<motion.div
-														key={`params-${currentStartIndex}`}
-														initial={{
-															opacity: 0,
-															y: (() => {
-																const direction = currentStartIndex - prevStartIndex;
-																// 원형 구조 고려
-																if (Math.abs(direction) > allParams.length / 2) {
-																	return direction > 0 ? -50 : 50;
-																}
-																return direction > 0 ? 50 : -50;
-															})(),
-														}}
-														animate={{
-															opacity: 1,
-															y: 0,
-														}}
-														exit={{
-															opacity: 0,
-															y: (() => {
-																const direction = currentStartIndex - prevStartIndex;
-																// 원형 구조 고려
-																if (Math.abs(direction) > allParams.length / 2) {
+												{/* 상단 네비게이션 버튼 (절반 겹침) */}
+												<motion.button
+													onClick={prevParam}
+													className="btn-glass p-2 md:p-3 rounded-full hover:glow-primary transition-all shadow-lg z-10"
+													aria-label="이전 파라미터"
+													whileHover={{ scale: 1.1, rotate: -5 }}
+													whileTap={{ scale: 0.95 }}
+													transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+													style={{
+														color: colors.isDark ? '#f1f5f9' : '#1e293b',
+														position: 'absolute',
+														top: '-20px',
+														left: '50%',
+														x: '-50%', // Framer Motion의 x 속성 사용 (transform과 분리)
+														pointerEvents: 'auto',
+													}}
+													layout={false}
+												>
+													<ChevronUp
+														className="w-4 h-4 md:w-5 md:h-5"
+														style={{ color: 'inherit' }}
+													/>
+												</motion.button>
+												{/* 하단 네비게이션 버튼 (절반 겹침) */}
+												<motion.button
+													onClick={nextParam}
+													className="btn-glass p-2 md:p-3 rounded-full hover:glow-primary transition-all shadow-lg z-10"
+													aria-label="다음 파라미터"
+													whileHover={{ scale: 1.1, rotate: 5 }}
+													whileTap={{ scale: 0.95 }}
+													transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+													style={{
+														color: colors.isDark ? '#f1f5f9' : '#1e293b',
+														position: 'absolute',
+														bottom: '-20px',
+														left: '50%',
+														x: '-50%', // Framer Motion의 x 속성 사용 (transform과 분리)
+														pointerEvents: 'auto',
+													}}
+													layout={false}
+												>
+													<ChevronDown
+														className="w-4 h-4 md:w-5 md:h-5"
+														style={{ color: 'inherit' }}
+													/>
+												</motion.button>
+												<div className="relative w-full overflow-hidden">
+													<AnimatePresence mode="wait">
+														<motion.div
+															key={`params-${currentStartIndex}`}
+															initial={{
+																opacity: 0,
+																y: (() => {
+																	const direction = currentStartIndex - prevStartIndex;
+																	// 원형 구조 고려
+																	if (Math.abs(direction) > allParams.length / 2) {
+																		return direction > 0 ? -50 : 50;
+																	}
 																	return direction > 0 ? 50 : -50;
-																}
-																return direction > 0 ? -50 : 50;
-															})(),
-														}}
-														transition={{
-															type: 'spring',
-															stiffness: 300,
-															damping: 30,
-														}}
-														className="w-full flex flex-col gap-4"
-													>
-														{getCurrentParams().map((param, index) => {
-															const isRemovable = themeAdditionalParams.some((p) => p.id === param.id) || activeCommonParams.some((p) => p.id === param.id);
+																})(),
+															}}
+															animate={{
+																opacity: 1,
+																y: 0,
+															}}
+															exit={{
+																opacity: 0,
+																y: (() => {
+																	const direction = currentStartIndex - prevStartIndex;
+																	// 원형 구조 고려
+																	if (Math.abs(direction) > allParams.length / 2) {
+																		return direction > 0 ? 50 : -50;
+																	}
+																	return direction > 0 ? -50 : 50;
+																})(),
+															}}
+															transition={{
+																type: 'spring',
+																stiffness: 300,
+																damping: 30,
+															}}
+															className="w-full flex flex-col gap-4"
+														>
+															{getCurrentParams().map((param, index) => {
+																const isRemovable = themeAdditionalParams.some((p) => p.id === param.id) || activeCommonParams.some((p) => p.id === param.id);
 
-															return (
-																<div
-																	key={`${param.id}-${(currentStartIndex + index) % allParams.length}`}
-																	className="w-full"
-																>
-																	<ParameterSlider
-																		param={param}
-																		value={getParamValue(param.id)}
-																		onChange={(value: number) => setParamValue(param.id, value)}
-																		onRemove={
-																			isRemovable
-																				? themeAdditionalParams.some((p) => p.id === param.id)
-																					? () => onRemoveThemeParam(param.id)
-																					: () => onRemoveCommonParam(param.id)
-																				: undefined
-																		}
-																		isRemovable={isRemovable}
-																		orientation={orientation}
-																	/>
-																</div>
-															);
-														})}
-													</motion.div>
-												</AnimatePresence>
+																return (
+																	<div
+																		key={`${param.id}-${(currentStartIndex + index) % allParams.length}`}
+																		className="w-full"
+																	>
+																		<ParameterSlider
+																			param={param}
+																			value={getParamValue(param.id)}
+																			onChange={(value: number) => setParamValue(param.id, value)}
+																			onRemove={
+																				isRemovable
+																					? themeAdditionalParams.some((p) => p.id === param.id)
+																						? () => onRemoveThemeParam(param.id)
+																						: () => onRemoveCommonParam(param.id)
+																					: undefined
+																			}
+																			isRemovable={isRemovable}
+																			orientation={orientation}
+																		/>
+																	</div>
+																);
+															})}
+														</motion.div>
+													</AnimatePresence>
+												</div>
 											</div>
 										</div>
-
-										{/* 하단 네비게이션 버튼 (절반 겹침) */}
-										{allParams.length > 0 && (
-											<motion.button
-												onClick={nextParam}
-												className="absolute btn-glass p-2 md:p-3 rounded-full hover:glow-primary transition-all shadow-lg z-10"
-												aria-label="다음 파라미터"
-												whileHover={{ scale: 1.1, rotate: 5 }}
-												whileTap={{ scale: 0.95 }}
-												transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-												style={{
-													color: colors.isDark ? '#f1f5f9' : '#1e293b',
-													bottom: '-20px', // 절반 겹치도록
-													left: '50%',
-													transform: 'translateX(-50%)',
-												}}
-											>
-												<ChevronDown
-													className="w-4 h-4 md:w-5 md:h-5"
-													style={{ color: 'inherit' }}
-												/>
-											</motion.button>
-										)}
-									</div>
-								</motion.div>
+									</motion.div>
+								</div>
 							)}
 
 							{/* 세로 모드 또는 전체 레이아웃 컨테이너 */}
@@ -719,7 +736,7 @@ export const ParameterPanel = ({
 					>
 						<AnimatePresence mode="popLayout">
 							{Array.from({ length: allParams.length }).map((_, paramIndex) => {
-								// 현재 보여지는 범위 계산
+								// 현재 보여지는 범위 계산 (반응형)
 								const isInVisibleRange = (() => {
 									for (let i = 0; i < visibleCount; i++) {
 										const idx = (currentStartIndex + i) % allParams.length;
@@ -734,7 +751,6 @@ export const ParameterPanel = ({
 
 								// 연속된 범위인지 확인 (원형 구조 고려)
 								const isContinuous = (() => {
-									if (visibleCount === 0) return false;
 									if (firstVisibleIndex <= lastVisibleIndex) {
 										// 일반적인 경우 (원형이 아닌)
 										return paramIndex >= firstVisibleIndex && paramIndex <= lastVisibleIndex;
