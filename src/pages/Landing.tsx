@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause } from 'lucide-react';
 import { getTimeGreeting } from '../utils/timeUtils';
 import { MUSIC_THEMES } from '../constants/themes';
-import { Button, ThemeToggle } from '../components/ui';
+import { Button, ThemeToggle } from '../components/UI';
 import CarouselCard from '../components/Carousel/CarouselCard';
 import { CarouselButton } from '../components/Carousel/CarouselNavigation';
 import { CarouselIndicators } from '../components/Carousel/CarouselIndicators';

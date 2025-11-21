@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Play, Pause, Volume2, VolumeX, Home, Maximize, Minimize } from 'lucide-react';
 import { usePlayerStore } from '../store/playerStore';
-import { ThemeToggle, Slider, Button } from '../components/ui';
+import { ThemeToggle, Slider, Button } from '../components/UI';
 import { PARAM_RANGES } from '../constants/themes';
 import { formatTime } from '../utils/timeUtils';
 
