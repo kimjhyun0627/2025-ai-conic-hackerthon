@@ -135,7 +135,7 @@ export const BaseCarouselSection = <T extends CarouselItem>({
 			{/* Back Button */}
 			{onBack && (
 				<motion.div
-					className="flex items-center justify-center mb-8 px-6 md:px-12"
+					className="flex items-center justify-center mb-4 mt-4 px-6 md:px-12"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}
 				>

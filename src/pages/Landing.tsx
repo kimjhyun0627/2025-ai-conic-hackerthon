@@ -124,7 +124,11 @@ const Landing = () => {
 				<TransitionOverlay isVisible={isTransitioning} />
 
 				{/* Main Content */}
-				<div className="max-w-6xl w-full mx-auto px-4 md:px-6 lg:px-8 h-full flex flex-col">
+				<div
+					className={`max-w-6xl w-full mx-auto px-4 md:px-6 lg:px-8 h-full flex flex-col ${
+						selectedCategory ? 'pb-16 md:pb-24 lg:pb-32 xl:pb-40' : ''
+					}`}
+				>
 					{/* Greeting Section */}
 					<motion.div
 						className="text-center space-y-2 md:space-y-3"
