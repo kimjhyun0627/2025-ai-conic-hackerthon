@@ -32,15 +32,10 @@ export const ParameterSection = ({ params, getParamValue, setParamValue, onRemov
 			}}
 			{...(isRemovable
 				? {
-						initial: { opacity: 0, scale: 0.9, width: isVertical ? 0 : undefined },
-						animate: { opacity: 1, scale: 1, width: isVertical ? 'auto' : undefined },
+						initial: { opacity: 0 },
+						animate: { opacity: 1 },
 						exit: {
 							opacity: 0,
-							scale: 0.9,
-							width: isVertical ? 0 : undefined,
-							marginRight: isVertical ? 0 : undefined,
-							paddingLeft: isVertical ? 0 : undefined,
-							paddingRight: isVertical ? 0 : undefined,
 						},
 						transition: {
 							layout: {
@@ -51,43 +46,14 @@ export const ParameterSection = ({ params, getParamValue, setParamValue, onRemov
 								duration: 0.3,
 								ease: [0.4, 0, 0.2, 1],
 							},
-							scale: {
-								duration: 0.3,
-								ease: [0.4, 0, 0.2, 1],
-							},
-							width: isVertical
-								? {
-										duration: 0.4,
-										ease: [0.4, 0, 0.2, 1],
-									}
-								: undefined,
-							paddingLeft: isVertical
-								? {
-										duration: 0.4,
-										ease: [0.4, 0, 0.2, 1],
-									}
-								: undefined,
-							paddingRight: isVertical
-								? {
-										duration: 0.4,
-										ease: [0.4, 0, 0.2, 1],
-									}
-								: undefined,
-							marginRight: isVertical
-								? {
-										duration: 0.4,
-										ease: [0.4, 0, 0.2, 1],
-									}
-								: undefined,
 						},
 					}
 				: {
-						initial: { opacity: 0, scale: 0.95 },
-						animate: { opacity: 1, scale: 1 },
+						initial: { opacity: 0 },
+						animate: { opacity: 1 },
 						transition: {
 							layout: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
 							opacity: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-							scale: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
 						},
 					})}
 		>
