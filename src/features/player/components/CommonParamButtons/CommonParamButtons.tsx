@@ -9,10 +9,9 @@ import { PLAYER_CONSTANTS } from '../../constants';
 interface CommonParamButtonsProps {
 	availableCommonParams: CategoryParameter[];
 	onAddCommonParam: (paramId: string) => void;
-	orientation: 'horizontal' | 'vertical';
 }
 
-export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, orientation }: CommonParamButtonsProps) => {
+export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam }: CommonParamButtonsProps) => {
 	const colors = useThemeColors();
 	const [removingButtonIds, setRemovingButtonIds] = useState<Set<string>>(new Set());
 	const [shouldHidePanel, setShouldHidePanel] = useState(false);

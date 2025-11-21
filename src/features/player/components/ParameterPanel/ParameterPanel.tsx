@@ -110,7 +110,7 @@ export const ParameterPanel = ({
 						className={PLAYER_STYLES.parameterPanel}
 						style={{
 							// 패널 자체는 가로/세로 모드 모두 동일한 위치/폭을 유지
-							...getParameterPanelStyle(colors, orientation),
+							...getParameterPanelStyle(colors),
 						}}
 						initial={{
 							...PLAYER_ANIMATIONS.parameterPanel.initial,
@@ -294,7 +294,6 @@ export const ParameterPanel = ({
 								<CommonParamButtons
 									availableCommonParams={availableCommonParams}
 									onAddCommonParam={onAddCommonParam}
-									orientation={orientation}
 								/>
 
 								{/* 모드 토글 버튼 */}

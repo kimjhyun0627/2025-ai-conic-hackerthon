@@ -3,7 +3,7 @@ import type { ThemeColors } from '@/shared/hooks/useThemeColors';
 /**
  * 파라미터 패널 스타일 생성
  */
-export const getParameterPanelStyle = (colors: ThemeColors, orientation?: 'horizontal' | 'vertical') => ({
+export const getParameterPanelStyle = (colors: ThemeColors) => ({
 	backdropFilter: 'blur(20px) saturate(180%)',
 	WebkitBackdropFilter: 'blur(20px) saturate(180%)',
 	background: colors.parameterPanelBg,
