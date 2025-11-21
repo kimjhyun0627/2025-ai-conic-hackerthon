@@ -65,9 +65,33 @@ export const ParameterPanel = ({
 						borderColor: colors.glassBorder,
 						padding: '1rem 1.5rem',
 					}}
-					{...PLAYER_ANIMATIONS.parameterPanel}
+					initial={PLAYER_ANIMATIONS.parameterPanel.initial}
+					animate={PLAYER_ANIMATIONS.parameterPanel.animate}
+					exit={PLAYER_ANIMATIONS.parameterPanel.exit}
+					transition={{
+						layout: {
+							duration: 0.6,
+							ease: [0.4, 0, 0.2, 1],
+						},
+						height: {
+							duration: 0.6,
+							ease: [0.4, 0, 0.2, 1],
+						},
+						opacity: {
+							duration: 0.3,
+						},
+					}}
 				>
-					<div className="w-full max-w-[960px] mx-auto">
+					<motion.div
+						layout
+						className="w-full max-w-[960px] mx-auto"
+						transition={{
+							layout: {
+								duration: 0.6,
+								ease: [0.4, 0, 0.2, 1],
+							},
+						}}
+					>
 						<motion.div
 							layout
 							style={{
@@ -75,7 +99,19 @@ export const ParameterPanel = ({
 								gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
 								gap: '1rem',
 							}}
-							{...PLAYER_ANIMATIONS.parameterGrid}
+							initial={PLAYER_ANIMATIONS.parameterGrid.initial}
+							animate={PLAYER_ANIMATIONS.parameterGrid.animate}
+							exit={PLAYER_ANIMATIONS.parameterGrid.exit}
+							transition={{
+								layout: {
+									duration: 0.6,
+									ease: [0.4, 0, 0.2, 1],
+								},
+								opacity: {
+									duration: 0.3,
+									delay: 0.1,
+								},
+							}}
 						>
 							{/* 기본 파라미터 (테마별 처음 3개) */}
 							{themeBaseParams.map((param) => (
@@ -117,7 +153,31 @@ export const ParameterPanel = ({
 									<motion.div
 										key={param.id}
 										layout
-										{...PLAYER_ANIMATIONS.parameterItem}
+										initial={PLAYER_ANIMATIONS.parameterItem.initial}
+										animate={PLAYER_ANIMATIONS.parameterItem.animate}
+										exit={PLAYER_ANIMATIONS.parameterItem.exit}
+										transition={{
+											layout: {
+												duration: 0.6,
+												ease: [0.4, 0, 0.2, 1],
+											},
+											opacity: {
+												duration: 0.5,
+												ease: 'easeOut',
+											},
+											height: {
+												duration: 0.6,
+												ease: [0.4, 0, 0.2, 1],
+											},
+											y: {
+												duration: 0.5,
+												ease: 'easeOut',
+											},
+											scale: {
+												duration: 0.5,
+												ease: 'easeOut',
+											},
+										}}
 									>
 										<ParameterSlider
 											param={param}
@@ -186,7 +246,7 @@ export const ParameterPanel = ({
 								)}
 							</AnimatePresence>
 						</motion.div>
-					</div>
+					</motion.div>
 				</motion.div>
 			)}
 		</AnimatePresence>
