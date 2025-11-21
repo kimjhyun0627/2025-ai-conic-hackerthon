@@ -6,7 +6,6 @@ import { ParameterSlider } from './ParameterSlider';
 import type { CategoryParameter } from '../../types';
 import { PLAYER_ANIMATIONS, PLAYER_STYLES } from '../../constants/playerConstants';
 import { useThemeColors } from '../../hooks/useThemeColors';
-import { useGlassButton } from '../../hooks/useGlassButton';
 import { getParameterPanelStyle, getCommonParamPanelStyle, getCommonParamButtonStyle } from '../../utils/playerStyleUtils';
 
 interface ParameterPanelProps {
@@ -38,7 +37,6 @@ export const ParameterPanel = ({
 	const [removingButtonIds, setRemovingButtonIds] = useState<Set<string>>(new Set());
 	const [shouldHidePanel, setShouldHidePanel] = useState(false);
 	const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
-	const { buttonStyle, handleMouseEnter, handleMouseLeave } = useGlassButton();
 	const panelRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 
@@ -440,23 +438,38 @@ export const ParameterPanel = ({
 								<div className="flex items-center justify-center">
 									<button
 										onClick={() => setOrientation(orientation === 'horizontal' ? 'vertical' : 'horizontal')}
-										className={PLAYER_STYLES.glassButton.controlButton}
-										style={buttonStyle}
-										onMouseEnter={handleMouseEnter}
-										onMouseLeave={handleMouseLeave}
+										className="p-2.5 md:p-3 rounded-full transition-all duration-200 glow-primary shadow-2xl relative overflow-hidden group hover:scale-110 active:scale-95"
+										style={{
+											background: colors.playButtonGradient,
+										}}
 										aria-label={orientation === 'horizontal' ? '세로 모드로 전환' : '가로 모드로 전환'}
 									>
-										{orientation === 'horizontal' ? (
-											<LayoutGrid
-												className="w-5 h-5 md:w-6 md:h-6"
-												style={{ color: colors.iconColor }}
-											/>
-										) : (
-											<LayoutList
-												className="w-5 h-5 md:w-6 md:h-6"
-												style={{ color: colors.iconColor }}
-											/>
-										)}
+										<motion.div
+											style={{
+												position: 'absolute',
+												inset: 0,
+												background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent)',
+											}}
+											animate={{ x: ['-100%', '200%'] }}
+											transition={PLAYER_ANIMATIONS.playButtonShine.transition}
+										/>
+										<AnimatePresence mode="wait">
+											{orientation === 'horizontal' ? (
+												<motion.div
+													key="grid"
+													{...PLAYER_ANIMATIONS.playButtonIcon}
+												>
+													<LayoutGrid className="w-4 h-4 md:w-5 md:h-5 text-white fill-white relative z-10" />
+												</motion.div>
+											) : (
+												<motion.div
+													key="list"
+													{...PLAYER_ANIMATIONS.playButtonIcon}
+												>
+													<LayoutList className="w-4 h-4 md:w-5 md:h-5 text-white fill-white relative z-10" />
+												</motion.div>
+											)}
+										</AnimatePresence>
 									</button>
 								</div>
 							</motion.div>

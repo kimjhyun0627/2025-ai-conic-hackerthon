@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, ChevronUp, ChevronDown } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { usePlayerStore } from '../../store/playerStore';
 import { useThemeColors } from '../../hooks/useThemeColors';
 import { useGlassButton } from '../../hooks/useGlassButton';
@@ -230,7 +230,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 								animate={{ rotate: isExpanded ? 180 : 0 }}
 								transition={PLAYER_ANIMATIONS.expandButton.transition}
 							>
-								<ChevronUp
+								<SlidersHorizontal
 									className="w-5 h-5 md:w-6 md:h-6"
 									style={{ color: colors.iconColor }}
 								/>
