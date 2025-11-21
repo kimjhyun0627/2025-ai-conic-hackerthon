@@ -18,11 +18,11 @@ export const getResponsiveTextSize = (windowWidth: number, type: 'heading' | 'su
 
 	if (type === 'subtitle') {
 		if (windowWidth >= BREAKPOINTS.DESKTOP) return '28px';
-		if (windowWidth >= 1280) return '24px';
-		if (windowWidth >= 1024) return '20px';
-		if (windowWidth >= 1024) return '16px';
-		if (windowWidth >= 768) return '12px';
-		return '10px';
+		if (windowWidth >= 1280) return '26px';
+		if (windowWidth >= 1024) return '22px';
+		if (windowWidth >= 768) return '20px';
+		if (windowWidth >= 640) return '18px';
+		return '16px';
 	}
 
 	// caption (subtitle보다 작은 크기)
