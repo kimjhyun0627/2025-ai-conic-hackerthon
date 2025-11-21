@@ -42,6 +42,7 @@ export const ParameterPanel = ({
 	const [prevStartIndex, setPrevStartIndex] = useState(0);
 	const [indicatorLeft, setIndicatorLeft] = useState<string>('auto');
 	const [indicatorTop, setIndicatorTop] = useState<string>('50%');
+	const [hoveredParamIndex, setHoveredParamIndex] = useState<number | null>(null);
 	const panelRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 	const carouselRef = useRef<HTMLDivElement>(null);
@@ -823,6 +824,9 @@ export const ParameterPanel = ({
 
 								const isActive = isInVisibleRange && isContinuous;
 
+								const param = allParams[paramIndex];
+								const isHovered = hoveredParamIndex === paramIndex;
+
 								return (
 									<motion.button
 										key={paramIndex}
@@ -845,8 +849,10 @@ export const ParameterPanel = ({
 											setPrevStartIndex(currentStartIndex);
 											setCurrentStartIndex(targetStartIndex);
 										}}
+										onMouseEnter={() => setHoveredParamIndex(paramIndex)}
+										onMouseLeave={() => setHoveredParamIndex(null)}
 										className="relative group px-3 py-0.5 border-0 outline-none focus:outline-none bg-transparent cursor-pointer min-w-[32px] flex items-center justify-center"
-										aria-label={`${paramIndex + 1}번째 파라미터`}
+										aria-label={`${param.nameKo} 파라미터`}
 									>
 										<motion.div
 											className="rounded-full transition-all"
@@ -869,6 +875,28 @@ export const ParameterPanel = ({
 												damping: 30,
 											}}
 										/>
+										{/* 툴팁 */}
+										<AnimatePresence>
+											{isHovered && param && (
+												<motion.div
+													initial={{ opacity: 0, scale: 0.8, x: -5 }}
+													animate={{ opacity: 1, scale: 1, x: 0 }}
+													exit={{ opacity: 0, scale: 0.8, x: -5 }}
+													transition={{
+														type: 'spring',
+														stiffness: 400,
+														damping: 25,
+													}}
+													className="absolute left-full  top-1/2 -translate-y-1/2 whitespace-nowrap text-xs font-medium pointer-events-none"
+													style={{
+														color: colors.isDark ? '#f1f5f9' : '#1e293b',
+														zIndex: 101,
+													}}
+												>
+													{param.nameKo}
+												</motion.div>
+											)}
+										</AnimatePresence>
 									</motion.button>
 								);
 							})}
