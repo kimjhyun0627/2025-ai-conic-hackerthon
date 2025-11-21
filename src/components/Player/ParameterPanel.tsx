@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { ParameterSlider } from './ParameterSlider';
@@ -31,6 +32,25 @@ export const ParameterPanel = ({
 	onAddCommonParam,
 }: ParameterPanelProps) => {
 	const colors = useThemeColors();
+	const [removingButtonIds, setRemovingButtonIds] = useState<Set<string>>(new Set());
+
+	const handleButtonClick = (param: CategoryParameter) => {
+		// 버튼 사라지는 애니메이션을 위해 상태 설정
+		setRemovingButtonIds((prev) => new Set(prev).add(param.id));
+		// 즉시 파라미터 추가 (새 파라미터 컨테이너가 생성되면서 애니메이션 시작)
+		onAddCommonParam(param.id);
+		// 애니메이션 완료 후 상태 정리
+		setTimeout(() => {
+			setRemovingButtonIds((prev) => {
+				const next = new Set(prev);
+				next.delete(param.id);
+				return next;
+			});
+		}, 300);
+	};
+
+	// 표시할 버튼 목록: availableCommonParams만 사용 (애니메이션 상태로 제어)
+	const visibleButtons = availableCommonParams;
 
 	return (
 		<AnimatePresence>
@@ -112,30 +132,55 @@ export const ParameterPanel = ({
 
 							{/* 공통 파라미터 추가 버튼 */}
 							<AnimatePresence>
-								{availableCommonParams.length > 0 && (
+								{visibleButtons.length > 0 && (
 									<motion.div
 										layout
 										{...PLAYER_ANIMATIONS.commonParamPanel}
 										className="glass-card rounded-2xl p-4 md:p-5"
 									>
 										<div className="flex flex-wrap gap-2">
-											{availableCommonParams.map((param) => (
-												<motion.button
-													key={param.id}
-													onClick={() => onAddCommonParam(param.id)}
-													{...PLAYER_ANIMATIONS.commonParamButton}
-													className="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-md border"
-													style={{
-														background: colors.parameterButtonBg,
-														borderColor: colors.glassBorder,
-													}}
-												>
-													<Plus className="w-4 h-4" style={{ color: colors.iconColor }} />
-													<span className="text-sm font-medium" style={{ color: colors.textMutedColor }}>
-														{param.nameKo}
-													</span>
-												</motion.button>
-											))}
+											<AnimatePresence mode="popLayout">
+												{visibleButtons.map((param) => {
+													const isRemoving = removingButtonIds.has(param.id);
+													return (
+														<motion.button
+															key={param.id}
+															layout
+															onClick={() => handleButtonClick(param)}
+															initial={{ opacity: 0, scale: 0.9 }}
+															animate={isRemoving ? { opacity: 0, scale: 0.8, width: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 } : { opacity: 1, scale: 1 }}
+															exit={{ opacity: 0, scale: 0.8, width: 0, paddingLeft: 0, paddingRight: 0, marginRight: 0 }}
+															transition={{
+																layout: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+																opacity: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+																scale: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+																width: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+																paddingLeft: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+																paddingRight: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+																marginRight: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+															}}
+															whileHover={isRemoving ? {} : { scale: 1.05 }}
+															whileTap={isRemoving ? {} : { scale: 0.95 }}
+															className="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-md border overflow-hidden"
+															style={{
+																background: colors.parameterButtonBg,
+																borderColor: colors.glassBorder,
+															}}
+														>
+															<Plus
+																className="w-4 h-4 shrink-0"
+																style={{ color: colors.iconColor }}
+															/>
+															<span
+																className="text-sm font-medium whitespace-nowrap"
+																style={{ color: colors.textMutedColor }}
+															>
+																{param.nameKo}
+															</span>
+														</motion.button>
+													);
+												})}
+											</AnimatePresence>
 										</div>
 									</motion.div>
 								)}
@@ -147,4 +192,3 @@ export const ParameterPanel = ({
 		</AnimatePresence>
 	);
 };
-
