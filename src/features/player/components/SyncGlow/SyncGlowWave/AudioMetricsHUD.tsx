@@ -51,7 +51,7 @@ export const AudioMetricsHUD = ({ rms, bpm, lowEnergy, midEnergy, highEnergy }: 
 				{/* BPM */}
 				<MetricRow
 					label="BPM"
-					value={bpm !== null ? bpm.toString() : '측정 중'}
+					value={bpm !== null ? (Math.round(bpm / 5) * 5).toString() : '측정 중'}
 					color={colors.isDark ? '#f1f5f9' : '#0f172a'}
 				/>
 

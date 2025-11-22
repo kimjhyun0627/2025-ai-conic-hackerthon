@@ -20,6 +20,7 @@ interface ParameterCarouselProps {
 	onRemoveCommonParam: (paramId: string) => void;
 	onPrev: () => void;
 	onNext: () => void;
+	currentBPM?: number | null;
 }
 
 export const ParameterCarousel = ({
@@ -36,6 +37,7 @@ export const ParameterCarousel = ({
 	onRemoveCommonParam,
 	onPrev,
 	onNext,
+	currentBPM,
 }: ParameterCarouselProps) => {
 	const colors = useThemeColors();
 	const [isPrevHovered, setIsPrevHovered] = useState(false);
@@ -169,6 +171,7 @@ export const ParameterCarousel = ({
 													}
 													isRemovable={isRemovable}
 													orientation="horizontal"
+													currentBPM={currentBPM}
 												/>
 											</div>
 										);

@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import type { ChangeEvent } from 'react';
+import { motion } from 'framer-motion';
 import { Slider } from '@/shared/components/ui';
 import type { CategoryParameter } from '@/shared/types';
 import { useThemeColors } from '@/shared/hooks';
@@ -12,12 +13,17 @@ interface ParameterSliderProps {
 	onRemove?: () => void;
 	isRemovable?: boolean;
 	orientation?: 'horizontal' | 'vertical';
+	currentBPM?: number | null;
 }
 
-export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable = false, orientation = 'horizontal' }: ParameterSliderProps) => {
+export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable = false, orientation = 'horizontal', currentBPM }: ParameterSliderProps) => {
 	const colors = useThemeColors();
 	const isVertical = orientation === 'vertical';
 	const mergedParam = mergeParamWithDefaults(param);
+	const isBPM = mergedParam.unit === 'BPM' || param.id === 'tempo';
+	// BPM을 5 단위로 반올림
+	const roundedBPM = currentBPM !== null && currentBPM !== undefined ? Math.round(currentBPM / 5) * 5 : null;
+	const bpmPercentage = isBPM && roundedBPM !== null ? Math.min(100, Math.max(0, ((roundedBPM - mergedParam.min) / (mergedParam.max - mergedParam.min)) * 100)) : null;
 
 	return (
 		<div
@@ -49,19 +55,93 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 					/>
 				</button>
 			)}
-			<Slider
-				label={mergedParam.nameKo}
-				description={isVertical ? undefined : mergedParam.description}
-				value={value}
-				min={mergedParam.min}
-				max={mergedParam.max}
-				step={mergedParam.unit === 'BPM' ? 5 : mergedParam.unit === '%' ? 5 : 1}
-				tickStep={mergedParam.unit === 'BPM' ? 5 : undefined}
-				tickInterval={isVertical && mergedParam.unit === '%' ? 10 : undefined}
-				unit={mergedParam.unit ? ` ${mergedParam.unit}` : ''}
-				orientation={orientation}
-				onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.target.value))}
-			/>
+			<div className="relative w-full">
+				<Slider
+					label={mergedParam.nameKo}
+					description={isVertical ? undefined : mergedParam.description}
+					value={value}
+					min={mergedParam.min}
+					max={mergedParam.max}
+					step={mergedParam.unit === 'BPM' ? 5 : mergedParam.unit === '%' ? 5 : 1}
+					tickStep={mergedParam.unit === 'BPM' ? 5 : undefined}
+					tickInterval={isVertical && mergedParam.unit === '%' ? 10 : undefined}
+					unit={mergedParam.unit ? ` ${mergedParam.unit}` : ''}
+					orientation={orientation}
+					onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.target.value))}
+				/>
+				{/* BPM 표시 오버레이 (슬라이더 트랙 위에 다른 색으로 표시) */}
+				{isBPM && (
+					<motion.div
+						className="absolute pointer-events-none"
+						style={{
+							...(isVertical
+								? {
+										// 세로 모드: label 높이(gap-2) + 트랙 컨테이너 paddingTop(10px)부터 시작
+										left: 'calc(50% - 1px)',
+										transform: 'translateX(-50%)',
+										bottom: '10px',
+										width: '4px',
+										background:
+											bpmPercentage !== null
+												? colors.isDark
+													? 'linear-gradient(to top, #fde047 0%, #facc15 100%)'
+													: 'linear-gradient(to top, #eab308 0%, #ca8a04 100%)'
+												: colors.isDark
+													? 'rgba(253, 224, 71, 0.8)'
+													: 'rgba(234, 179, 8, 0.9)',
+										borderRadius: '1px',
+										opacity: bpmPercentage !== null ? 0.95 : 1,
+										zIndex: 5,
+									}
+								: {
+										// 가로 모드: label 높이(1.5rem) + description 높이(0.5rem) + 트랙 컨테이너 paddingTop(10px) + 눈금 top(6px)
+										top: 'calc(1.5rem + 0.5rem + 10px + 6px + 8px + 7px)',
+										left: 0,
+										height: '4px',
+										background:
+											bpmPercentage !== null
+												? colors.isDark
+													? 'linear-gradient(to right, #fde047 0%, #facc15 100%)'
+													: 'linear-gradient(to right, #eab308 0%, #ca8a04 100%)'
+												: colors.isDark
+													? 'rgba(253, 224, 71, 0.8)'
+													: 'rgba(234, 179, 8, 0.9)',
+										borderRadius: '1px',
+										opacity: bpmPercentage !== null ? 0.95 : 1,
+										zIndex: 5,
+									}),
+						}}
+						animate={{
+							...(isVertical
+								? {
+										height: bpmPercentage !== null ? `calc(200px * ${bpmPercentage / 100})` : '60px',
+									}
+								: {
+										width: bpmPercentage !== null ? `${bpmPercentage}%` : '30%',
+									}),
+							...(bpmPercentage === null
+								? {
+										scale: [1, 1.05, 1],
+									}
+								: {}),
+						}}
+						transition={{
+							...(bpmPercentage === null
+								? {
+										scale: {
+											duration: 2,
+											repeat: Infinity,
+											ease: [0.4, 0, 0.6, 1],
+										},
+									}
+								: {
+										duration: 0.3,
+										ease: [0.4, 0, 0.2, 1],
+									}),
+						}}
+					/>
+				)}
+			</div>
 		</div>
 	);
 };

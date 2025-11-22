@@ -10,6 +10,7 @@ import { PLAYER_CONSTANTS } from '../../../constants';
 import { useThemeColors } from '@/shared/hooks';
 import { useIndicatorPosition } from '../../../hooks';
 import { useParameterCarousel } from '../../../hooks';
+import { useAudioAnalyzer, useBPM } from '../../../hooks';
 import { getParameterPanelStyle } from '../../../utils';
 import { getRowSplit, shouldUseTwoRows } from '../../../utils';
 import { usePlayerStore } from '@/store/playerStore';
@@ -42,10 +43,19 @@ export const ParameterPanel = ({
 	const colors = useThemeColors();
 	const orientation = usePlayerStore((state) => state.parameterPanelOrientation);
 	const setParameterPanelOrientation = usePlayerStore((state) => state.setParameterPanelOrientation);
+	const isPlaying = usePlayerStore((state) => state.isPlaying);
 	const [shouldShowIndicator, setShouldShowIndicator] = useState(false);
 	const panelRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
 	const carouselRef = useRef<HTMLDivElement>(null);
+
+	// 현재 BPM 계산
+	const audioAnalysis = useAudioAnalyzer(isPlaying);
+	const currentBPM = useBPM({
+		isPlaying,
+		peak: audioAnalysis.peak,
+		timestamp: audioAnalysis.timestamp,
+	});
 
 	// 세로 모드에서 모든 파라미터 합치기
 	const allParams = [...themeBaseParams, ...themeAdditionalParams, ...activeCommonParams];
@@ -192,6 +202,7 @@ export const ParameterPanel = ({
 									onRemoveCommonParam={onRemoveCommonParam}
 									onPrev={prevParam}
 									onNext={nextParam}
+									currentBPM={currentBPM}
 								/>
 							)}
 
@@ -226,6 +237,7 @@ export const ParameterPanel = ({
 										setParamValue={setParamValue}
 										onRemoveThemeParam={onRemoveThemeParam}
 										onRemoveCommonParam={onRemoveCommonParam}
+										currentBPM={currentBPM}
 									/>
 								)}
 

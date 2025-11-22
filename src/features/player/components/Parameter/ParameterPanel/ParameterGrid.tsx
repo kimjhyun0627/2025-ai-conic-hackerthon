@@ -15,6 +15,7 @@ interface ParameterGridProps {
 	setParamValue: (paramId: string, value: number) => void;
 	onRemoveThemeParam: (paramId: string) => void;
 	onRemoveCommonParam: (paramId: string) => void;
+	currentBPM?: number | null;
 }
 
 export const ParameterGrid = ({
@@ -29,6 +30,7 @@ export const ParameterGrid = ({
 	setParamValue,
 	onRemoveThemeParam,
 	onRemoveCommonParam,
+	currentBPM,
 }: ParameterGridProps) => {
 	return (
 		<motion.div
@@ -76,6 +78,7 @@ export const ParameterGrid = ({
 								onRemove={isRemovable ? (themeAdditionalParams.some((p) => p.id === param.id) ? () => onRemoveThemeParam(param.id) : () => onRemoveCommonParam(param.id)) : undefined}
 								isRemovable={isRemovable}
 								orientation={orientation}
+								currentBPM={currentBPM}
 							/>
 						</motion.div>
 					);
