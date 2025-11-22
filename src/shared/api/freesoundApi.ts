@@ -169,21 +169,11 @@ interface FreesoundSearchResponse {
 	results: FreesoundSearchResult[];
 }
 
-interface FreesoundAnalysisResponse {
-	rhythm?: {
-		bpm?: {
-			mean?: number;
-			value?: number;
-		};
-	};
-}
-
 export interface FreesoundTrackPreview {
 	id: string;
 	title: string;
 	previewUrl: string;
 	duration: number;
-	bpm: number | null;
 }
 
 const sanitizeQuery = (value: string) =>
@@ -193,20 +183,6 @@ const sanitizeQuery = (value: string) =>
 		.trim();
 
 const pickPreviewUrl = (previews: PreviewFormats) => previews['preview-hq-mp3'] || previews['preview-hq-ogg'] || previews['preview-lq-mp3'] || previews['preview-lq-ogg'] || null;
-
-const fetchSoundBpm = async (soundId: number, signal?: AbortSignal) => {
-	const { data } = await withRetry(
-		() =>
-			freesoundClient.get<FreesoundAnalysisResponse>(`/sounds/${soundId}/analysis/`, {
-				params: { descriptors: 'rhythm.bpm' },
-				signal,
-			}),
-		signal
-	);
-
-	const bpmValue = data?.rhythm?.bpm?.mean ?? data?.rhythm?.bpm?.value ?? null;
-	return typeof bpmValue === 'number' ? Math.round(bpmValue) : null;
-};
 
 export const fetchFreesoundPreviewByGenre = async (genreName: string, signal?: AbortSignal): Promise<FreesoundTrackPreview> => {
 	return requestQueue.enqueue(async () => {
@@ -354,14 +330,11 @@ export const fetchFreesoundPreviewByGenre = async (genreName: string, signal?: A
 			throw new Error('사용 가능한 미리듣기 URL이 없습니다.');
 		}
 
-		const bpm = await fetchSoundBpm(selectedResult.id, signal);
-
 		return {
 			id: String(selectedResult.id),
 			title: selectedResult.name,
 			previewUrl,
 			duration: Math.round(selectedResult.duration),
-			bpm,
 		};
 	}, signal);
 };
