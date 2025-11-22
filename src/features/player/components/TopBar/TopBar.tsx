@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Maximize, Minimize, Grid3x3, ChevronDown } from 'lucide-react';
+import { Home, Maximize, Minimize, Grid3x3, ChevronDown, Layers } from 'lucide-react';
 import { Button, ThemeToggle } from '@/shared/components/ui';
 import { useFullscreen, useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '../../constants';
@@ -9,12 +9,14 @@ import { usePlayerStore } from '@/store/playerStore';
 import { usePlayerParams, useGenreTrack } from '../../hooks';
 import type { MusicGenre } from '@/shared/types';
 
-interface PlayerTopBarProps {
+interface TopBarProps {
 	onHomeClick: () => void;
 	isVisible?: boolean;
+	visualizationMode?: 'box' | 'intensity';
+	onVisualizationModeChange?: (mode: 'box' | 'intensity') => void;
 }
 
-export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProps) => {
+export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box', onVisualizationModeChange }: TopBarProps) => {
 	const { isFullscreen, toggleFullscreen } = useFullscreen();
 	const theme = useThemeStore((state) => state.theme);
 	const selectedGenre = usePlayerStore((state) => state.selectedGenre);
@@ -26,6 +28,7 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 	const [isFullscreenHovered, setIsFullscreenHovered] = useState(false);
 	const [isGenreButtonHovered, setIsGenreButtonHovered] = useState(false);
 	const [isHomeButtonHovered, setIsHomeButtonHovered] = useState(false);
+	const [isVisualizationModeHovered, setIsVisualizationModeHovered] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	// 현재 카테고리의 장르 목록 가져오기
@@ -284,6 +287,65 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 									</Button>
 								</div>
 							</motion.div>
+
+							{/* 시각화 모드 토글 버튼 */}
+							{onVisualizationModeChange && (
+								<motion.div
+									initial="hidden"
+									animate="visible"
+									exit="hidden"
+									variants={{
+										hidden: {
+											opacity: 0,
+											y: -20,
+											transition: {
+												opacity: {
+													duration: 0.3,
+													ease: [0.4, 0, 0.2, 1],
+												},
+												y: {
+													duration: 0.3,
+													ease: [0.4, 0, 0.2, 1],
+												},
+											},
+										},
+										visible: {
+											opacity: 1,
+											y: 0,
+											transition: {
+												...PLAYER_CONSTANTS.ANIMATIONS.topBarDelayed.transition,
+											},
+										},
+									}}
+								>
+									<button
+										onClick={() => onVisualizationModeChange(visualizationMode === 'box' ? 'intensity' : 'box')}
+										onMouseEnter={(e) => {
+											setIsVisualizationModeHovered(true);
+											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
+											e.currentTarget.style.color = '#fb7185';
+										}}
+										onMouseLeave={(e) => {
+											setIsVisualizationModeHovered(false);
+											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
+											e.currentTarget.style.color = visualizationMode === 'intensity' ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a';
+										}}
+										className="h-11 px-4 rounded-2xl backdrop-blur-md border shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+										style={{
+											background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
+											borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+											color: isVisualizationModeHovered || visualizationMode === 'intensity' ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+										}}
+										aria-label="시각화 모드 전환"
+									>
+										<Layers
+											className="w-5 h-5"
+											style={{ color: visualizationMode === 'intensity' || isVisualizationModeHovered ? '#fb7185' : undefined }}
+										/>
+										<span>{visualizationMode === 'box' ? '박스' : '주파수'}</span>
+									</button>
+								</motion.div>
+							)}
 
 							<motion.div
 								initial="hidden"

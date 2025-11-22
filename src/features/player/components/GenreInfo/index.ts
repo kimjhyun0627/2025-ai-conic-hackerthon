@@ -1,0 +1,1 @@
+export { GenreInfo } from './GenreInfo';

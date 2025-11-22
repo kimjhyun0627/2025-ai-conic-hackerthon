@@ -1,0 +1,1 @@
+export { IntensitySyncGlow } from './IntensitySyncGlow';

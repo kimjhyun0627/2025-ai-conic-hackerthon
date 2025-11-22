@@ -3,13 +3,13 @@ import type { MusicGenre, MusicTheme } from '@/shared/types';
 import { PLAYER_CONSTANTS } from '../../constants';
 import { useThemeColors } from '@/shared/hooks';
 
-interface PlayerGenreInfoProps {
+interface GenreInfoProps {
 	genre: MusicGenre;
 	theme: MusicTheme | null;
 	isVisible?: boolean;
 }
 
-export const PlayerGenreInfo = ({ genre, theme, isVisible = true }: PlayerGenreInfoProps) => {
+export const GenreInfo = ({ genre, theme, isVisible = true }: GenreInfoProps) => {
 	const colors = useThemeColors();
 	const textColor = colors.isDark ? 'rgb(241 245 249)' : 'rgb(15 23 42)'; // slate-50 : slate-900
 	const textSecondaryColor = colors.isDark ? 'rgb(203 213 225)' : 'rgb(30 41 59)'; // slate-300 : slate-800

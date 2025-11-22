@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ParameterCarousel } from '../ParameterCarousel';
-import { CommonParamButtons } from '../CommonParamButtons';
+import { ParameterButtons } from '../ParamButtons';
 import { ParameterGrid } from './ParameterGrid';
 import { ParameterModeToggle } from './ParameterModeToggle';
 import { ParameterIndicatorWrapper } from './ParameterIndicatorWrapper';
@@ -230,7 +230,7 @@ export const ParameterPanel = ({
 								)}
 
 								{/* 공통 파라미터 추가 버튼 - 항상 하단에 배치 */}
-								<CommonParamButtons
+								<ParameterButtons
 									availableCommonParams={availableCommonParams}
 									onAddCommonParam={handleAddCommonParam}
 									orientation={orientation}

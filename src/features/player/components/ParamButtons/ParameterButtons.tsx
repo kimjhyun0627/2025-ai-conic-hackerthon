@@ -6,13 +6,13 @@ import { useThemeColors } from '@/shared/hooks';
 import { getCommonParamPanelStyle, getCommonParamButtonStyle } from '../../utils';
 import { PLAYER_CONSTANTS } from '../../constants';
 
-interface CommonParamButtonsProps {
+interface ParameterButtonsProps {
 	availableCommonParams: CategoryParameter[];
 	onAddCommonParam: (paramId: string) => void;
 	orientation?: 'horizontal' | 'vertical';
 }
 
-export const CommonParamButtons = ({ availableCommonParams, onAddCommonParam, orientation = 'horizontal' }: CommonParamButtonsProps) => {
+export const ParameterButtons = ({ availableCommonParams, onAddCommonParam, orientation = 'horizontal' }: ParameterButtonsProps) => {
 	const colors = useThemeColors();
 	const [removingButtonIds, setRemovingButtonIds] = useState<Set<string>>(new Set());
 	const [shouldHidePanel, setShouldHidePanel] = useState(false);

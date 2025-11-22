@@ -4,7 +4,7 @@ import { getSharedAudioElement } from '@/shared/audio';
 import { playAudioSafely } from '../../utils/audioPlaybackUtils';
 import { useAutoPrefetch } from '../../hooks/useAutoPrefetch';
 
-export const PlayerAudioEngine = () => {
+export const AudioEngine = () => {
 	// Store 상태를 개별 selector로 가져오기 (객체 반환 시 무한 루프 방지)
 	const getCurrentTrack = usePlayerStore((state) => state.getCurrentTrack);
 	const isPlaying = usePlayerStore((state) => state.isPlaying);
@@ -110,10 +110,10 @@ export const PlayerAudioEngine = () => {
 		}
 
 		if (isPlaying) {
-			console.log('[PlayerAudioEngine] 재생 시작:', { trackId: currentTrack?.id, audioPaused: audio.paused });
+			console.log('[AudioEngine] 재생 시작:', { trackId: currentTrack?.id, audioPaused: audio.paused });
 			playAudioSafely(audio, () => setIsPlaying(false));
 		} else {
-			console.log('[PlayerAudioEngine] 일시정지:', { trackId: currentTrack?.id, audioPaused: audio.paused });
+			console.log('[AudioEngine] 일시정지:', { trackId: currentTrack?.id, audioPaused: audio.paused });
 			audio.pause();
 		}
 

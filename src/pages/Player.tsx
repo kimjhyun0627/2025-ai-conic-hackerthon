@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { usePlayerStore } from '@/store/playerStore';
 import { ConfirmModal } from '@/shared/components/ui';
-import { PlayerTopBar, PlayerGenreInfo, PlayerCenterImage, PlayerControls, ParameterPanel, GradientOverlay, PlayerAudioEngine } from '@/features/player/components';
+import { TopBar, GenreInfo, PlayerCenterImage, IntensitySyncGlow, ControlerPanel, ParameterPanel, GradientOverlay, AudioEngine } from '@/features/player/components';
 import { usePlayerParams, useGenreChangeAnimation, usePlayerExit, usePlayerTrack } from '@/features/player/hooks';
 import { useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '@/features/player/constants';
@@ -14,6 +14,7 @@ const Player = () => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isControlsVisible, setIsControlsVisible] = useState(true);
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [visualizationMode, setVisualizationMode] = useState<'box' | 'intensity'>('box');
 
 	const { selectedGenre, isPlaying, moveToPrevTrack, resetQueue } = usePlayerStore();
 	const { selectedTheme, themeBaseParams, themeAdditionalParams, activeCommonParamsList, availableCommonParams, getParamValue, setParamValue, addCommonParam, removeCommonParam, removeThemeParam } =
@@ -68,26 +69,35 @@ const Player = () => {
 
 	return (
 		<>
-			<PlayerAudioEngine />
+			<AudioEngine />
 			<div className="min-h-screen flex flex-col relative overflow-hidden">
 				{/* Top Bar */}
-				<PlayerTopBar
+				<TopBar
 					onHomeClick={handleHomeClick}
 					isVisible={isControlsVisible}
+					visualizationMode={visualizationMode}
+					onVisualizationModeChange={setVisualizationMode}
 				/>
 
 				{/* Genre Info */}
-				<PlayerGenreInfo
+				<GenreInfo
 					genre={selectedGenre}
 					theme={selectedTheme}
 					isVisible={isControlsVisible}
 				/>
 
-				{/* Center Image */}
-				<PlayerCenterImage
-					genre={selectedGenre}
-					isPlaying={isPlaying}
-				/>
+				{/* Center Image - 모드에 따라 다른 컴포넌트 렌더링 */}
+				{visualizationMode === 'box' ? (
+					<PlayerCenterImage
+						genre={selectedGenre}
+						isPlaying={isPlaying}
+					/>
+				) : (
+					<IntensitySyncGlow
+						genre={selectedGenre}
+						isPlaying={isPlaying}
+					/>
+				)}
 
 				{/* Bottom - Player Board */}
 				<div className="fixed bottom-6 left-4 right-4 z-50 flex justify-center">
@@ -117,7 +127,7 @@ const Player = () => {
 							}}
 							className="w-full rounded-2xl backdrop-blur-xl border shadow-2xl relative z-10 mt-4"
 						>
-							<PlayerControls
+							<ControlerPanel
 								genre={selectedGenre}
 								isExpanded={isExpanded}
 								isVisible={isControlsVisible}

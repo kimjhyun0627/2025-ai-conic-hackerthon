@@ -8,7 +8,7 @@ import { formatTime } from '@/shared/utils';
 import { Slider } from '@/shared/components/ui';
 import type { MusicGenre } from '@/shared/types';
 
-interface PlayerControlsProps {
+interface ControlerPanelProps {
 	genre: MusicGenre;
 	isExpanded: boolean;
 	isVisible: boolean;
@@ -18,7 +18,7 @@ interface PlayerControlsProps {
 	onNext: () => void;
 }
 
-export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, onToggleVisibility, onPrev, onNext }: PlayerControlsProps) => {
+export const ControlerPanel = ({ genre, isExpanded, isVisible, onToggleExpand, onToggleVisibility, onPrev, onNext }: ControlerPanelProps) => {
 	const { isPlaying, volume, currentTime, duration, isMuted, setIsPlaying, setVolume, setCurrentTime, toggleMute, queue } = usePlayerStore();
 	const colors = useThemeColors();
 	const { buttonStyle, handleMouseEnter, handleMouseLeave } = useGlassButton();
@@ -29,7 +29,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 
 	const handlePlayPause = () => {
 		const newIsPlaying = !isPlaying;
-		console.log('[PlayerControls] 재생/일시정지 버튼 클릭:', { current: isPlaying, new: newIsPlaying });
+		console.log('[ControlerPanel] 재생/일시정지 버튼 클릭:', { current: isPlaying, new: newIsPlaying });
 		setIsPlaying(newIsPlaying);
 	};
 

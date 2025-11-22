@@ -191,7 +191,7 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 		borderRadius: className?.includes('rounded-2xl') ? '1rem' : '0.75rem',
 		border: 'none', // 외부 div의 border 사용
 		background: isPlayerStyle
-			? 'transparent' // PlayerTopBar에서 사용할 때는 투명하게
+			? 'transparent' // TopBar에서 사용할 때는 투명하게
 			: className?.includes('bg-white/20')
 				? isHovered
 					? isDark
@@ -210,7 +210,7 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 		backdropFilter: isPlayerStyle ? 'none' : 'blur(12px)',
 		WebkitBackdropFilter: isPlayerStyle ? 'none' : 'blur(12px)',
 		boxShadow: isPlayerStyle
-			? 'none' // PlayerTopBar에서 사용할 때는 외부 div의 shadow 사용
+			? 'none' // TopBar에서 사용할 때는 외부 div의 shadow 사용
 			: isHovered
 				? isDark
 					? '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
