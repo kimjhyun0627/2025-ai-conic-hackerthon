@@ -43,10 +43,10 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 					}}
 				>
 					<AnimatePresence>
-						{genre.image ? (
+						{genre.backgroundImage || genre.image ? (
 							<motion.img
 								key={genre.id}
-								src={genre.image}
+								src={genre.backgroundImage || genre.image}
 								alt={genre.nameKo}
 								draggable={false}
 								className="w-full h-full object-cover absolute inset-0"

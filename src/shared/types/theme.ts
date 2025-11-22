@@ -8,7 +8,8 @@ export interface MusicGenre {
 	nameKo: string;
 	category: ThemeCategory;
 	description?: string;
-	image?: string; // 장르 이미지 경로
+	image?: string; // 장르 이미지 경로 (랜딩 페이지 캐러셀용 - cover 폴더)
+	backgroundImage?: string; // 장르 배경 이미지 경로 (player 페이지 CenterImage용 - background 폴더)
 }
 
 // Category Parameter

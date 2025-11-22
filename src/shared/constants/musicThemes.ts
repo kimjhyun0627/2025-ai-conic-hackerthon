@@ -1,28 +1,50 @@
 import type { MusicTheme } from '@/shared/types';
-import focusImage from '@/assets/focus.jpg';
-import energyImage from '@/assets/energy.jpg';
-import relaxImage from '@/assets/relax.jpg';
-import moodImage from '@/assets/mood.jpg';
-import workoutImage from '@/assets/workout.jpg';
-import lofiBeatsImage from '@/assets/lofi-beats.jpg';
-import jazzInstrumentalImage from '@/assets/jazz-instrumental.jpg';
-import ambientImage from '@/assets/ambient.jpg';
-import classicPianoImage from '@/assets/classic-piano.jpg';
-import edmImage from '@/assets/edm.jpg';
-import houseImage from '@/assets/house.jpg';
-import technoImage from '@/assets/techno.jpg';
-import downtempoImage from '@/assets/downtempo.jpg';
-import natureAmbientImage from '@/assets/nature-ambient.jpg';
-import meditationImage from '@/assets/meditation.jpg';
-import futureBassImage from '@/assets/future-bass.jpg';
-import alternativeImage from '@/assets/alternative.jpg';
-import synthwaveImage from '@/assets/synthwave.jpg';
-import tripHopImage from '@/assets/trip-hop.jpg';
-import trapImage from '@/assets/trap.jpg';
-import hardstyleImage from '@/assets/hardstyle.jpg';
-import hiphopBeatsImage from '@/assets/hiphop-beats.jpg';
-import drumBassImage from '@/assets/drum-bass.jpg';
-import chillwaveImage from '@/assets/chillwave.jpg';
+// 카테고리 이미지 (default 폴더)
+import focusImage from '@/assets/theme/focus.jpg';
+import energyImage from '@/assets/theme/energy.jpg';
+import relaxImage from '@/assets/theme/relax.jpg';
+import moodImage from '@/assets/theme/mood.jpg';
+import workoutImage from '@/assets/theme/workout.jpg';
+// 장르 이미지 - cover (랜딩 페이지 캐러셀용)
+import focusAmbientCover from '@/assets/cover/focus_Ambient.jpg';
+import focusJazzInstrumentalCover from '@/assets/cover/focus_JazzInstrumental.jpg';
+import focusLoFiBeatsCover from '@/assets/cover/focus_LoFiBeats.jpg';
+import focusClassicalPianoCover from '@/assets/cover/focus_ClassicalPiano.jpg';
+import tensionDrumBassCover from '@/assets/cover/tension_DrumAndBass.jpg';
+import tensionEDMCover from '@/assets/cover/tension_Edm.jpg';
+import tensionHouseCover from '@/assets/cover/tension_House.jpg';
+import tensionTechnoCover from '@/assets/cover/tension_Techno.jpg';
+import restChillWaveCover from '@/assets/cover/rest_Chillwave.jpg';
+import restDowntempoCover from '@/assets/cover/rest_Downtempo.jpg';
+import restMeditationCover from '@/assets/cover/rest_Meditation.jpg';
+import restNatureAmbientCover from '@/assets/cover/rest_NatureAmbient.jpg';
+import moodAlternativeCover from '@/assets/cover/mood_Alternative.jpg';
+import moodFutureBassCover from '@/assets/cover/mood_FutureBass.jpg';
+import moodSynthwaveCover from '@/assets/cover/mood_Synthwave.jpg';
+import moodTriphopCover from '@/assets/cover/mood_TripHop.jpg';
+import workoutHardstyleCover from '@/assets/cover/workout_Hardstyle.jpg';
+import workoutHipHopCover from '@/assets/cover/workout_HipHop.jpg';
+import workoutTrapCover from '@/assets/cover/workout_Trap.jpg';
+// 장르 이미지 - background (player 페이지 CenterImage용)
+import focusAmbientBackground from '@/assets/background/focus_Ambient.jpg';
+import focusClassicalPianoBackground from '@/assets/background/focus_ClassicalPiano.jpg';
+import focusJazzInstrumentalBackground from '@/assets/background/focus_JazzInstrumental.jpg';
+import focusLofiBackground from '@/assets/background/focus_LoFiBeats.jpg';
+import tensionDrumBassBackground from '@/assets/background/tension_DrumAndBass.jpg';
+import tensionEDMBackground from '@/assets/background/tension_Edm.jpg';
+import tensionHouseBackground from '@/assets/background/tension_House.jpg';
+import tensionTechnoBackground from '@/assets/background/tension_Techno.jpg';
+import restChillWaveBackground from '@/assets/background/rest_Chillwave.jpg';
+import restDowntempoBackground from '@/assets/background/rest_Downtempo.jpg';
+import restMeditationBackground from '@/assets/background/rest_Meditation.jpg';
+import restNatureAmbientBackground from '@/assets/background/rest_NatureAmbient.jpg';
+import moodAlternativeBackground from '@/assets/background/mood_Alternative.jpg';
+import moodFutureBassBackground from '@/assets/background/mood_FutureBass.jpg';
+import moodSynthwaveBackground from '@/assets/background/mood_Synthwave.jpg';
+import moodTriphopBackground from '@/assets/background/mood_TripHop.jpg';
+import workoutHardstyleBackground from '@/assets/background/workout_Hardstyle.jpg';
+import workoutHipHopBackground from '@/assets/background/workout_HipHop.jpg';
+import workoutTrapBackground from '@/assets/background/workout_Trap.jpg';
 
 export const MUSIC_THEMES: MusicTheme[] = [
 	{
@@ -143,7 +165,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '로파이 비트',
 				category: 'focus',
 				description: '차분한 비트와 감성적인 멜로디',
-				image: lofiBeatsImage,
+				image: focusLoFiBeatsCover,
+				backgroundImage: focusLofiBackground,
 			},
 			{
 				id: 'jazz-instrumental',
@@ -151,7 +174,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '재즈 인스트루멘탈',
 				category: 'focus',
 				description: '우아한 재즈 연주',
-				image: jazzInstrumentalImage,
+				image: focusJazzInstrumentalCover,
+				backgroundImage: focusJazzInstrumentalBackground,
 			},
 			{
 				id: 'ambient',
@@ -159,7 +183,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '앰비언트',
 				category: 'focus',
 				description: '몽환적이고 집중하기 좋은 사운드',
-				image: ambientImage,
+				image: focusAmbientCover,
+				backgroundImage: focusAmbientBackground,
 			},
 			{
 				id: 'classic-piano',
@@ -167,7 +192,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '클래식 피아노',
 				category: 'focus',
 				description: '편안한 피아노 선율',
-				image: classicPianoImage,
+				image: focusClassicalPianoCover,
+				backgroundImage: focusClassicalPianoBackground,
 			},
 		],
 	},
@@ -289,7 +315,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: 'EDM',
 				category: 'energy',
 				description: '강렬한 일렉트로닉 댄스 뮤직',
-				image: edmImage,
+				image: tensionEDMCover,
+				backgroundImage: tensionEDMBackground,
 			},
 			{
 				id: 'house',
@@ -297,7 +324,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '하우스',
 				category: 'energy',
 				description: '리드미컬한 하우스 비트',
-				image: houseImage,
+				image: tensionHouseCover,
+				backgroundImage: tensionHouseBackground,
 			},
 			{
 				id: 'techno',
@@ -305,7 +333,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '테크노',
 				category: 'energy',
 				description: '강력한 테크노 사운드',
-				image: technoImage,
+				image: tensionTechnoCover,
+				backgroundImage: tensionTechnoBackground,
 			},
 			{
 				id: 'drum-bass',
@@ -313,7 +342,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '드럼 앤 베이스',
 				category: 'energy',
 				description: '빠른 비트와 베이스라인',
-				image: drumBassImage,
+				image: tensionDrumBassCover,
+				backgroundImage: tensionDrumBassBackground,
 			},
 		],
 	},
@@ -435,7 +465,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '다운템포',
 				category: 'relax',
 				description: '느긋한 템포의 편안한 음악',
-				image: downtempoImage,
+				image: restDowntempoCover,
+				backgroundImage: restDowntempoBackground,
 			},
 			{
 				id: 'chillwave',
@@ -443,7 +474,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '칠웨이브',
 				category: 'relax',
 				description: '몽환적이고 편안한 웨이브',
-				image: chillwaveImage,
+				image: restChillWaveCover,
+				backgroundImage: restChillWaveBackground,
 			},
 			{
 				id: 'nature-ambient',
@@ -451,7 +483,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '자연 앰비언트',
 				category: 'relax',
 				description: '자연의 소리와 앰비언트',
-				image: natureAmbientImage,
+				image: restNatureAmbientCover,
+				backgroundImage: restNatureAmbientBackground,
 			},
 			{
 				id: 'meditation',
@@ -459,7 +492,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '명상',
 				category: 'relax',
 				description: '명상과 힐링을 위한 음악',
-				image: meditationImage,
+				image: restMeditationCover,
+				backgroundImage: restMeditationBackground,
 			},
 		],
 	},
@@ -581,7 +615,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '퓨쳐 베이스',
 				category: 'mood',
 				description: '감성적인 베이스 사운드',
-				image: futureBassImage,
+				image: moodFutureBassCover,
+				backgroundImage: moodFutureBassBackground,
 			},
 			{
 				id: 'alternative',
@@ -589,7 +624,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '얼터너티브',
 				category: 'mood',
 				description: '독특한 분위기의 비트',
-				image: alternativeImage,
+				image: moodAlternativeCover,
+				backgroundImage: moodAlternativeBackground,
 			},
 			{
 				id: 'synthwave',
@@ -597,7 +633,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '신스웨이브',
 				category: 'mood',
 				description: '레트로 신스 사운드',
-				image: synthwaveImage,
+				image: moodSynthwaveCover,
+				backgroundImage: moodSynthwaveBackground,
 			},
 			{
 				id: 'trip-hop',
@@ -605,7 +642,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '트립합',
 				category: 'mood',
 				description: '몽환적인 힙합 비트',
-				image: tripHopImage,
+				image: moodTriphopCover,
+				backgroundImage: moodTriphopBackground,
 			},
 		],
 	},
@@ -727,7 +765,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '트랩',
 				category: 'workout',
 				description: '강렬한 트랩 비트',
-				image: trapImage,
+				image: workoutTrapCover,
+				backgroundImage: workoutTrapBackground,
 			},
 			{
 				id: 'hardstyle',
@@ -735,7 +774,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '하드스타일',
 				category: 'workout',
 				description: '강력한 하드 킥',
-				image: hardstyleImage,
+				image: workoutHardstyleCover,
+				backgroundImage: workoutHardstyleBackground,
 			},
 			{
 				id: 'hiphop-beats',
@@ -743,7 +783,8 @@ export const MUSIC_THEMES: MusicTheme[] = [
 				nameKo: '힙합 비트',
 				category: 'workout',
 				description: '에너지 넘치는 힙합 비트',
-				image: hiphopBeatsImage,
+				image: workoutHipHopCover,
+				backgroundImage: workoutHipHopBackground,
 			},
 		],
 	},
