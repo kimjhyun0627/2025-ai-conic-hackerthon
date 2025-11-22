@@ -54,7 +54,7 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 		};
 	}, []);
 
-	const handleGenreSelect = (genre: MusicGenre) => {
+	const handleGenreSelect = async (genre: MusicGenre) => {
 		// 같은 장르를 재선택한 경우 아무 액션도 하지 않음
 		if (selectedGenre?.id === genre.id) {
 			setIsGenreDropdownOpen(false);
@@ -64,17 +64,38 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 		// 이전 타이머가 있으면 정리
 		if (genreSelectTimerRef.current) {
 			clearTimeout(genreSelectTimerRef.current);
+			genreSelectTimerRef.current = null;
 		}
 
-		// 다른 장르 선택 시 토스트 표시 후 딜레이
-		setShowToast(true);
+		// 드롭다운 닫기
 		setIsGenreDropdownOpen(false);
-		// 딜레이 후 장르 변경
-		genreSelectTimerRef.current = setTimeout(() => {
-			usePlayerStore.getState().setSelectedGenre(genre);
+
+		// 토스트 표시 (duration: null로 설정하여 API 응답까지 자동으로 닫히지 않음)
+		setShowToast(true);
+
+		try {
+			// TODO: 실제 API 호출로 교체
+			// const response = await generateMusic(genre, audioParams);
+			// 예시: API 호출 시뮬레이션
+			const response = await new Promise<{ success: boolean }>((resolve) => {
+				// 실제 API 호출로 교체 필요
+				// fetch('/api/generate-music', { ... })
+				setTimeout(() => {
+					resolve({ success: true });
+				}, 2000); // 임시 딜레이
+			});
+
+			// API 응답 성공 시 장르 변경 및 토스트 닫기
+			if (response.success) {
+				usePlayerStore.getState().setSelectedGenre(genre);
+				setShowToast(false);
+			}
+		} catch (error) {
+			// 에러 처리
+			console.error('음악 생성 실패:', error);
 			setShowToast(false);
-			genreSelectTimerRef.current = null;
-		}, PLAYER_CONSTANTS.TIMING.GENRE_SELECT_DELAY);
+			// TODO: 에러 토스트 표시
+		}
 	};
 
 	return (
@@ -243,7 +264,7 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 				<Toast
 					message="음악이 생성되면 세부 장르로 넘어가요!"
 					type="info"
-					duration={PLAYER_CONSTANTS.TIMING.TOAST_DURATION}
+					duration={null}
 					onClose={() => setShowToast(false)}
 				/>
 			)}
