@@ -13,7 +13,7 @@ import type { MusicGenre } from '@/shared/types';
 export const useGenreTrack = () => {
 	const { fetchTrack, cleanup } = useTrackFetcher();
 	const { selectedGenre, setSelectedGenre, setCurrentTrack, setNextTrack, moveToNextTrack, setDuration, resetQueue, setIsGenreChangeInProgress } = usePlayerStore();
-	const { showInfo, removeToast } = useToast();
+	const { showInfo, showError, removeToast } = useToast();
 
 	const toastIdRef = useRef<string | null>(null);
 
@@ -77,6 +77,10 @@ export const useGenreTrack = () => {
 				if (error instanceof DOMException && error.name === 'AbortError') {
 					return;
 				}
+
+				// 에러 토스트 표시
+				console.error('[useGenreTrack] 장르 변경 중 트랙 가져오기 실패:', error);
+				showError('음악을 불러오는데 실패했습니다. 다시 시도해주세요.', 5000);
 			} finally {
 				// 장르 변경 완료 플래그 해제
 				setIsGenreChangeInProgress(false);
@@ -86,7 +90,7 @@ export const useGenreTrack = () => {
 				}
 			}
 		},
-		[selectedGenre, fetchTrack, setSelectedGenre, setCurrentTrack, setNextTrack, moveToNextTrack, setDuration, resetQueue, setIsGenreChangeInProgress, showInfo, removeToast]
+		[selectedGenre, fetchTrack, setSelectedGenre, setCurrentTrack, setNextTrack, moveToNextTrack, setDuration, resetQueue, setIsGenreChangeInProgress, showInfo, showError, removeToast]
 	);
 
 	return {
