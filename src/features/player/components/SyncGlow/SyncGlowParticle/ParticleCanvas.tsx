@@ -269,47 +269,47 @@ export const ParticleCanvas = ({ isPlaying, isDark, palette, lowEnergy, midEnerg
 			ctx.save();
 			ctx.globalAlpha = 0.4;
 
+			// 최소 선 너비 (값이 0이어도 보이도록)
+			const minLineWidth = width * 0.01; // 화면 너비의 1%
+
 			// 저음 - 하단
-			if (smoothedLowEnergyRef.current > 0.05) {
-				const y = height * 0.8;
-				const lineWidth = width * smoothedLowEnergyRef.current;
-				ctx.strokeStyle = currentProps.palette[0];
-				ctx.lineWidth = 3;
-				ctx.shadowBlur = 20;
-				ctx.shadowColor = currentProps.palette[0];
-				ctx.beginPath();
-				ctx.moveTo((width - lineWidth) / 2, y);
-				ctx.lineTo((width + lineWidth) / 2, y);
-				ctx.stroke();
-			}
+			const lowEnergy = Math.max(smoothedLowEnergyRef.current, 0.01); // 최소값 0.01
+			const lowY = height * 0.8;
+			const lowLineWidth = Math.max(width * lowEnergy, minLineWidth);
+			ctx.strokeStyle = currentProps.palette[0];
+			ctx.lineWidth = 3;
+			ctx.shadowBlur = 20;
+			ctx.shadowColor = currentProps.palette[0];
+			ctx.beginPath();
+			ctx.moveTo((width - lowLineWidth) / 2, lowY);
+			ctx.lineTo((width + lowLineWidth) / 2, lowY);
+			ctx.stroke();
 
 			// 중음 - 중앙
-			if (smoothedMidEnergyRef.current > 0.05) {
-				const y = height * 0.5;
-				const lineWidth = width * smoothedMidEnergyRef.current;
-				ctx.strokeStyle = currentProps.palette[1];
-				ctx.lineWidth = 3;
-				ctx.shadowBlur = 20;
-				ctx.shadowColor = currentProps.palette[1];
-				ctx.beginPath();
-				ctx.moveTo((width - lineWidth) / 2, y);
-				ctx.lineTo((width + lineWidth) / 2, y);
-				ctx.stroke();
-			}
+			const midEnergy = Math.max(smoothedMidEnergyRef.current, 0.01); // 최소값 0.01
+			const midY = height * 0.5;
+			const midLineWidth = Math.max(width * midEnergy, minLineWidth);
+			ctx.strokeStyle = currentProps.palette[1];
+			ctx.lineWidth = 3;
+			ctx.shadowBlur = 20;
+			ctx.shadowColor = currentProps.palette[1];
+			ctx.beginPath();
+			ctx.moveTo((width - midLineWidth) / 2, midY);
+			ctx.lineTo((width + midLineWidth) / 2, midY);
+			ctx.stroke();
 
 			// 고음 - 상단
-			if (smoothedHighEnergyRef.current > 0.05) {
-				const y = height * 0.2;
-				const lineWidth = width * smoothedHighEnergyRef.current;
-				ctx.strokeStyle = currentProps.palette[currentProps.palette.length - 1];
-				ctx.lineWidth = 3;
-				ctx.shadowBlur = 20;
-				ctx.shadowColor = currentProps.palette[currentProps.palette.length - 1];
-				ctx.beginPath();
-				ctx.moveTo((width - lineWidth) / 2, y);
-				ctx.lineTo((width + lineWidth) / 2, y);
-				ctx.stroke();
-			}
+			const highEnergy = Math.max(smoothedHighEnergyRef.current, 0.01); // 최소값 0.01
+			const highY = height * 0.2;
+			const highLineWidth = Math.max(width * highEnergy, minLineWidth);
+			ctx.strokeStyle = currentProps.palette[currentProps.palette.length - 1];
+			ctx.lineWidth = 3;
+			ctx.shadowBlur = 20;
+			ctx.shadowColor = currentProps.palette[currentProps.palette.length - 1];
+			ctx.beginPath();
+			ctx.moveTo((width - highLineWidth) / 2, highY);
+			ctx.lineTo((width + highLineWidth) / 2, highY);
+			ctx.stroke();
 
 			ctx.restore();
 
