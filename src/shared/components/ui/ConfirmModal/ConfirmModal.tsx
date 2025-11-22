@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useThemeStore } from '@/store/themeStore';
+import { useThemeColors } from '@/shared/hooks';
 
 interface ConfirmModalProps {
 	isOpen: boolean;
@@ -12,34 +12,104 @@ interface ConfirmModalProps {
 	onCancel: () => void;
 }
 
+// 색상 상수
+const COLORS = {
+	title: {
+		dark: '#f1f5f9', // slate-100
+		light: '#020617', // slate-950
+	},
+	message: {
+		dark: '#cbd5e1', // slate-300
+		light: '#1e293b', // slate-800
+	},
+	buttonText: {
+		dark: '#f1f5f9', // slate-100
+		light: '#0f172a', // slate-900
+	},
+	confirmButton: {
+		default: 'linear-gradient(to bottom right, #fb7185, #f43f5e)',
+		hover: 'linear-gradient(to bottom right, #f43f5e, #e11d48)',
+	},
+	cancelButton: {
+		pressed: {
+			dark: 'rgba(255, 255, 255, 0.2)',
+			light: 'rgba(0, 0, 0, 0.15)',
+		},
+		hover: {
+			dark: 'rgba(255, 255, 255, 0.1)',
+			light: 'rgba(0, 0, 0, 0.05)',
+		},
+	},
+	backdrop: {
+		dark: 'rgba(28, 25, 23, 0.1)',
+		light: 'rgba(254, 248, 242, 0.1)',
+	},
+} as const;
+
+// 애니메이션 상수
+const ANIMATIONS = {
+	backdrop: {
+		duration: 0.2,
+	},
+	modal: {
+		type: 'spring' as const,
+		stiffness: 300,
+		damping: 30,
+	},
+	confirmButton: {
+		type: 'spring' as const,
+		stiffness: 400,
+		damping: 17,
+	},
+} as const;
+
+// 버튼 상태 타입
+type ButtonState = {
+	confirmHovered: boolean;
+	cancelHovered: boolean;
+	cancelPressed: boolean;
+};
+
+type ButtonAction = { type: 'SET_CONFIRM_HOVER'; payload: boolean } | { type: 'SET_CANCEL_HOVER'; payload: boolean } | { type: 'SET_CANCEL_PRESSED'; payload: boolean } | { type: 'RESET_CANCEL' };
+
+const buttonStateReducer = (state: ButtonState, action: ButtonAction): ButtonState => {
+	switch (action.type) {
+		case 'SET_CONFIRM_HOVER':
+			return { ...state, confirmHovered: action.payload };
+		case 'SET_CANCEL_HOVER':
+			return { ...state, cancelHovered: action.payload };
+		case 'SET_CANCEL_PRESSED':
+			return { ...state, cancelPressed: action.payload };
+		case 'RESET_CANCEL':
+			return { ...state, cancelHovered: false, cancelPressed: false };
+		default:
+			return state;
+	}
+};
+
 const ConfirmModal = ({ isOpen, title = '확인', message, confirmText = '확인', cancelText = '취소', onConfirm, onCancel }: ConfirmModalProps) => {
-	const theme = useThemeStore((state) => state.theme);
-	const isDark = theme === 'dark';
-	const [isHovered, setIsHovered] = useState(false);
-	const [isCancelHovered, setIsCancelHovered] = useState(false);
-	const [isCancelPressed, setIsCancelPressed] = useState(false);
+	const colors = useThemeColors();
+	const [buttonState, dispatch] = useReducer(buttonStateReducer, {
+		confirmHovered: false,
+		cancelHovered: false,
+		cancelPressed: false,
+	});
 
-	const titleColor = isDark ? '#f1f5f9' : '#020617'; // slate-100 : slate-950
-	const messageColor = isDark ? '#cbd5e1' : '#1e293b'; // slate-300 : slate-800
+	const titleColor = colors.isDark ? COLORS.title.dark : COLORS.title.light;
+	const messageColor = colors.isDark ? COLORS.message.dark : COLORS.message.light;
 
-	// 호버 시 더 짙은 색상
-	const getButtonBackground = () => {
-		if (isHovered) {
-			return isDark ? 'linear-gradient(to bottom right, #f43f5e, #e11d48)' : 'linear-gradient(to bottom right, #f43f5e, #e11d48)';
-		}
-		return isDark ? 'linear-gradient(to bottom right, #fb7185, #f43f5e)' : 'linear-gradient(to bottom right, #fb7185, #f43f5e)';
+	// 확인 버튼 배경색 (호버 상태에 따라)
+	const getConfirmButtonBackground = () => {
+		return buttonState.confirmHovered ? COLORS.confirmButton.hover : COLORS.confirmButton.default;
 	};
 
-	// 취소 버튼 호버 및 클릭 시 배경색
+	// 취소 버튼 배경색
 	const getCancelButtonBackground = () => {
-		if (isCancelPressed) {
-			// 라이트 모드: 배경보다 조금 어두운 반투명 회색
-			// 다크 모드: 배경보다 조금 더 밝은 반투명 회색
-			return isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)';
+		if (buttonState.cancelPressed) {
+			return colors.isDark ? COLORS.cancelButton.pressed.dark : COLORS.cancelButton.pressed.light;
 		}
-		if (isCancelHovered) {
-			// 호버 시 약간의 배경색 변경
-			return isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)';
+		if (buttonState.cancelHovered) {
+			return colors.isDark ? COLORS.cancelButton.hover.dark : COLORS.cancelButton.hover.light;
 		}
 		return 'transparent';
 	};
@@ -53,11 +123,11 @@ const ConfirmModal = ({ isOpen, title = '확인', message, confirmText = '확인
 						initial={{ opacity: 0 }}
 						animate={{ opacity: 1 }}
 						exit={{ opacity: 0 }}
-						transition={{ duration: 0.2 }}
+						transition={{ duration: ANIMATIONS.backdrop.duration }}
 						className="fixed inset-0 bg-black/50 backdrop-blur-sm z-10000"
 						onClick={onCancel}
 						style={{
-							background: isDark ? 'rgba(28, 25, 23, 0.1)' : 'rgba(254, 248, 242, 0.1)',
+							background: colors.isDark ? COLORS.backdrop.dark : COLORS.backdrop.light,
 						}}
 					/>
 
@@ -67,7 +137,7 @@ const ConfirmModal = ({ isOpen, title = '확인', message, confirmText = '확인
 							initial={{ opacity: 0, scale: 0.9, y: 20 }}
 							animate={{ opacity: 1, scale: 1, y: 0 }}
 							exit={{ opacity: 0, scale: 0.9, y: 20 }}
-							transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+							transition={ANIMATIONS.modal}
 							className="glass-card rounded-2xl p-6 md:p-8 max-w-md w-full shadow-2xl pointer-events-auto"
 							onClick={(e) => e.stopPropagation()}
 						>
@@ -91,17 +161,14 @@ const ConfirmModal = ({ isOpen, title = '확인', message, confirmText = '확인
 							<div className="flex gap-3 justify-end">
 								<motion.button
 									onClick={onCancel}
-									onMouseEnter={() => setIsCancelHovered(true)}
-									onMouseLeave={() => {
-										setIsCancelHovered(false);
-										setIsCancelPressed(false);
-									}}
-									onMouseDown={() => setIsCancelPressed(true)}
-									onMouseUp={() => setIsCancelPressed(false)}
+									onMouseEnter={() => dispatch({ type: 'SET_CANCEL_HOVER', payload: true })}
+									onMouseLeave={() => dispatch({ type: 'RESET_CANCEL' })}
+									onMouseDown={() => dispatch({ type: 'SET_CANCEL_PRESSED', payload: true })}
+									onMouseUp={() => dispatch({ type: 'SET_CANCEL_PRESSED', payload: false })}
 									className="min-w-[80px] px-5 py-2.5 text-base font-semibold rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 inline-flex items-center justify-center"
 									style={{
 										background: getCancelButtonBackground(),
-										color: isDark ? '#f1f5f9' : '#0f172a',
+										color: colors.isDark ? COLORS.buttonText.dark : COLORS.buttonText.light,
 										transition: 'background 0.2s ease-in-out',
 									}}
 								>
@@ -109,21 +176,17 @@ const ConfirmModal = ({ isOpen, title = '확인', message, confirmText = '확인
 								</motion.button>
 								<motion.button
 									onClick={onConfirm}
-									onMouseEnter={() => setIsHovered(true)}
-									onMouseLeave={() => setIsHovered(false)}
+									onMouseEnter={() => dispatch({ type: 'SET_CONFIRM_HOVER', payload: true })}
+									onMouseLeave={() => dispatch({ type: 'SET_CONFIRM_HOVER', payload: false })}
 									className="min-w-[80px] px-5 py-2.5 text-base font-semibold rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 shadow-lg shadow-primary-500/30"
 									style={{
-										background: getButtonBackground(),
+										background: getConfirmButtonBackground(),
 										color: '#ffffff',
 										transition: 'background 0.3s ease-in-out',
 									}}
 									whileHover={{ scale: 1.02 }}
 									whileTap={{ scale: 0.98 }}
-									transition={{
-										type: 'spring',
-										stiffness: 400,
-										damping: 17,
-									}}
+									transition={ANIMATIONS.confirmButton}
 								>
 									{confirmText}
 								</motion.button>
