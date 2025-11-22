@@ -118,6 +118,17 @@ const isRetryableError = (error: unknown) => {
 	}
 
 	const status = error.response?.status;
+
+	// 배포 환경 디버깅: 4xx 에러도 로깅
+	if (status && status >= 400 && status < 500) {
+		console.error('[FreeSound API] Client error:', {
+			status,
+			statusText: error.response?.statusText,
+			data: error.response?.data,
+			url: error.config?.url,
+		});
+	}
+
 	return typeof status === 'number' && RETRYABLE_STATUS.has(status);
 };
 
@@ -201,28 +212,85 @@ export const fetchFreesoundPreviewByGenre = async (genreName: string, signal?: A
 	return requestQueue.enqueue(async () => {
 		const query = sanitizeQuery(genreName + ' music');
 
-		const { data } = await withRetry(
-			() =>
-				freesoundClient.get<FreesoundSearchResponse>('/search/text/', {
-					params: {
-						query,
-						fields: SEARCH_FIELDS,
-						filter: DEFAULT_FILTER,
-						page_size: 10,
-						sort: 'rating_desc',
-					},
-					signal,
-				}),
-			signal
-		);
+		let response;
+		try {
+			response = await withRetry(
+				() =>
+					freesoundClient.get<FreesoundSearchResponse>('/search/text/', {
+						params: {
+							query,
+							fields: SEARCH_FIELDS,
+							filter: DEFAULT_FILTER,
+							page_size: 10,
+							sort: 'rating_desc',
+						},
+						signal,
+					}),
+				signal
+			);
+		} catch (error) {
+			console.error('[FreeSound API] Request failed:', error);
+			if (axios.isAxiosError(error)) {
+				console.error('[FreeSound API] Response status:', error.response?.status);
+				console.error('[FreeSound API] Response data:', error.response?.data);
+			}
+			throw error;
+		}
 
-		// API 응답 검증
+		const { data } = response;
+
+		// API 응답 검증 및 디버깅 로그
 		if (!data) {
+			console.error('[FreeSound API] No data in response:', { response, genreName, query });
 			throw new Error('API 응답이 없습니다.');
 		}
 
-		if (!data.results || !Array.isArray(data.results) || data.results.length === 0) {
-			throw new Error('검색 결과가 없습니다.');
+		// 응답 구조 로깅 (배포 환경 디버깅용)
+		console.log('[FreeSound API] Response structure:', {
+			hasData: !!data,
+			hasResults: !!data.results,
+			resultsType: typeof data.results,
+			isArray: Array.isArray(data.results),
+			resultsLength: Array.isArray(data.results) ? data.results.length : 'N/A',
+			dataKeys: Object.keys(data),
+			genreName,
+			query,
+		});
+
+		// results가 없는 경우 - 다른 응답 구조일 수 있음
+		if (!data.results) {
+			console.error('[FreeSound API] No results property in response:', {
+				data,
+				dataStringified: JSON.stringify(data, null, 2),
+				genreName,
+				query,
+			});
+
+			// 다른 가능한 응답 구조 확인
+			if ('count' in data && typeof (data as Record<string, unknown>).count === 'number') {
+				console.warn('[FreeSound API] Response has count but no results:', data);
+			}
+
+			throw new Error('검색 결과가 없습니다. (응답에 results가 없음)');
+		}
+
+		if (!Array.isArray(data.results)) {
+			console.error('[FreeSound API] Results is not an array:', {
+				results: data.results,
+				resultsType: typeof data.results,
+				genreName,
+				query,
+			});
+			throw new Error('검색 결과가 없습니다. (results가 배열이 아님)');
+		}
+
+		if (data.results.length === 0) {
+			console.error('[FreeSound API] Results array is empty:', {
+				data,
+				genreName,
+				query,
+			});
+			throw new Error('검색 결과가 없습니다. (결과 배열이 비어있음)');
 		}
 
 		// 검색 결과 중에서 랜덤하게 선택
