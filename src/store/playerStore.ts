@@ -24,6 +24,7 @@ interface PlayerState {
 
 	// Selected Genre
 	selectedGenre: MusicGenre | null;
+	isGenreChangeInProgress: boolean; // 장르 변경 API 요청 진행 중 플래그
 
 	// Parameter Panel Orientation
 	parameterPanelOrientation: 'horizontal' | 'vertical';
@@ -51,6 +52,7 @@ interface PlayerState {
 
 	// Genre Selection
 	setSelectedGenre: (genre: MusicGenre | null) => void;
+	setIsGenreChangeInProgress: (inProgress: boolean) => void;
 
 	// Parameter Panel Orientation
 	setParameterPanelOrientation: (orientation: 'horizontal' | 'vertical') => void;
@@ -74,6 +76,7 @@ const initialState = {
 	audioParams: DEFAULT_AUDIO_PARAMS,
 	visualizerType: 'pulse' as VisualizerType,
 	selectedGenre: null,
+	isGenreChangeInProgress: false,
 	parameterPanelOrientation: 'horizontal' as 'horizontal' | 'vertical',
 };
 
@@ -221,6 +224,7 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
 	// Genre Selection
 	setSelectedGenre: (genre: MusicGenre | null) => set({ selectedGenre: genre }),
+	setIsGenreChangeInProgress: (inProgress: boolean) => set({ isGenreChangeInProgress: inProgress }),
 
 	// Parameter Panel Orientation
 	setParameterPanelOrientation: (orientation: 'horizontal' | 'vertical') => set({ parameterPanelOrientation: orientation }),

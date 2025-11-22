@@ -9,6 +9,83 @@ const freesoundClient = axios.create({
 	timeout: Number(import.meta.env.VITE_FREESOUND_TIMEOUT ?? 30000),
 });
 
+// API 요청 큐 시스템
+type QueueItem<T> = {
+	resolve: (value: T) => void;
+	reject: (error: unknown) => void;
+	execute: () => Promise<T>;
+	signal?: AbortSignal;
+};
+
+class RequestQueue {
+	private queue: QueueItem<unknown>[] = [];
+	private isProcessing = false;
+
+	async enqueue<T>(execute: () => Promise<T>, signal?: AbortSignal): Promise<T> {
+		return new Promise<T>((resolve, reject) => {
+			// AbortSignal이 이미 abort된 경우 즉시 거부
+			if (signal?.aborted) {
+				reject(new DOMException('Operation aborted', 'AbortError'));
+				return;
+			}
+
+			const queueItem: QueueItem<T> = {
+				resolve,
+				reject,
+				execute,
+				signal,
+			};
+
+			// AbortSignal 리스너 추가
+			if (signal) {
+				const onAbort = () => {
+					const index = this.queue.indexOf(queueItem as QueueItem<unknown>);
+					if (index !== -1) {
+						this.queue.splice(index, 1);
+						reject(new DOMException('Operation aborted', 'AbortError'));
+					}
+				};
+				signal.addEventListener('abort', onAbort);
+			}
+
+			this.queue.push(queueItem as QueueItem<unknown>);
+			this.processQueue();
+		});
+	}
+
+	private async processQueue() {
+		if (this.isProcessing || this.queue.length === 0) {
+			return;
+		}
+
+		this.isProcessing = true;
+
+		while (this.queue.length > 0) {
+			const item = this.queue.shift();
+			if (!item) {
+				break;
+			}
+
+			// AbortSignal이 abort된 경우 건너뛰기
+			if (item.signal?.aborted) {
+				item.reject(new DOMException('Operation aborted', 'AbortError'));
+				continue;
+			}
+
+			try {
+				const result = await item.execute();
+				item.resolve(result);
+			} catch (error) {
+				item.reject(error);
+			}
+		}
+
+		this.isProcessing = false;
+	}
+}
+
+const requestQueue = new RequestQueue();
+
 const RETRYABLE_STATUS = new Set([408, 429, 500, 502, 503, 504]);
 const MAX_RETRY_ATTEMPTS = 3;
 const RETRY_BASE_DELAY = 600;
@@ -121,53 +198,55 @@ const fetchSoundBpm = async (soundId: number, signal?: AbortSignal) => {
 };
 
 export const fetchFreesoundPreviewByGenre = async (genreName: string, signal?: AbortSignal): Promise<FreesoundTrackPreview> => {
-	const query = sanitizeQuery(genreName + ' music');
+	return requestQueue.enqueue(async () => {
+		const query = sanitizeQuery(genreName + ' music');
 
-	const { data } = await withRetry(
-		() =>
-			freesoundClient.get<FreesoundSearchResponse>('/search/text/', {
-				params: {
-					query,
-					fields: SEARCH_FIELDS,
-					filter: DEFAULT_FILTER,
-					page_size: 10,
-					sort: 'rating_desc',
-				},
-				signal,
-			}),
-		signal
-	);
+		const { data } = await withRetry(
+			() =>
+				freesoundClient.get<FreesoundSearchResponse>('/search/text/', {
+					params: {
+						query,
+						fields: SEARCH_FIELDS,
+						filter: DEFAULT_FILTER,
+						page_size: 10,
+						sort: 'rating_desc',
+					},
+					signal,
+				}),
+			signal
+		);
 
-	// API 응답 검증
-	if (!data) {
-		throw new Error('API 응답이 없습니다.');
-	}
+		// API 응답 검증
+		if (!data) {
+			throw new Error('API 응답이 없습니다.');
+		}
 
-	if (!data.results || !Array.isArray(data.results) || data.results.length === 0) {
-		throw new Error('검색 결과가 없습니다.');
-	}
+		if (!data.results || !Array.isArray(data.results) || data.results.length === 0) {
+			throw new Error('검색 결과가 없습니다.');
+		}
 
-	// 검색 결과 중에서 랜덤하게 선택
-	const randomIndex = Math.floor(Math.random() * data.results.length);
-	const selectedResult = data.results[randomIndex];
+		// 검색 결과 중에서 랜덤하게 선택
+		const randomIndex = Math.floor(Math.random() * data.results.length);
+		const selectedResult = data.results[randomIndex];
 
-	if (!selectedResult) {
-		throw new Error('선택된 검색 결과가 없습니다.');
-	}
+		if (!selectedResult) {
+			throw new Error('선택된 검색 결과가 없습니다.');
+		}
 
-	const previewUrl = pickPreviewUrl(selectedResult.previews);
+		const previewUrl = pickPreviewUrl(selectedResult.previews);
 
-	if (!previewUrl) {
-		throw new Error('사용 가능한 미리듣기 URL이 없습니다.');
-	}
+		if (!previewUrl) {
+			throw new Error('사용 가능한 미리듣기 URL이 없습니다.');
+		}
 
-	const bpm = await fetchSoundBpm(selectedResult.id, signal);
+		const bpm = await fetchSoundBpm(selectedResult.id, signal);
 
-	return {
-		id: String(selectedResult.id),
-		title: selectedResult.name,
-		previewUrl,
-		duration: Math.round(selectedResult.duration),
-		bpm,
-	};
+		return {
+			id: String(selectedResult.id),
+			title: selectedResult.name,
+			previewUrl,
+			duration: Math.round(selectedResult.duration),
+			bpm,
+		};
+	}, signal);
 };

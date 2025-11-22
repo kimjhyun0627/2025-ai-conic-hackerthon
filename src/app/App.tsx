@@ -1,5 +1,6 @@
 import { BrowserRouter } from 'react-router-dom';
 import { AppRoutes } from './routes';
+import { ToastContainer } from '@/shared/components/ui';
 
 /**
  * 앱 레벨 컴포넌트
@@ -9,6 +10,7 @@ export function App() {
 	return (
 		<BrowserRouter>
 			<AppRoutes />
+			<ToastContainer />
 		</BrowserRouter>
 	);
 }

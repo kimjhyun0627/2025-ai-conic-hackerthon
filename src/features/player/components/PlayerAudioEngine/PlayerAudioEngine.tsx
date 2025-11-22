@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { usePlayerStore } from '@/store/playerStore';
 import { getSharedAudioElement } from '@/shared/audio';
 import { fetchTrackForGenre } from '@/shared/api';
-import { Toast } from '@/shared/components/ui';
+import { useToast } from '@/shared/components/ui';
 
 export const PlayerAudioEngine = () => {
 	const queue = usePlayerStore((state) => state.queue);
@@ -15,6 +15,7 @@ export const PlayerAudioEngine = () => {
 	const setDuration = usePlayerStore((state) => state.setDuration);
 	const setCurrentTime = usePlayerStore((state) => state.setCurrentTime);
 	const selectedGenre = usePlayerStore((state) => state.selectedGenre);
+	const isGenreChangeInProgress = usePlayerStore((state) => state.isGenreChangeInProgress);
 	const nextTrack = usePlayerStore((state) => state.queue.next);
 	const setNextTrack = usePlayerStore((state) => state.setNextTrack);
 	const moveToNextTrack = usePlayerStore((state) => state.moveToNextTrack);
@@ -24,9 +25,10 @@ export const PlayerAudioEngine = () => {
 	const rafIdRef = useRef<number | null>(null);
 	const prefetchAbortRef = useRef<AbortController | null>(null);
 	const prefetchedTrackIdRef = useRef<string | null>(null);
-	const [showNextPrefetchToast, setShowNextPrefetchToast] = useState(false);
-	const [showNextReadyToast, setShowNextReadyToast] = useState(false);
+	const prefetchToastIdRef = useRef<string | null>(null);
+	const readyToastIdRef = useRef<string | null>(null);
 	const previousIsPlayingRef = useRef(isPlaying);
+	const { showInfo, showSuccess, removeToast } = useToast();
 
 	// Initialize audio element
 	useEffect(() => {
@@ -193,21 +195,37 @@ export const PlayerAudioEngine = () => {
 			prefetchAbortRef.current.abort();
 			prefetchAbortRef.current = null;
 		}
-		setShowNextPrefetchToast(false);
-		setShowNextReadyToast(false);
-	}, [currentTrack?.id]);
+		if (prefetchToastIdRef.current) {
+			removeToast(prefetchToastIdRef.current);
+			prefetchToastIdRef.current = null;
+		}
+		if (readyToastIdRef.current) {
+			removeToast(readyToastIdRef.current);
+			readyToastIdRef.current = null;
+		}
+	}, [currentTrack?.id, removeToast]);
 
 	// Prefetch next track when remaining time <= 30s
 	useEffect(() => {
+		// 장르 변경 중이면 다음 노래 요청 무시
+		if (isGenreChangeInProgress) {
+			if (prefetchToastIdRef.current) {
+				removeToast(prefetchToastIdRef.current);
+				prefetchToastIdRef.current = null;
+			}
+			return;
+		}
 		if (!currentTrack || !selectedGenre) {
-			if (showNextPrefetchToast) {
-				setShowNextPrefetchToast(false);
+			if (prefetchToastIdRef.current) {
+				removeToast(prefetchToastIdRef.current);
+				prefetchToastIdRef.current = null;
 			}
 			return;
 		}
 		if (nextTrack || (queue.currentIndex >= 0 && queue.currentIndex < queue.tracks.length - 1)) {
-			if (showNextPrefetchToast) {
-				setShowNextPrefetchToast(false);
+			if (prefetchToastIdRef.current) {
+				removeToast(prefetchToastIdRef.current);
+				prefetchToastIdRef.current = null;
 			}
 			return;
 		}
@@ -229,27 +247,39 @@ export const PlayerAudioEngine = () => {
 		const abortController = new AbortController();
 		prefetchAbortRef.current = abortController;
 		prefetchedTrackIdRef.current = currentTrack.id;
-		setShowNextPrefetchToast(true);
+
+		// 토스트 표시
+		if (!prefetchToastIdRef.current) {
+			prefetchToastIdRef.current = showInfo('다음 노래를 준비 중이에요!', null);
+		}
 
 		fetchTrackForGenre(selectedGenre, abortController.signal)
 			.then((track) => {
 				if (!abortController.signal.aborted) {
 					setNextTrack(track);
-					setShowNextReadyToast(true);
+					// 프리페치 토스트 제거하고 준비 완료 토스트 표시
+					if (prefetchToastIdRef.current) {
+						removeToast(prefetchToastIdRef.current);
+						prefetchToastIdRef.current = null;
+					}
+					readyToastIdRef.current = showSuccess('다음 노래가 준비되었어요', 3000);
 				}
 			})
 			.catch((error) => {
 				if (!abortController.signal.aborted) {
 					console.error('다음 트랙 프리페치 실패:', error);
+					if (prefetchToastIdRef.current) {
+						removeToast(prefetchToastIdRef.current);
+						prefetchToastIdRef.current = null;
+					}
 				}
 			})
 			.finally(() => {
 				if (prefetchAbortRef.current === abortController) {
 					prefetchAbortRef.current = null;
-					setShowNextPrefetchToast(false);
 				}
 			});
-	}, [currentTrack, currentTime, nextTrack, selectedGenre, setNextTrack, showNextPrefetchToast, queue.currentIndex, queue.tracks.length]);
+	}, [currentTrack, currentTime, nextTrack, selectedGenre, isGenreChangeInProgress, setNextTrack, queue.currentIndex, queue.tracks.length, showInfo, showSuccess, removeToast]);
 
 	// Smooth progress updates while playing
 	useEffect(() => {
@@ -288,24 +318,5 @@ export const PlayerAudioEngine = () => {
 		}
 	}, [currentTime]);
 
-	return (
-		<>
-			{showNextPrefetchToast && (
-				<Toast
-					message="다음 노래를 준비 중이에요!"
-					type="info"
-					duration={null}
-					onClose={() => setShowNextPrefetchToast(false)}
-				/>
-			)}
-			{showNextReadyToast && (
-				<Toast
-					message="다음 노래가 준비되었어요"
-					type="success"
-					duration={3000}
-					onClose={() => setShowNextReadyToast(false)}
-				/>
-			)}
-		</>
-	);
+	return null;
 };

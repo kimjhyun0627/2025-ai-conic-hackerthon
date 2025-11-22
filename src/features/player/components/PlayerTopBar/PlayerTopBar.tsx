@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Home, Maximize, Minimize, Grid3x3, ChevronDown } from 'lucide-react';
-import { Button, ThemeToggle, Toast } from '@/shared/components/ui';
+import { Button, ThemeToggle, useToast } from '@/shared/components/ui';
 import { useFullscreen, useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '../../constants';
 import { useThemeStore } from '@/store/themeStore';
@@ -26,10 +26,12 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 	const moveToNextTrack = usePlayerStore((state) => state.moveToNextTrack);
 	const setDuration = usePlayerStore((state) => state.setDuration);
 	const resetQueue = usePlayerStore((state) => state.resetQueue);
+	const setIsGenreChangeInProgress = usePlayerStore((state) => state.setIsGenreChangeInProgress);
 	const { selectedTheme } = usePlayerParams();
 	const colors = useThemeColors();
+	const { showInfo, removeToast } = useToast();
 	const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
-	const [showToast, setShowToast] = useState(false);
+	const toastIdRef = useRef<string | null>(null);
 	const [hoveredGenreId, setHoveredGenreId] = useState<string | null>(null);
 	const [isFullscreenHovered, setIsFullscreenHovered] = useState(false);
 	const [isGenreButtonHovered, setIsGenreButtonHovered] = useState(false);
@@ -77,8 +79,14 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 		// 드롭다운 닫기
 		setIsGenreDropdownOpen(false);
 
+		// 장르 변경 시작 플래그 설정
+		setIsGenreChangeInProgress(true);
+
 		// 토스트 표시 (duration: null로 설정하여 API 응답까지 자동으로 닫히지 않음)
-		setShowToast(true);
+		if (toastIdRef.current) {
+			removeToast(toastIdRef.current);
+		}
+		toastIdRef.current = showInfo('새로운 장르를 불러오는 중이에요...', null);
 
 		// 기존 요청이 있다면 취소
 		if (genreRequestAbortRef.current) {
@@ -122,10 +130,15 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 				console.error('장르 변경 중 FreeSound API 호출 실패:', error);
 			}
 		} finally {
+			// 장르 변경 완료 플래그 해제
+			setIsGenreChangeInProgress(false);
 			if (genreRequestAbortRef.current === abortController) {
 				genreRequestAbortRef.current = null;
 			}
-			setShowToast(false);
+			if (toastIdRef.current) {
+				removeToast(toastIdRef.current);
+				toastIdRef.current = null;
+			}
 		}
 	};
 
@@ -433,16 +446,6 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 					</button>
 				</motion.div>
 			</div>
-
-			{/* Toast 메시지 */}
-			{showToast && (
-				<Toast
-					message="음악이 생성되면 변경한 장르로 넘어가요!"
-					type="info"
-					duration={null}
-					onClose={() => setShowToast(false)}
-				/>
-			)}
 		</>
 	);
 };
