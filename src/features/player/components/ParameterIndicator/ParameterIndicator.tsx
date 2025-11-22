@@ -98,6 +98,7 @@ export const ParameterIndicator = ({ allParams, currentStartIndex, visibleCount,
 									width: '8px',
 									height: '8px',
 									backgroundColor: isActive ? '#fb7185' : colors.isDark ? 'rgba(30, 41, 59, 1)' : 'rgba(241, 245, 249, 1)',
+									border: `1.5px solid ${!isActive ? colors.glassBorder : 'transparent'}`,
 									opacity: isActive ? 0.7 : 0.35, // 활성: 불투명, 비활성: 더 투명
 									backdropFilter: 'blur(4px)',
 									WebkitBackdropFilter: 'blur(4px)',
