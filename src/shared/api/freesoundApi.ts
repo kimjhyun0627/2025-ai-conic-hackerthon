@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+import { isCancelError } from '@/shared/utils';
 
 const FREESOUND_BASE_URL = '/api/freesound';
 const SEARCH_FIELDS = 'id,name,previews,duration';
@@ -313,10 +314,7 @@ const executeSearchRequest = async (query: string, signal?: AbortSignal) => {
 		);
 	} catch (error) {
 		// 취소된 요청은 로깅하지 않음
-		if (error && typeof error === 'object' && 'code' in error && error.code === 'ERR_CANCELED') {
-			throw error;
-		}
-		if (error instanceof DOMException && error.name === 'AbortError') {
+		if (isCancelError(error)) {
 			throw error;
 		}
 

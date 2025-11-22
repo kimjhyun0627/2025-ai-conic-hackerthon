@@ -6,6 +6,7 @@ import { usePlayerStore } from '@/store/playerStore';
 import { ConfirmModal, useToast } from '@/shared/components/ui';
 import { TopBar, GenreInfo, SyncGlowIntensity, SyncGlowWave, SyncGlowParticle, SyncGlowOscilloscope, ControlerPanel, ParameterPanel, GradientOverlay, AudioEngine } from '@/features/player/components';
 import { usePlayerParams, useGenreChangeAnimation, usePlayerExit, usePlayerTrack, useTrackFetcher } from '@/features/player/hooks';
+import { isCancelError } from '@/shared/utils';
 import { useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '@/features/player/constants';
 
@@ -93,12 +94,8 @@ const Player = () => {
 			// 큐에만 추가하고 재생하지 않음
 			setNextTrack(track);
 		} catch (error) {
-			// AbortError 또는 axios CanceledError는 정상적인 취소이므로 무시
-			if (error instanceof DOMException && error.name === 'AbortError') {
-				return;
-			}
-			// axios의 CanceledError 확인
-			if (error && typeof error === 'object' && 'code' in error && error.code === 'ERR_CANCELED') {
+			// 취소된 요청은 정상적인 취소이므로 무시
+			if (isCancelError(error)) {
 				return;
 			}
 

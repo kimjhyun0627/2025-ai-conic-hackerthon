@@ -5,6 +5,7 @@ import type { MusicGenre } from '@/shared/types';
 import { useTrackFetcher } from '@/features/player/hooks/useTrackFetcher';
 import { getSharedAudioElement } from '@/shared/audio';
 import { useToast } from '@/shared/components/ui';
+import { isCancelError } from '@/shared/utils';
 
 /**
  * 장르 선택 및 음악 생성 API 호출을 관리하는 커스텀 훅
@@ -72,8 +73,8 @@ export const useGenreSelection = () => {
 					return;
 				}
 
-				// AbortError는 정상적인 취소이므로 무시
-				if (error instanceof DOMException && error.name === 'AbortError') {
+				// 취소된 요청은 정상적인 취소이므로 무시
+				if (isCancelError(error)) {
 					return;
 				}
 

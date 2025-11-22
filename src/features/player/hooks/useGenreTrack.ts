@@ -3,6 +3,7 @@ import { usePlayerStore } from '@/store/playerStore';
 import { useToast } from '@/shared/components/ui';
 import { useTrackFetcher } from './useTrackFetcher';
 import type { MusicGenre } from '@/shared/types';
+import { isCancelError } from '@/shared/utils';
 
 /**
  * 장르별 트랙 관리 훅
@@ -73,8 +74,8 @@ export const useGenreTrack = () => {
 					}
 				}
 			} catch (error) {
-				// AbortError는 정상적인 취소이므로 무시
-				if (error instanceof DOMException && error.name === 'AbortError') {
+				// 취소된 요청은 정상적인 취소이므로 무시
+				if (isCancelError(error)) {
 					return;
 				}
 

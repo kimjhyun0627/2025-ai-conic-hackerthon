@@ -2,6 +2,7 @@ import { useCallback, useRef, useEffect } from 'react';
 import { usePlayerStore } from '@/store/playerStore';
 import { useToast } from '@/shared/components/ui';
 import { useTrackFetcher } from './useTrackFetcher';
+import { isCancelError } from '@/shared/utils';
 
 /**
  * 플레이어에서 사용하는 트랙 관리 훅
@@ -98,12 +99,8 @@ export const usePlayerTrack = () => {
 			readyToastIdRef.current = showSuccess('다음 트랙이 준비되었어요!', 3000);
 			moveToNextTrack();
 		} catch (error) {
-			// AbortError 또는 axios CanceledError는 정상적인 취소이므로 무시
-			if (error instanceof DOMException && error.name === 'AbortError') {
-				return;
-			}
-			// axios의 CanceledError 확인
-			if (error && typeof error === 'object' && 'code' in error && error.code === 'ERR_CANCELED') {
+			// 취소된 요청은 정상적인 취소이므로 무시
+			if (isCancelError(error)) {
 				return;
 			}
 
