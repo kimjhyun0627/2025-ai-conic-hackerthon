@@ -1,0 +1,1 @@
+export { BeatSyncGlow } from './BeatSyncGlow';

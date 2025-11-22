@@ -28,7 +28,9 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 	const trackNumber = queue.currentIndex >= 0 ? queue.currentIndex + 1 : 1;
 
 	const handlePlayPause = () => {
-		setIsPlaying(!isPlaying);
+		const newIsPlaying = !isPlaying;
+		console.log('[PlayerControls] 재생/일시정지 버튼 클릭:', { current: isPlaying, new: newIsPlaying });
+		setIsPlaying(newIsPlaying);
 	};
 
 	const handleProgressChange = (e: React.ChangeEvent<HTMLInputElement>) => {

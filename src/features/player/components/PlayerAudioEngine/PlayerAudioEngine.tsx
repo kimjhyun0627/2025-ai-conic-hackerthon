@@ -110,8 +110,10 @@ export const PlayerAudioEngine = () => {
 		}
 
 		if (isPlaying) {
+			console.log('[PlayerAudioEngine] 재생 시작:', { trackId: currentTrack?.id, audioPaused: audio.paused });
 			playAudioSafely(audio, () => setIsPlaying(false));
 		} else {
+			console.log('[PlayerAudioEngine] 일시정지:', { trackId: currentTrack?.id, audioPaused: audio.paused });
 			audio.pause();
 		}
 
