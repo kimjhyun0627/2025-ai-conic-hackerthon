@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { MusicGenre } from '@/shared/types';
 import { PLAYER_CONSTANTS } from '../../constants';
 
@@ -18,38 +18,52 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 						height: '100%',
 					}}
 				>
-					{genre.image ? (
-						<motion.img
-							src={genre.image}
-							alt={genre.nameKo}
-							draggable={false}
-							className="w-full h-full object-cover"
-							initial={{ scale: 1.1 }}
-							animate={{ scale: isPlaying ? 1.05 : 1 }}
-							transition={{ duration: 4, repeat: isPlaying ? Infinity : 0, ease: 'easeInOut' }}
-						/>
-					) : (
-						<div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-500/20 to-primary-700/20">
+					<AnimatePresence>
+						{genre.image ? (
+							<motion.img
+								key={genre.id}
+								src={genre.image}
+								alt={genre.nameKo}
+								draggable={false}
+								className="w-full h-full object-cover absolute inset-0"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1, scale: isPlaying ? 1.05 : 1 }}
+								exit={{ opacity: 0 }}
+								transition={{
+									opacity: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+									scale: { duration: 4, repeat: isPlaying ? Infinity : 0, ease: 'easeInOut' },
+								}}
+							/>
+						) : (
 							<motion.div
-								className="text-8xl"
-								{...(isPlaying
-									? {
-											animate: {
-												scale: [1, 1.1, 1],
-												rotate: [0, 5, -5, 0],
-											},
-											transition: {
-												duration: 2,
-												repeat: Infinity,
-												ease: 'easeInOut',
-											},
-										}
-									: {})}
+								key={`fallback-${genre.id}`}
+								className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-500/20 to-primary-700/20 absolute inset-0"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+								transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
 							>
-								🎵
+								<motion.div
+									className="text-8xl"
+									{...(isPlaying
+										? {
+												animate: {
+													scale: [1, 1.1, 1],
+													rotate: [0, 5, -5, 0],
+												},
+												transition: {
+													duration: 2,
+													repeat: Infinity,
+													ease: 'easeInOut',
+												},
+											}
+										: {})}
+								>
+									🎵
+								</motion.div>
 							</motion.div>
-						</div>
-					)}
+						)}
+					</AnimatePresence>
 					{/* Animated Background Gradient Overlay */}
 					{isPlaying && (
 						<motion.div

@@ -10,10 +10,11 @@ interface PlayerGenreInfoProps {
 
 export const PlayerGenreInfo = ({ genre, theme, isVisible = true }: PlayerGenreInfoProps) => {
 	return (
-		<div className="absolute top-6 left-6 z-10 max-w-sm md:max-w-md">
-			<AnimatePresence>
+		<div className="absolute top-6 left-6 z-10 w-64 md:w-80">
+			<AnimatePresence mode="wait">
 				{isVisible && (
 					<motion.div
+						key={genre.id}
 						initial="hidden"
 						animate="visible"
 						exit="hidden"
@@ -21,16 +22,16 @@ export const PlayerGenreInfo = ({ genre, theme, isVisible = true }: PlayerGenreI
 							hidden: {
 								opacity: 0,
 								y: -20,
-								transition: PLAYER_CONSTANTS.ANIMATIONS.genreInfo.transition,
+								transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
 							},
 							visible: {
 								opacity: 1,
 								y: 0,
-								transition: PLAYER_CONSTANTS.ANIMATIONS.genreInfo.transition,
+								transition: { duration: 0.4, ease: [0.4, 0, 0.2, 1] },
 							},
 						}}
 					>
-						<div className={PLAYER_CONSTANTS.STYLES.glassCard}>
+						<div className={`${PLAYER_CONSTANTS.STYLES.glassCard} w-full`}>
 							{theme && (
 								<div className="flex items-center gap-2 mb-2">
 									<span className="text-sm md:text-base font-medium text-slate-600 dark:text-slate-400">{theme.categoryNameKo}</span>
