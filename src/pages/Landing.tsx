@@ -97,18 +97,18 @@ const Landing = () => {
 
 	// 인디케이터 위치 업데이트 (리사이즈 및 스크롤 시)
 	useEffect(() => {
-		updateIndicatorPosition();
-		updateBackButtonPosition();
-		window.addEventListener('resize', updateIndicatorPosition);
-		window.addEventListener('scroll', updateIndicatorPosition);
-		window.addEventListener('resize', updateBackButtonPosition);
-		window.addEventListener('scroll', updateBackButtonPosition);
+		const updatePositions = () => {
+			updateIndicatorPosition();
+			updateBackButtonPosition();
+		};
+
+		updatePositions();
+		window.addEventListener('resize', updatePositions);
+		window.addEventListener('scroll', updatePositions);
 
 		return () => {
-			window.removeEventListener('resize', updateIndicatorPosition);
-			window.removeEventListener('scroll', updateIndicatorPosition);
-			window.removeEventListener('resize', updateBackButtonPosition);
-			window.removeEventListener('scroll', updateBackButtonPosition);
+			window.removeEventListener('resize', updatePositions);
+			window.removeEventListener('scroll', updatePositions);
 		};
 	}, [updateIndicatorPosition, updateBackButtonPosition, selectedCategory, categoryCarousel.currentIndex, genreCarousel.currentIndex]);
 

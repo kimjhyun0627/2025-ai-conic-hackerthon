@@ -101,26 +101,6 @@ export const getSampleAudioUrlByGenre = (genre: MusicGenre): string | null => {
 };
 
 /**
- * 첫 재생 여부 확인 (localStorage 사용)
- */
-const STORAGE_KEY_PREFIX = 'sample_audio_played_';
-
-export const isFirstPlay = (key: string): boolean => {
-	if (typeof window === 'undefined') return true;
-	const storageKey = `${STORAGE_KEY_PREFIX}${key}`;
-	return !localStorage.getItem(storageKey);
-};
-
-/**
- * 첫 재생 완료 표시
- */
-export const markAsPlayed = (key: string): void => {
-	if (typeof window === 'undefined') return;
-	const storageKey = `${STORAGE_KEY_PREFIX}${key}`;
-	localStorage.setItem(storageKey, 'true');
-};
-
-/**
  * 테마 카테고리 또는 장르 ID로 샘플 오디오 URL 가져오기
  * @param categoryOrGenreId - 카테고리 또는 장르 ID
  * @param category - 테마 카테고리 (장르인 경우 필수)
