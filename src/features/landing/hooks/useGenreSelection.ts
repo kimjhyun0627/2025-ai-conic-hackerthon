@@ -5,6 +5,7 @@ import { DEFAULT_AUDIO_PARAMS } from '@/shared/constants';
 import type { MusicGenre } from '@/shared/types';
 import { useTrackFetcher } from '@/features/player/hooks/useTrackFetcher';
 import { getSharedAudioElement } from '@/shared/audio';
+import { useToast } from '@/shared/components/ui';
 
 /**
  * 장르 선택 및 음악 생성 API 호출을 관리하는 커스텀 훅
@@ -16,6 +17,7 @@ export const useGenreSelection = () => {
 	const setIsPlaying = usePlayerStore((state) => state.setIsPlaying);
 	const setDuration = usePlayerStore((state) => state.setDuration);
 	const getVolume = usePlayerStore.getState;
+	const { showError } = useToast();
 
 	const { fetchTrack, cancel, cleanup } = useTrackFetcher();
 	const cancelApiCallRef = useRef<(() => void) | null>(null);
@@ -80,9 +82,12 @@ export const useGenreSelection = () => {
 				console.error('FreeSound API 호출 실패:', error);
 				setIsTransitioning(false);
 				cancelApiCallRef.current = null;
+
+				// 에러 토스트 표시
+				showError('음악 생성에 실패했습니다. 다시 시도해주세요.', 5000);
 			}
 		},
-		[navigate, setSelectedGenre, setCurrentTrack, setIsPlaying, setDuration, getVolume, fetchTrack, cancel]
+		[navigate, setSelectedGenre, setCurrentTrack, setIsPlaying, setDuration, getVolume, fetchTrack, cancel, showError]
 	);
 
 	const handleCancelApiCall = useCallback(() => {

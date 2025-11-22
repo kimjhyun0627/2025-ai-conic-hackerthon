@@ -8,3 +8,5 @@ export { usePlayerTrack } from './usePlayerTrack';
 export { useGenreTrack } from './useGenreTrack';
 export { useAutoPrefetch } from './useAutoPrefetch';
 export { useAudioAnalyzer } from './useAudioAnalyzer';
+export { useBPM } from './useBPM';
+export { usePrimaryPalette } from './usePrimaryPalette';

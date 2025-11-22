@@ -1,1 +1,0 @@
-export { SyncGlowBeat } from './SyncGlowBeat';

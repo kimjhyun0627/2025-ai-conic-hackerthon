@@ -1,0 +1,1 @@
+export { SyncGlowWave } from './SyncGlowWave';
