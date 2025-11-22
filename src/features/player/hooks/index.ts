@@ -6,3 +6,4 @@ export { usePlayerExit } from './usePlayerExit';
 export { useTrackFetcher } from './useTrackFetcher';
 export { usePlayerTrack } from './usePlayerTrack';
 export { useGenreTrack } from './useGenreTrack';
+export { useAutoPrefetch } from './useAutoPrefetch';
