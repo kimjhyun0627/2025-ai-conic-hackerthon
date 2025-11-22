@@ -4,4 +4,5 @@
  */
 export const ENV = {
 	API_BASE_URL: import.meta.env.VITE_API_BASE_URL || '',
+	FREESOUND_API_KEY: import.meta.env.VITE_FREESOUND_API_KEY || '',
 } as const;

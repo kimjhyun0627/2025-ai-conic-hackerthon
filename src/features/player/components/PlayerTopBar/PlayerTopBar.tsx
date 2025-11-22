@@ -8,6 +8,8 @@ import { useThemeStore } from '@/store/themeStore';
 import { usePlayerStore } from '@/store/playerStore';
 import { usePlayerParams } from '../../hooks';
 import type { MusicGenre } from '@/shared/types';
+import { fetchTrackForGenre } from '@/shared/api';
+import { DEFAULT_AUDIO_PARAMS } from '@/shared/constants';
 
 interface PlayerTopBarProps {
 	onHomeClick: () => void;
@@ -17,7 +19,13 @@ interface PlayerTopBarProps {
 export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProps) => {
 	const { isFullscreen, toggleFullscreen } = useFullscreen();
 	const theme = useThemeStore((state) => state.theme);
-	const { selectedGenre } = usePlayerStore();
+	const selectedGenre = usePlayerStore((state) => state.selectedGenre);
+	const setSelectedGenre = usePlayerStore((state) => state.setSelectedGenre);
+	const setCurrentTrack = usePlayerStore((state) => state.setCurrentTrack);
+	const setNextTrack = usePlayerStore((state) => state.setNextTrack);
+	const moveToNextTrack = usePlayerStore((state) => state.moveToNextTrack);
+	const setDuration = usePlayerStore((state) => state.setDuration);
+	const resetQueue = usePlayerStore((state) => state.resetQueue);
 	const { selectedTheme } = usePlayerParams();
 	const colors = useThemeColors();
 	const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
@@ -27,7 +35,7 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 	const [isGenreButtonHovered, setIsGenreButtonHovered] = useState(false);
 	const [isHomeButtonHovered, setIsHomeButtonHovered] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const genreSelectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const genreRequestAbortRef = useRef<AbortController | null>(null);
 
 	// 현재 카테고리의 장르 목록 가져오기
 	const currentGenres = selectedTheme?.genres || [];
@@ -49,11 +57,12 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 		};
 	}, [isGenreDropdownOpen]);
 
-	// 컴포넌트 언마운트 시 타이머 정리
+	// 컴포넌트 언마운트 시 요청 정리
 	useEffect(() => {
 		return () => {
-			if (genreSelectTimerRef.current) {
-				clearTimeout(genreSelectTimerRef.current);
+			if (genreRequestAbortRef.current) {
+				genreRequestAbortRef.current.abort();
+				genreRequestAbortRef.current = null;
 			}
 		};
 	}, []);
@@ -65,40 +74,58 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 			return;
 		}
 
-		// 이전 타이머가 있으면 정리
-		if (genreSelectTimerRef.current) {
-			clearTimeout(genreSelectTimerRef.current);
-			genreSelectTimerRef.current = null;
-		}
-
 		// 드롭다운 닫기
 		setIsGenreDropdownOpen(false);
 
 		// 토스트 표시 (duration: null로 설정하여 API 응답까지 자동으로 닫히지 않음)
 		setShowToast(true);
 
-		try {
-			// TODO: 실제 API 호출로 교체
-			// const response = await generateMusic(genre, audioParams);
-			// 예시: API 호출 시뮬레이션
-			const response = await new Promise<{ success: boolean }>((resolve) => {
-				// 실제 API 호출로 교체 필요
-				// fetch('/api/generate-music', { ... })
-				setTimeout(() => {
-					resolve({ success: true });
-				}, 2000); // 임시 딜레이
-			});
+		// 기존 요청이 있다면 취소
+		if (genreRequestAbortRef.current) {
+			genreRequestAbortRef.current.abort();
+		}
 
-			// API 응답 성공 시 장르 변경 및 토스트 닫기
-			if (response.success) {
-				usePlayerStore.getState().setSelectedGenre(genre);
-				setShowToast(false);
+		const abortController = new AbortController();
+		genreRequestAbortRef.current = abortController;
+
+		try {
+			const track = await fetchTrackForGenre(genre, abortController.signal);
+
+			const queue = usePlayerStore.getState().queue;
+			const hasCurrentTrack = queue.currentIndex >= 0 && queue.currentIndex < queue.tracks.length;
+			const prevGenre = usePlayerStore.getState().selectedGenre;
+
+			// 장르가 실제로 변경된 경우에만 queue 초기화
+			const isGenreChanged = !prevGenre || prevGenre.id !== genre.id;
+
+			if (isGenreChanged) {
+				// 새 장르로 변경: 큐 초기화 후 새 트랙 설정
+				resetQueue();
+				setSelectedGenre(genre);
+				setCurrentTrack(track);
+				setDuration(track.duration || DEFAULT_AUDIO_PARAMS.tempo);
+			} else {
+				// 같은 장르 내에서: 다음 트랙으로 추가
+				if (!hasCurrentTrack) {
+					// 첫 트랙인 경우
+					setCurrentTrack(track);
+					setDuration(track.duration || DEFAULT_AUDIO_PARAMS.tempo);
+				} else {
+					// 이미 트랙이 있는 경우 다음 트랙으로 추가
+					setNextTrack(track);
+					moveToNextTrack();
+					setDuration(track.duration || DEFAULT_AUDIO_PARAMS.tempo);
+				}
 			}
 		} catch (error) {
-			// 에러 처리
-			console.error('음악 생성 실패:', error);
+			if (!abortController.signal.aborted) {
+				console.error('장르 변경 중 FreeSound API 호출 실패:', error);
+			}
+		} finally {
+			if (genreRequestAbortRef.current === abortController) {
+				genreRequestAbortRef.current = null;
+			}
 			setShowToast(false);
-			// TODO: 에러 토스트 표시
 		}
 	};
 

@@ -1,0 +1,1 @@
+export { getSharedAudioElement } from './audioElement';

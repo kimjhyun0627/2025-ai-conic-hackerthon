@@ -9,3 +9,4 @@ export { ParameterCarousel } from './ParameterCarousel';
 export { ParameterIndicator } from './ParameterIndicator';
 export { CommonParamButtons } from './CommonParamButtons';
 export { GradientOverlay } from './GradientOverlay';
+export { PlayerAudioEngine } from './PlayerAudioEngine';

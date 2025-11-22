@@ -3,19 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { usePlayerStore } from '@/store/playerStore';
-import { ConfirmModal } from '@/shared/components/ui';
-import { PlayerTopBar, PlayerGenreInfo, PlayerCenterImage, PlayerControls, ParameterPanel, GradientOverlay } from '@/features/player/components';
+import { ConfirmModal, Toast } from '@/shared/components/ui';
+import { PlayerTopBar, PlayerGenreInfo, PlayerCenterImage, PlayerControls, ParameterPanel, GradientOverlay, PlayerAudioEngine } from '@/features/player/components';
 import { usePlayerParams, useGenreChangeAnimation, usePlayerExit } from '@/features/player/hooks';
 import { useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '@/features/player/constants';
+import { fetchTrackForGenre } from '@/shared/api';
 
 const Player = () => {
 	const navigate = useNavigate();
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isControlsVisible, setIsControlsVisible] = useState(true);
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [showNextLoadingToast, setShowNextLoadingToast] = useState(false);
+	const [showNextReadyToast, setShowNextReadyToast] = useState(false);
 
-	const { selectedGenre, isPlaying } = usePlayerStore();
+	const { selectedGenre, isPlaying, queue, moveToNextTrack, moveToPrevTrack, setNextTrack, resetQueue } = usePlayerStore();
 	const { selectedTheme, themeBaseParams, themeAdditionalParams, activeCommonParamsList, availableCommonParams, getParamValue, setParamValue, addCommonParam, removeCommonParam, removeThemeParam } =
 		usePlayerParams();
 	const colors = useThemeColors();
@@ -32,6 +35,29 @@ const Player = () => {
 			navigate('/');
 		}
 	}, [selectedGenre, navigate]);
+
+	// 장르(테마) 변경 시 처리
+	// 주의: PlayerTopBar에서 resetQueue를 먼저 호출하므로, 여기서는 중복 호출을 방지하기 위해 주석 처리
+	// const prevGenreRef = useRef<{ id: string; category: string } | null>(null);
+	// useEffect(() => {
+	// 	if (selectedGenre && prevGenreRef.current !== null) {
+	// 		const prevGenre = prevGenreRef.current;
+	// 		// 장르가 변경된 경우 (같은 카테고리든 다른 카테고리든) queue 초기화
+	// 		if (prevGenre.id !== selectedGenre.id) {
+	// 			resetQueue();
+	// 		}
+	// 	}
+	// 	if (selectedGenre) {
+	// 		prevGenreRef.current = { id: selectedGenre.id, category: selectedGenre.category };
+	// 	}
+	// }, [selectedGenre, resetQueue]);
+
+	// Player 페이지에서 나갈 때 queue 초기화
+	useEffect(() => {
+		if (isLeaving) {
+			resetQueue();
+		}
+	}, [isLeaving, resetQueue]);
 
 	if (!selectedGenre) {
 		return null;
@@ -51,15 +77,47 @@ const Player = () => {
 	};
 
 	const handlePrev = () => {
-		// TODO: 이전 트랙으로 이동
+		moveToPrevTrack();
 	};
 
 	const handleNext = () => {
-		// TODO: 다음 트랙으로 이동
+		// nextTrack이 있으면 바로 이동
+		if (queue.next) {
+			moveToNextTrack();
+			return;
+		}
+
+		// tracks에 다음 트랙이 있으면 이동
+		if (queue.currentIndex >= 0 && queue.currentIndex < queue.tracks.length - 1) {
+			moveToNextTrack();
+			return;
+		}
+
+		// nextTrack도 없고 tracks에도 다음 트랙이 없으면 새 트랙 가져오기 시작
+		if (!selectedGenre) {
+			return;
+		}
+
+		// 로딩 토스트 표시
+		setShowNextLoadingToast(true);
+
+		// 비동기로 트랙 가져오기 시작 (await 없이 즉시 실행)
+		fetchTrackForGenre(selectedGenre)
+			.then((track) => {
+				setNextTrack(track);
+				setShowNextLoadingToast(false);
+				setShowNextReadyToast(true);
+				moveToNextTrack();
+			})
+			.catch((error) => {
+				console.error('다음 트랙 가져오기 실패:', error);
+				setShowNextLoadingToast(false);
+			});
 	};
 
 	return (
 		<>
+			<PlayerAudioEngine />
 			<div className="min-h-screen flex flex-col relative overflow-hidden">
 				{/* Top Bar */}
 				<PlayerTopBar
@@ -210,6 +268,26 @@ const Player = () => {
 				onConfirm={handleConfirmHome}
 				onCancel={handleCancelHome}
 			/>
+
+			{/* Next Track Loading Toast */}
+			{showNextLoadingToast && (
+				<Toast
+					message="다음 노래를 준비 중이에요!"
+					type="info"
+					duration={null}
+					onClose={() => setShowNextLoadingToast(false)}
+				/>
+			)}
+
+			{/* Next Track Ready Toast */}
+			{showNextReadyToast && (
+				<Toast
+					message="다음 노래가 준비되었어요"
+					type="success"
+					duration={3000}
+					onClose={() => setShowNextReadyToast(false)}
+				/>
+			)}
 		</>
 	);
 };

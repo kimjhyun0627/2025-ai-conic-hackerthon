@@ -190,8 +190,12 @@ const CarouselCard = ({
 
 	// 등장/퇴장 애니메이션을 위한 초기 값 설정
 	const getInitialValues = () => {
-		// 첫 렌더링이거나 등장하는 경우
-		if (isFirstRender.current || isEntering) {
+		// 첫 렌더링 시에는 애니메이션을 건너뛰고 현재 위치에서 바로 시작
+		if (isFirstRender.current) {
+			return false;
+		}
+		// 등장하는 경우에만 초기 애니메이션 적용
+		if (isEntering) {
 			if (relativeIndex < 0) {
 				return { x: -400, scale: 0.5, opacity: 0 };
 			} else if (relativeIndex > 0) {

@@ -113,7 +113,7 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 								className="absolute inset-0"
 								style={{
 									opacity: waveOpacity,
-									background: `linear-gradient(90deg, transparent, ${waveColor1}, transparent)`,
+									backgroundImage: `linear-gradient(90deg, transparent, ${waveColor1}, transparent)`,
 									backgroundSize: '200% 100%',
 								}}
 								animate={{
@@ -129,7 +129,7 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 								className="absolute inset-0"
 								style={{
 									opacity: waveOpacity,
-									background: `linear-gradient(90deg, transparent, ${waveColor2}, transparent)`,
+									backgroundImage: `linear-gradient(90deg, transparent, ${waveColor2}, transparent)`,
 									backgroundSize: '200% 100%',
 								}}
 								animate={{
@@ -146,7 +146,7 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 								className="absolute inset-0"
 								style={{
 									opacity: waveOpacity,
-									background: `linear-gradient(90deg, transparent, ${waveColor3}, transparent)`,
+									backgroundImage: `linear-gradient(90deg, transparent, ${waveColor3}, transparent)`,
 									backgroundSize: '200% 100%',
 								}}
 								animate={{

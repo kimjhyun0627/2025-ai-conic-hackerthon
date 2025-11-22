@@ -19,10 +19,13 @@ interface PlayerControlsProps {
 }
 
 export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, onToggleVisibility, onPrev, onNext }: PlayerControlsProps) => {
-	const { isPlaying, volume, currentTime, duration, isMuted, setIsPlaying, setVolume, setCurrentTime, toggleMute } = usePlayerStore();
+	const { isPlaying, volume, currentTime, duration, isMuted, setIsPlaying, setVolume, setCurrentTime, toggleMute, queue } = usePlayerStore();
 	const colors = useThemeColors();
 	const { buttonStyle, handleMouseEnter, handleMouseLeave } = useGlassButton();
 	const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+
+	// 트랙 번호 계산: currentIndex + 1 (0-based이므로 +1)
+	const trackNumber = queue.currentIndex >= 0 ? queue.currentIndex + 1 : 1;
 
 	const handlePlayPause = () => {
 		setIsPlaying(!isPlaying);
@@ -54,7 +57,7 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 						>
 							•
 						</span>{' '}
-						Track 1
+						Track {trackNumber}
 					</p>
 				</div>
 
@@ -71,29 +74,15 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 							type="range"
 							min={0}
 							max={duration || 100}
+							step={0.01}
 							value={currentTime}
 							onChange={handleProgressChange}
-							className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb transition-all duration-200"
+							className="w-full h-2 rounded-lg appearance-none cursor-pointer slider-thumb transition-all duration-200 bg-transparent"
 							style={
 								{
 									'--progress': `${progressPercentage}%`,
 								} as React.CSSProperties
 							}
-						/>
-						<motion.div
-							style={{
-								position: 'absolute',
-								top: 0,
-								left: 0,
-								height: '0.375rem',
-								background: 'linear-gradient(to right, #fb7185, #f43f5e)',
-								borderRadius: '0.375rem',
-								pointerEvents: 'none',
-								width: `${progressPercentage}%`,
-							}}
-							initial={{ width: 0 }}
-							animate={{ width: `${progressPercentage}%` }}
-							transition={{ duration: 0.1 }}
 						/>
 					</div>
 					<span
@@ -146,8 +135,8 @@ export const PlayerControls = ({ genre, isExpanded, isVisible, onToggleExpand, o
 								)}
 							</AnimatePresence>
 						</button>
-						<div className="hidden md:flex items-center gap-1.5">
-							<div className="w-16">
+						<div className="flex items-center gap-1.5">
+							<div className="w-16 sm:w-20">
 								<Slider
 									min={0}
 									max={100}

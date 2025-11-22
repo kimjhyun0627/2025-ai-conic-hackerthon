@@ -13,6 +13,8 @@ interface PlayerState {
 
 	// Queue
 	queue: AudioQueue;
+	// Computed
+	getCurrentTrack: () => Track | null;
 
 	// Audio Parameters
 	audioParams: AudioParams;
@@ -36,8 +38,9 @@ interface PlayerState {
 	// Queue Actions
 	setCurrentTrack: (track: Track | null) => void;
 	setNextTrack: (track: Track | null) => void;
-	addToHistory: (track: Track) => void;
 	moveToNextTrack: () => void;
+	moveToPrevTrack: () => void;
+	resetQueue: () => void;
 
 	// Audio Params Actions
 	setAudioParams: (params: Partial<AudioParams>) => void;
@@ -64,9 +67,9 @@ const initialState = {
 	isMuted: false,
 	previousVolume: 70,
 	queue: {
-		current: null,
+		tracks: [],
+		currentIndex: -1,
 		next: null,
-		history: [],
 	},
 	audioParams: DEFAULT_AUDIO_PARAMS,
 	visualizerType: 'pulse' as VisualizerType,
@@ -76,6 +79,15 @@ const initialState = {
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
 	...initialState,
+
+	// Computed
+	getCurrentTrack: () => {
+		const { queue } = get();
+		if (queue.currentIndex >= 0 && queue.currentIndex < queue.tracks.length) {
+			return queue.tracks[queue.currentIndex];
+		}
+		return null;
+	},
 
 	// Player Actions
 	setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
@@ -111,39 +123,89 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
 	// Queue Actions
 	setCurrentTrack: (track: Track | null) =>
-		set((state) => ({
-			queue: { ...state.queue, current: track },
-			currentTime: 0,
-			isPlaying: false,
-		})),
+		set((state) => {
+			if (!track) {
+				return {
+					queue: { ...state.queue, currentIndex: -1 },
+					currentTime: 0,
+					isPlaying: false, // track이 null인 경우만 false
+				};
+			}
+
+			// tracks에 없으면 추가
+			const trackIndex = state.queue.tracks.findIndex((t) => t.id === track.id);
+			if (trackIndex === -1) {
+				return {
+					queue: {
+						...state.queue,
+						tracks: [...state.queue.tracks, track],
+						currentIndex: state.queue.tracks.length,
+					},
+					currentTime: 0,
+					isPlaying: true, // 트랙이 변경되면 항상 재생
+				};
+			}
+
+			return {
+				queue: { ...state.queue, currentIndex: trackIndex },
+				currentTime: 0,
+				isPlaying: true, // 트랙이 변경되면 항상 재생
+			};
+		}),
 
 	setNextTrack: (track: Track | null) =>
 		set((state) => ({
 			queue: { ...state.queue, next: track },
 		})),
 
-	addToHistory: (track: Track) =>
-		set((state) => ({
-			queue: {
-				...state.queue,
-				history: [...state.queue.history, track].slice(-10), // 최근 10개만 유지
-			},
-		})),
-
 	moveToNextTrack: () => {
-		const { queue, addToHistory } = get();
-		if (queue.current) {
-			addToHistory(queue.current);
+		const { queue } = get();
+		const { tracks, currentIndex, next } = queue;
+
+		// next 트랙이 있으면 tracks에 추가하고 이동
+		if (next) {
+			const nextIndex = tracks.length; // next는 tracks 끝에 추가
+			set((state) => ({
+				queue: {
+					...state.queue,
+					tracks: [...state.queue.tracks, next],
+					currentIndex: nextIndex,
+					next: null,
+				},
+				currentTime: 0,
+				isPlaying: true, // 항상 재생 상태로 진입
+			}));
+			return;
 		}
-		set((state) => ({
-			queue: {
-				...state.queue,
-				current: state.queue.next,
-				next: null,
-			},
-			currentTime: 0,
-			isPlaying: !!state.queue.next,
-		}));
+
+		// next가 없고 다음 인덱스가 있으면 이동
+		if (currentIndex >= 0 && currentIndex < tracks.length - 1) {
+			set((state) => ({
+				queue: {
+					...state.queue,
+					currentIndex: state.queue.currentIndex + 1,
+				},
+				currentTime: 0,
+				isPlaying: true, // 항상 재생 상태로 진입
+			}));
+		}
+	},
+
+	moveToPrevTrack: () => {
+		const { queue } = get();
+		const { currentIndex } = queue;
+
+		// 이전 인덱스가 있으면 이동
+		if (currentIndex > 0) {
+			set((state) => ({
+				queue: {
+					...state.queue,
+					currentIndex: state.queue.currentIndex - 1,
+				},
+				currentTime: 0,
+				isPlaying: true, // 항상 재생 상태로 진입
+			}));
+		}
 	},
 
 	// Audio Params Actions
@@ -164,5 +226,14 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 	setParameterPanelOrientation: (orientation: 'horizontal' | 'vertical') => set({ parameterPanelOrientation: orientation }),
 
 	// Reset
+	resetQueue: () =>
+		set({
+			queue: {
+				tracks: [],
+				currentIndex: -1,
+				next: null,
+			},
+		}),
+
 	reset: () => set(initialState),
 }));

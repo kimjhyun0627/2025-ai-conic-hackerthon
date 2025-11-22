@@ -61,7 +61,7 @@ export const TransitionOverlay = ({ isVisible, onCancel }: TransitionOverlayProp
 							<motion.h2
 								className="text-2xl md:text-3xl font-semibold"
 								style={{
-									background: colors.isDark
+									backgroundImage: colors.isDark
 										? 'linear-gradient(135deg, #a52a2a 0%, #fb7185 20%, #f472b6 40%, #fb7185 60%, #fb923c 75%, #a52a2a 100%)'
 										: 'linear-gradient(135deg, #8b2635 0%, #fb7185 20%, #f472b6 40%, #fb7185 60%, #fb923c 80%, #8b2635 100%)',
 									backgroundSize: '200% 200%',

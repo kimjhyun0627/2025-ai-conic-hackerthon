@@ -5,6 +5,7 @@ import { MUSIC_THEMES } from '@/shared/constants';
 import { ThemeToggle } from '@/shared/components/ui';
 import { TransitionOverlay } from '@/shared/components/common';
 import { CategorySection, GenreSection } from '@/features/landing/components';
+import { GradientOverlay } from '@/features/player/components';
 import { useThemeStore } from '@/store/themeStore';
 import { useWindowWidth, useWindowSize } from '@/shared/hooks';
 import { useVisibleRange, useCarousel, useGenreSelection } from '@/features/landing/hooks';
@@ -42,9 +43,9 @@ const Landing = () => {
 		return Math.round(minPaddingTop + (maxPaddingTop - minPaddingTop) * ratio);
 	}, [height]);
 
-	const categoryCarousel = useCarousel(MUSIC_THEMES);
+	const categoryCarousel = useCarousel(MUSIC_THEMES, { randomInitialIndex: true });
 	const selectedTheme = MUSIC_THEMES.find((musicTheme) => musicTheme.category === selectedCategory);
-	const genreCarousel = useCarousel(selectedTheme?.genres || []);
+	const genreCarousel = useCarousel(selectedTheme?.genres || [], { randomInitialIndex: true });
 
 	// 인디케이터 위치 업데이트 함수
 	const updateIndicatorPosition = useCallback(() => {
@@ -176,6 +177,11 @@ const Landing = () => {
 
 	return (
 		<>
+			<GradientOverlay
+				isVisible={isTransitioning}
+				type="genreChange"
+				zIndex={140}
+			/>
 			{/* Theme Toggle - Fixed Top Right */}
 			<motion.div
 				style={{

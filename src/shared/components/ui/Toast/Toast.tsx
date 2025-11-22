@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, XCircle, AlertTriangle, Info, X } from 'lucide-react';
 import { useThemeColors } from '@/shared/hooks';
@@ -14,6 +14,12 @@ const Toast = ({ message, type = 'info', duration = 3000, onClose }: ToastProps)
 	const [isVisible, setIsVisible] = useState(true);
 	const colors = useThemeColors();
 	const isIndefinite = duration === null || duration === undefined;
+	const onCloseRef = useRef(onClose);
+
+	// onClose ref를 최신 값으로 유지
+	useEffect(() => {
+		onCloseRef.current = onClose;
+	}, [onClose]);
 
 	useEffect(() => {
 		// duration이 null이면 자동으로 닫히지 않음
@@ -24,12 +30,12 @@ const Toast = ({ message, type = 'info', duration = 3000, onClose }: ToastProps)
 		const timer = setTimeout(() => {
 			setIsVisible(false);
 			setTimeout(() => {
-				onClose?.();
+				onCloseRef.current?.();
 			}, 300); // 페이드아웃 애니메이션 후 제거
 		}, duration);
 
 		return () => clearTimeout(timer);
-	}, [duration, onClose, isIndefinite]);
+	}, [duration, isIndefinite]);
 
 	const icons = {
 		success: CheckCircle2,
