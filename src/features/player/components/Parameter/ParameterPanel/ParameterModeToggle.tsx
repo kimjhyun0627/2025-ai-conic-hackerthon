@@ -3,8 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, LayoutList } from 'lucide-react';
 import { PLAYER_CONSTANTS } from '../../../constants';
 import { useThemeColors } from '@/shared/hooks';
-
-const PRIMARY_COLOR = '#fb7185'; // primary-500
+import { PRIMARY_COLOR } from '@/shared/constants';
 
 interface ParameterModeToggleProps {
 	orientation: 'horizontal' | 'vertical';
