@@ -28,14 +28,17 @@ export const SyncGlowWave = ({ genre, isPlaying }: SyncGlowWaveProps) => {
 	});
 
 	return (
-		<SyncGlowContainer withPadding className="w-[calc(100vw-20vh)] h-[80vh] overflow-hidden relative">
+		<SyncGlowContainer
+			withPadding
+			className="w-[calc(100vw-20vh)] h-[80vh] overflow-hidden relative"
+		>
 			{/* 장르 이미지 (배경) */}
 			<GenreImage
 				genre={genre}
 				isPlaying={isPlaying}
 				imageOpacity={imageOpacity}
 				zIndex={0}
-				opacityMultiplier={0.5}
+				opacityMultiplier={0.8}
 			/>
 
 			{/* 주파수 스펙트럼 막대 그래프 (중앙 정렬) */}
