@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { isCancelError } from '@/shared/utils';
+import { RequestQueue } from '@/shared/audio';
 
 const FREESOUND_BASE_URL = '/api/freesound';
 const SEARCH_FIELDS = 'id,name,previews,duration';
@@ -9,81 +10,6 @@ const freesoundClient = axios.create({
 	baseURL: FREESOUND_BASE_URL,
 	timeout: Number(import.meta.env.VITE_FREESOUND_TIMEOUT ?? 30000),
 });
-
-// API 요청 큐 시스템
-type QueueItem<T> = {
-	resolve: (value: T) => void;
-	reject: (error: unknown) => void;
-	execute: () => Promise<T>;
-	signal?: AbortSignal;
-};
-
-class RequestQueue {
-	private queue: QueueItem<unknown>[] = [];
-	private isProcessing = false;
-
-	async enqueue<T>(execute: () => Promise<T>, signal?: AbortSignal): Promise<T> {
-		return new Promise<T>((resolve, reject) => {
-			// AbortSignal이 이미 abort된 경우 즉시 거부
-			if (signal?.aborted) {
-				reject(new DOMException('Operation aborted', 'AbortError'));
-				return;
-			}
-
-			const queueItem: QueueItem<T> = {
-				resolve,
-				reject,
-				execute,
-				signal,
-			};
-
-			// AbortSignal 리스너 추가
-			if (signal) {
-				const onAbort = () => {
-					const index = this.queue.indexOf(queueItem as QueueItem<unknown>);
-					if (index !== -1) {
-						this.queue.splice(index, 1);
-						reject(new DOMException('Operation aborted', 'AbortError'));
-					}
-				};
-				signal.addEventListener('abort', onAbort);
-			}
-
-			this.queue.push(queueItem as QueueItem<unknown>);
-			this.processQueue();
-		});
-	}
-
-	private async processQueue() {
-		if (this.isProcessing || this.queue.length === 0) {
-			return;
-		}
-
-		this.isProcessing = true;
-
-		while (this.queue.length > 0) {
-			const item = this.queue.shift();
-			if (!item) {
-				break;
-			}
-
-			// AbortSignal이 abort된 경우 건너뛰기
-			if (item.signal?.aborted) {
-				item.reject(new DOMException('Operation aborted', 'AbortError'));
-				continue;
-			}
-
-			try {
-				const result = await item.execute();
-				item.resolve(result);
-			} catch (error) {
-				item.reject(error);
-			}
-		}
-
-		this.isProcessing = false;
-	}
-}
 
 const requestQueue = new RequestQueue();
 

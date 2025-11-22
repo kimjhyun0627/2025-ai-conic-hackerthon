@@ -1,5 +1,6 @@
 import type { MusicGenre, Track } from '@/shared/types';
-import { fetchFreesoundPreviewByGenre } from './freesoundApi';
+// import { fetchFreesoundPreviewByGenre } from './freesoundApi';
+import { generateSoundByGenre } from './musicGenApi';
 
 export const fetchTrackForGenre = async (genre: MusicGenre, signal?: AbortSignal, activeParams?: Record<string, number>): Promise<Track> => {
 	// 활성화된 파라미터들을 API body로 전송할 데이터로 구성
@@ -13,14 +14,14 @@ export const fetchTrackForGenre = async (genre: MusicGenre, signal?: AbortSignal
 		console.log(`📊 Active parameters count: ${Object.keys(activeParams).length}`);
 	}
 
-	const preview = await fetchFreesoundPreviewByGenre(genre.name, signal);
+	const preview = await generateSoundByGenre(genre, signal, activeParams);
 
 	return {
-		id: `freesound-${preview.id}-${Date.now()}`,
-		title: preview.title || genre.name,
+		id: preview.id,
+		title: preview.title,
 		genre: genre.name,
 		genreKo: genre.nameKo,
-		audioUrl: preview.previewUrl,
+		audioUrl: preview.audioUrl,
 		duration: preview.duration,
 		status: 'ready',
 		createdAt: new Date(),
