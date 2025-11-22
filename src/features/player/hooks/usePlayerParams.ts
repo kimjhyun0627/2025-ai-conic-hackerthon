@@ -145,19 +145,10 @@ export const usePlayerParams = () => {
 			...preservedHiddenParams,
 		};
 
-		// visibleAdditionalParams에서 현재 장르에 없는 파라미터 제거 (정리)
-		// 장르가 변경되면 setSelectedGenre에서 이미 visibleAdditionalParams가 초기화됨
-		const baseParamIds = theme.parameters.slice(0, 3).map((p) => p.id);
-		const additionalParamIds = theme.parameters.filter((p) => !baseParamIds.includes(p.id)).map((p) => p.id);
-
-		// visibleAdditionalParams에서 현재 장르에 없는 파라미터 제거
-		const invalidParams = visibleAdditionalParams.filter((id) => !additionalParamIds.includes(id));
-		if (invalidParams.length > 0) {
-			invalidParams.forEach((id) => removeVisibleAdditionalParam(id));
-		}
-
 		// hiddenThemeParams는 더 이상 사용하지 않지만, 하위 호환성을 위해 유지
 		// visibleAdditionalParams에 없는 추가 파라미터를 hiddenThemeParams에 저장
+		const baseParamIds = theme.parameters.slice(0, 3).map((p) => p.id);
+		const additionalParamIds = theme.parameters.filter((p) => !baseParamIds.includes(p.id)).map((p) => p.id);
 		const hiddenParams = additionalParamIds.filter((id) => !visibleAdditionalParams.includes(id));
 		setHiddenThemeParams(hiddenParams);
 
