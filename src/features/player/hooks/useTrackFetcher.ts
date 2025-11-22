@@ -61,8 +61,12 @@ export const useTrackFetcher = () => {
 				const track = await fetchTrackForGenre(genre, effectiveSignal, paramValues);
 				return track;
 			} catch (error) {
-				// AbortError는 정상적인 취소이므로 무시
+				// AbortError 또는 axios CanceledError는 정상적인 취소이므로 재던지기 (상위에서 처리)
 				if (error instanceof DOMException && error.name === 'AbortError') {
+					throw error;
+				}
+				// axios의 CanceledError 확인
+				if (error && typeof error === 'object' && 'code' in error && error.code === 'ERR_CANCELED') {
 					throw error;
 				}
 

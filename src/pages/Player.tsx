@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { usePlayerStore } from '@/store/playerStore';
-import { ConfirmModal } from '@/shared/components/ui';
+import { ConfirmModal, useToast } from '@/shared/components/ui';
 import { TopBar, GenreInfo, SyncGlowIntensity, SyncGlowWave, SyncGlowParticle, SyncGlowOscilloscope, ControlerPanel, ParameterPanel, GradientOverlay, AudioEngine } from '@/features/player/components';
-import { usePlayerParams, useGenreChangeAnimation, usePlayerExit, usePlayerTrack } from '@/features/player/hooks';
+import { usePlayerParams, useGenreChangeAnimation, usePlayerExit, usePlayerTrack, useTrackFetcher } from '@/features/player/hooks';
 import { useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '@/features/player/constants';
 
@@ -16,11 +16,13 @@ const Player = () => {
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
 	const [visualizationMode, setVisualizationMode] = useState<'box' | 'wave' | 'particle' | 'oscilloscope'>('box');
 
-	const { selectedGenre, isPlaying, moveToPrevTrack, resetQueue } = usePlayerStore();
+	const { selectedGenre, isPlaying, moveToPrevTrack, setNextTrack, resetQueue, queue } = usePlayerStore();
 	const { selectedTheme, themeBaseParams, themeAdditionalParams, activeCommonParamsList, availableCommonParams, getParamValue, setParamValue, addCommonParam, removeCommonParam, removeThemeParam } =
 		usePlayerParams();
 	const colors = useThemeColors();
+	const { showWarning, showInfo, showSuccess, removeToast } = useToast();
 	const { handleNextTrack } = usePlayerTrack();
+	const { fetchTrack } = useTrackFetcher();
 
 	// 장르 변경 감지 및 애니메이션
 	const isGenreChanging = useGenreChangeAnimation(selectedGenre);
@@ -60,11 +62,49 @@ const Player = () => {
 	};
 
 	const handlePrev = () => {
+		// 첫 번째 트랙이면 경고 토스트 표시
+		if (queue.currentIndex <= 0) {
+			showWarning('첫 번째 트랙이에요!', 3000);
+			return;
+		}
 		moveToPrevTrack();
 	};
 
 	const handleNext = () => {
 		handleNextTrack();
+	};
+
+	// 적용하기 버튼: API 호출하여 큐에만 추가 (재생하지 않음)
+	const handleApply = async () => {
+		if (!selectedGenre) {
+			return;
+		}
+
+		// 로딩 토스트 표시
+		const loadingToastId = showInfo('새로운 트랙을 준비 중이에요!', null);
+
+		try {
+			const track = await fetchTrack(selectedGenre);
+
+			// 준비 완료 토스트 표시
+			removeToast(loadingToastId);
+			showSuccess('다음 트랙이 준비되었어요!', 3000);
+
+			// 큐에만 추가하고 재생하지 않음
+			setNextTrack(track);
+		} catch (error) {
+			// AbortError 또는 axios CanceledError는 정상적인 취소이므로 무시
+			if (error instanceof DOMException && error.name === 'AbortError') {
+				return;
+			}
+			// axios의 CanceledError 확인
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'ERR_CANCELED') {
+				return;
+			}
+
+			console.error('[Player] 트랙 가져오기 실패:', error);
+			removeToast(loadingToastId);
+		}
 	};
 
 	return (
@@ -161,6 +201,7 @@ const Player = () => {
 								onRemoveThemeParam={removeThemeParam}
 								onRemoveCommonParam={removeCommonParam}
 								onAddCommonParam={addCommonParam}
+								onApply={handleApply}
 							/>
 						)}
 					</div>

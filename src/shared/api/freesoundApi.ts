@@ -312,6 +312,14 @@ const executeSearchRequest = async (query: string, signal?: AbortSignal) => {
 			signal
 		);
 	} catch (error) {
+		// 취소된 요청은 로깅하지 않음
+		if (error && typeof error === 'object' && 'code' in error && error.code === 'ERR_CANCELED') {
+			throw error;
+		}
+		if (error instanceof DOMException && error.name === 'AbortError') {
+			throw error;
+		}
+
 		console.error('[FreeSound API] Request failed:', error);
 		if (axios.isAxiosError(error)) {
 			console.error('[FreeSound API] Response status:', error.response?.status);

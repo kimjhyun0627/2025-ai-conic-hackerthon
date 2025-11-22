@@ -83,7 +83,7 @@ export const usePlayerTrack = () => {
 		if (loadingToastIdRef.current) {
 			removeToast(loadingToastIdRef.current);
 		}
-		loadingToastIdRef.current = showInfo('다음 노래를 준비 중이에요!', null);
+		loadingToastIdRef.current = showInfo('다음 트랙을 준비 중이에요!', null);
 
 		try {
 			const track = await fetchTrack(selectedGenre);
@@ -95,13 +95,19 @@ export const usePlayerTrack = () => {
 			}
 
 			setNextTrack(track);
-			readyToastIdRef.current = showSuccess('다음 노래가 준비되었어요', 3000);
+			readyToastIdRef.current = showSuccess('다음 트랙이 준비되었어요!', 3000);
 			moveToNextTrack();
 		} catch (error) {
-			// AbortError는 정상적인 취소이므로 무시
+			// AbortError 또는 axios CanceledError는 정상적인 취소이므로 무시
 			if (error instanceof DOMException && error.name === 'AbortError') {
 				return;
 			}
+			// axios의 CanceledError 확인
+			if (error && typeof error === 'object' && 'code' in error && error.code === 'ERR_CANCELED') {
+				return;
+			}
+
+			console.error('[usePlayerTrack] 다음 트랙 가져오기 실패:', error);
 
 			if (loadingToastIdRef.current) {
 				removeToast(loadingToastIdRef.current);

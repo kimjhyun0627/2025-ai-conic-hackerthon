@@ -84,7 +84,7 @@ export const useAutoPrefetch = (currentTrack: { id: string; duration?: number } 
 
 		// 토스트 표시 및 자동 프리페치 상태 설정
 		if (!prefetchToastIdRef.current) {
-			prefetchToastIdRef.current = showInfo('다음 노래를 준비 중이에요!', null);
+			prefetchToastIdRef.current = showInfo('다음 트랙을 준비 중이에요!', null);
 		}
 		setIsAutoPrefetching(true);
 
@@ -97,7 +97,7 @@ export const useAutoPrefetch = (currentTrack: { id: string; duration?: number } 
 						removeToast(prefetchToastIdRef.current);
 						prefetchToastIdRef.current = null;
 					}
-					readyToastIdRef.current = showSuccess('다음 노래가 준비되었어요', 3000);
+					readyToastIdRef.current = showSuccess('다음 트랙이 준비되었어요!', 3000);
 					setIsAutoPrefetching(false);
 				}
 			})

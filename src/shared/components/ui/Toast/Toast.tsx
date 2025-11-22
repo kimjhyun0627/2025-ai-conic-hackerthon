@@ -83,14 +83,16 @@ const Toast = ({ message, type = 'info', duration = 3000, onClose }: ToastProps)
 					</div>
 
 					{/* 메시지 */}
-					<p
+					<div
 						className="text-sm md:text-base font-medium flex-1"
 						style={{
 							color: colors.isDark ? '#f1f5f9' : '#0f172a',
 						}}
 					>
-						{message}
-					</p>
+						{message.split('\n').map((line, index) => (
+							<div key={index}>{line}</div>
+						))}
+					</div>
 
 					{/* 닫기 버튼 */}
 					<button

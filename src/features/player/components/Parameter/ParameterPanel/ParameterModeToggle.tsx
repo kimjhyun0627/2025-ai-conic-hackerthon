@@ -1,15 +1,20 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, LayoutList } from 'lucide-react';
 import { PLAYER_CONSTANTS } from '../../../constants';
 import { useThemeColors } from '@/shared/hooks';
 
+const PRIMARY_COLOR = '#fb7185'; // primary-500
+
 interface ParameterModeToggleProps {
 	orientation: 'horizontal' | 'vertical';
 	onToggle: () => void;
+	onApply?: () => void;
 }
 
-export const ParameterModeToggle = ({ orientation, onToggle }: ParameterModeToggleProps) => {
+export const ParameterModeToggle = ({ orientation, onToggle, onApply }: ParameterModeToggleProps) => {
 	const colors = useThemeColors();
+	const [isApplyHovered, setIsApplyHovered] = useState(false);
 
 	return (
 		<motion.div
@@ -32,7 +37,7 @@ export const ParameterModeToggle = ({ orientation, onToggle }: ParameterModeTogg
 				delay: PLAYER_CONSTANTS.PARAMETER.UI.MODE_TOGGLE_DELAY,
 			}}
 		>
-			<div className="flex items-center justify-center">
+			<div className="flex items-center justify-center gap-3">
 				<button
 					onClick={onToggle}
 					className="p-2.5 md:p-3 rounded-full transition-all duration-200 glow-primary shadow-2xl relative overflow-hidden group hover:scale-110 active:scale-95"
@@ -68,6 +73,31 @@ export const ParameterModeToggle = ({ orientation, onToggle }: ParameterModeTogg
 						)}
 					</AnimatePresence>
 				</button>
+				{onApply && (
+					<button
+						onClick={onApply}
+						onMouseEnter={() => setIsApplyHovered(true)}
+						onMouseLeave={() => setIsApplyHovered(false)}
+						className="px-4 py-2.5 md:px-5 md:py-3 rounded-full transition-all duration-200 shadow-xl relative overflow-hidden group hover:scale-105 active:scale-95 text-sm md:text-base font-medium"
+						style={{
+							background: colors.glassButtonBg,
+							border: `1px solid ${isApplyHovered ? PRIMARY_COLOR : colors.glassBorder}`,
+							color: isApplyHovered ? PRIMARY_COLOR : colors.textSecondaryColor,
+						}}
+						aria-label="파라미터 적용하기"
+					>
+						<motion.div
+							style={{
+								position: 'absolute',
+								inset: 0,
+								background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent)',
+							}}
+							animate={{ x: ['-100%', '200%'] }}
+							transition={PLAYER_CONSTANTS.ANIMATIONS.playButtonShine.transition}
+						/>
+						<span className="relative z-10">적용하기</span>
+					</button>
+				)}
 			</div>
 		</motion.div>
 	);
