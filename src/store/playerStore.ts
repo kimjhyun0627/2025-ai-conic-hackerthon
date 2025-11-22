@@ -23,6 +23,9 @@ interface PlayerState {
 	// Selected Genre
 	selectedGenre: MusicGenre | null;
 
+	// Parameter Panel Orientation
+	parameterPanelOrientation: 'horizontal' | 'vertical';
+
 	// Actions
 	setIsPlaying: (isPlaying: boolean) => void;
 	setVolume: (volume: number) => void;
@@ -46,6 +49,9 @@ interface PlayerState {
 	// Genre Selection
 	setSelectedGenre: (genre: MusicGenre | null) => void;
 
+	// Parameter Panel Orientation
+	setParameterPanelOrientation: (orientation: 'horizontal' | 'vertical') => void;
+
 	// Reset
 	reset: () => void;
 }
@@ -65,6 +71,7 @@ const initialState = {
 	audioParams: DEFAULT_AUDIO_PARAMS,
 	visualizerType: 'pulse' as VisualizerType,
 	selectedGenre: null,
+	parameterPanelOrientation: 'horizontal' as 'horizontal' | 'vertical',
 };
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
@@ -152,6 +159,9 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
 	// Genre Selection
 	setSelectedGenre: (genre: MusicGenre | null) => set({ selectedGenre: genre }),
+
+	// Parameter Panel Orientation
+	setParameterPanelOrientation: (orientation: 'horizontal' | 'vertical') => set({ parameterPanelOrientation: orientation }),
 
 	// Reset
 	reset: () => set(initialState),

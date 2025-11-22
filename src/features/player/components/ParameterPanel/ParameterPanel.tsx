@@ -12,6 +12,7 @@ import { useIndicatorPosition } from '../../hooks';
 import { useParameterCarousel } from '../../hooks';
 import { getParameterPanelStyle } from '../../utils';
 import { getRowSplit, shouldUseTwoRows } from '../../utils';
+import { usePlayerStore } from '@/store/playerStore';
 
 interface ParameterPanelProps {
 	isExpanded: boolean;
@@ -39,7 +40,8 @@ export const ParameterPanel = ({
 	onAddCommonParam,
 }: ParameterPanelProps) => {
 	const colors = useThemeColors();
-	const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
+	const orientation = usePlayerStore((state) => state.parameterPanelOrientation);
+	const setParameterPanelOrientation = usePlayerStore((state) => state.setParameterPanelOrientation);
 	const [shouldShowIndicator, setShouldShowIndicator] = useState(false);
 	const panelRef = useRef<HTMLDivElement>(null);
 	const contentRef = useRef<HTMLDivElement>(null);
@@ -237,7 +239,7 @@ export const ParameterPanel = ({
 								{/* 모드 토글 버튼 */}
 								<ParameterModeToggle
 									orientation={orientation}
-									onToggle={() => setOrientation(orientation === 'horizontal' ? 'vertical' : 'horizontal')}
+									onToggle={() => setParameterPanelOrientation(orientation === 'horizontal' ? 'vertical' : 'horizontal')}
 								/>
 							</motion.div>
 						</motion.div>
