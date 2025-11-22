@@ -275,7 +275,7 @@ const CarouselCard = ({
 						<div
 							className="w-[min(90vw,450px)] h-[min(90vw,450px)] rounded-4xl overflow-hidden"
 							style={{
-								filter: isActive ? (theme === 'light' ? 'blur(15px) brightness(0.7) contrast(0.7)' : 'blur(15px) brightness(0.2) contrast(0.9)') : 'none',
+								filter: isActive ? (theme === 'light' ? 'blur(3px) brightness(1.2) contrast(0.8)' : 'blur(3px) brightness(0.5) contrast(0.9)') : 'none',
 								transition: 'filter 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
 								transform: 'scale(1.05)',
 								position: 'absolute',
