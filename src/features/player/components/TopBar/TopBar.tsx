@@ -1,22 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home, Maximize, Minimize, Grid3x3, ChevronDown, Square, Activity, Sparkles, Radio } from 'lucide-react';
+import { Home, Maximize, Minimize, Grid3x3, ChevronDown } from 'lucide-react';
 import { Button, ThemeToggle } from '@/shared/components/ui';
 import { useFullscreen, useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '../../constants';
 import { useThemeStore } from '@/store/themeStore';
 import { usePlayerStore } from '@/store/playerStore';
 import { usePlayerParams, useGenreTrack } from '../../hooks';
+import { VisualizationModeDropdown } from './VisualizationModeDropdown';
+import { DEFAULT_VISUALIZATION_MODE } from '../../constants/visualizationModes';
 import type { MusicGenre } from '@/shared/types';
+import type { VisualizationMode } from '../../types/visualization';
 
 interface TopBarProps {
 	onHomeClick: () => void;
 	isVisible?: boolean;
-	visualizationMode?: 'box' | 'wave' | 'particle' | 'oscilloscope';
-	onVisualizationModeChange?: (mode: 'box' | 'wave' | 'particle' | 'oscilloscope') => void;
+	visualizationMode?: VisualizationMode;
+	onVisualizationModeChange?: (mode: VisualizationMode) => void;
 }
 
-export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box', onVisualizationModeChange }: TopBarProps) => {
+export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = DEFAULT_VISUALIZATION_MODE, onVisualizationModeChange }: TopBarProps) => {
 	const { isFullscreen, toggleFullscreen } = useFullscreen();
 	const theme = useThemeStore((state) => state.theme);
 	const selectedGenre = usePlayerStore((state) => state.selectedGenre);
@@ -26,58 +29,30 @@ export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box
 	const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
 	const [isVisualizationDropdownOpen, setIsVisualizationDropdownOpen] = useState(false);
 	const [hoveredGenreId, setHoveredGenreId] = useState<string | null>(null);
-	const [hoveredVisualizationMode, setHoveredVisualizationMode] = useState<string | null>(null);
 	const [isFullscreenHovered, setIsFullscreenHovered] = useState(false);
 	const [isGenreButtonHovered, setIsGenreButtonHovered] = useState(false);
 	const [isHomeButtonHovered, setIsHomeButtonHovered] = useState(false);
-	const [isVisualizationModeHovered, setIsVisualizationModeHovered] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const visualizationDropdownRef = useRef<HTMLDivElement>(null);
 
 	// 현재 카테고리의 장르 목록 가져오기
 	const currentGenres = selectedTheme?.genres || [];
 
-	// 시각화 모드 옵션 정의
-	const visualizationModes = [
-		{ id: 'box', name: '박스', description: '주파수 대역별 색상', icon: Square },
-		{ id: 'wave', name: '웨이브', description: '주파수 분석 파형', icon: Activity },
-		{ id: 'particle', name: '파티클', description: '오디오 기반 생성형 비주얼', icon: Sparkles },
-		{ id: 'oscilloscope', name: '오실로스코프', description: '원형 오실로스코프 파형', icon: Radio },
-	] as const;
-
-	const onVisualizationModeSelect = (mode: 'box' | 'wave' | 'particle' | 'oscilloscope') => {
-		// 같은 모드를 재선택한 경우 아무 액션도 하지 않음
-		if (visualizationMode === mode) {
-			setIsVisualizationDropdownOpen(false);
-			return;
-		}
-
-		// 드롭다운 닫기
-		setIsVisualizationDropdownOpen(false);
-
-		// 모드 변경 처리
-		onVisualizationModeChange?.(mode);
-	};
-
-	// 드롭다운 외부 클릭 시 닫기
+	// 장르 드롭다운 외부 클릭 시 닫기 (비주얼 모드 드롭다운은 자체적으로 처리)
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 				setIsGenreDropdownOpen(false);
 			}
-			if (visualizationDropdownRef.current && !visualizationDropdownRef.current.contains(event.target as Node)) {
-				setIsVisualizationDropdownOpen(false);
-			}
 		};
 
-		if (isGenreDropdownOpen || isVisualizationDropdownOpen) {
+		if (isGenreDropdownOpen) {
 			document.addEventListener('mousedown', handleClickOutside);
 		}
 
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [isGenreDropdownOpen, isVisualizationDropdownOpen]);
+	}, [isGenreDropdownOpen]);
 
 	const onGenreSelect = async (genre: MusicGenre) => {
 		// 같은 장르를 재선택한 경우 아무 액션도 하지 않음
@@ -128,151 +103,14 @@ export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box
 											},
 										},
 									}}
-									className="relative"
-									ref={visualizationDropdownRef}
 								>
-									<div
-										onMouseEnter={() => setIsVisualizationModeHovered(true)}
-										onMouseLeave={() => setIsVisualizationModeHovered(false)}
-									>
-										<Button
-											variant="ghost"
-											size="sm"
-											onClick={() => {
-												setIsGenreDropdownOpen(false); // 장르 드롭다운 닫기
-												setIsVisualizationDropdownOpen(!isVisualizationDropdownOpen); // 비주얼 모드 드롭다운 토글
-											}}
-											className="btn-glass rounded-2xl backdrop-blur-md border shadow-lg hover:shadow-xl transition-all duration-300 h-11 px-4 py-0 flex items-center"
-											style={{
-												background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
-												borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-												color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
-											}}
-											onMouseEnter={(e) => {
-												e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
-												e.currentTarget.style.color = '#fb7185';
-											}}
-											onMouseLeave={(e) => {
-												e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
-												e.currentTarget.style.color = colors.isDark ? '#f1f5f9' : '#0f172a';
-											}}
-										>
-											{(() => {
-												const currentMode = visualizationModes.find((m) => m.id === visualizationMode);
-												const IconComponent = currentMode?.icon || Square;
-												return (
-													<IconComponent
-														className="w-5 h-5 mr-2"
-														style={{
-															color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : undefined,
-														}}
-													/>
-												);
-											})()}
-											<span
-												style={{
-													color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
-												}}
-											>
-												{visualizationModes.find((m) => m.id === visualizationMode)?.name || '시각화 모드'}
-											</span>
-											<ChevronDown
-												className={`w-4 h-4 ml-2 transition-transform duration-200 ${isVisualizationDropdownOpen ? 'rotate-180' : ''}`}
-												style={{
-													color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : undefined,
-												}}
-											/>
-										</Button>
-									</div>
-
-									{/* 드롭다운 메뉴 */}
-									<AnimatePresence>
-										{isVisualizationDropdownOpen && visualizationModes.length > 0 && (
-											<motion.div
-												initial={{ opacity: 0, y: -10, scale: 0.95 }}
-												animate={{ opacity: 1, y: 0, scale: 1 }}
-												exit={{ opacity: 0, y: -10, scale: 0.95 }}
-												transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-												className="absolute top-full right-0 mt-2 w-64 rounded-2xl shadow-2xl border backdrop-blur-xl"
-												style={{
-													background: colors.glassBackground,
-													borderColor: colors.glassBorder,
-													zIndex: 110000, // 파라미터 패널(z-100)보다 위에 표시
-												}}
-											>
-												<div className="p-2">
-													{visualizationModes.map((mode) => (
-														<motion.button
-															key={mode.id}
-															onClick={() => onVisualizationModeSelect(mode.id)}
-															onMouseEnter={() => setHoveredVisualizationMode(mode.id)}
-															onMouseLeave={() => setHoveredVisualizationMode(null)}
-															className={`w-full flex items-center gap-3 p-3 rounded-xl mb-2 last:mb-0 transition-all ${visualizationMode === mode.id ? 'bg-primary-500/20 border-2' : 'hover:bg-white/10 dark:hover:bg-white/5 border-2 border-transparent'}`}
-															style={
-																visualizationMode === mode.id
-																	? { borderColor: 'rgba(251, 113, 133, 0.5)' } // primary-500/50
-																	: undefined
-															}
-															whileHover={{ scale: 1.02 }}
-															whileTap={{ scale: 0.98 }}
-														>
-															{/* 아이콘 */}
-															<div
-																className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
-																style={{ background: colors.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)' }}
-															>
-																{(() => {
-																	const IconComponent = mode.icon;
-																	return (
-																		<IconComponent
-																			className="w-5 h-5"
-																			style={{
-																				color:
-																					hoveredVisualizationMode === mode.id || visualizationMode === mode.id
-																						? '#fb7185'
-																						: colors.isDark
-																							? '#f1f5f9'
-																							: '#0f172a',
-																			}}
-																		/>
-																	);
-																})()}
-															</div>
-															{/* 모드 정보 */}
-															<div className="flex-1 text-left min-w-0">
-																<div
-																	className="font-semibold text-base mb-1 truncate"
-																	style={{
-																		color:
-																			hoveredVisualizationMode === mode.id || visualizationMode === mode.id
-																				? '#fb7185' // primary-500 (호버 시 프라이머리 컬러)
-																				: theme === 'dark'
-																					? '#f1f5f9'
-																					: '#0f172a',
-																	}}
-																>
-																	{mode.name}
-																</div>
-																{mode.description && (
-																	<div
-																		className="text-sm line-clamp-2"
-																		style={{
-																			color:
-																				hoveredVisualizationMode === mode.id || visualizationMode === mode.id
-																					? 'rgba(251, 113, 133, 0.8)' // primary-500 with opacity
-																					: colors.textSecondaryColor,
-																		}}
-																	>
-																		{mode.description}
-																	</div>
-																)}
-															</div>
-														</motion.button>
-													))}
-												</div>
-											</motion.div>
-										)}
-									</AnimatePresence>
+									<VisualizationModeDropdown
+										visualizationMode={visualizationMode}
+										onVisualizationModeChange={onVisualizationModeChange}
+										isOpen={isVisualizationDropdownOpen}
+										onOpenChange={setIsVisualizationDropdownOpen}
+										onCloseOtherDropdown={() => setIsGenreDropdownOpen(false)}
+									/>
 								</motion.div>
 							)}
 

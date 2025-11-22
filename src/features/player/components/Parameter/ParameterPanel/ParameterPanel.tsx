@@ -6,12 +6,12 @@ import { ParameterGrid } from './ParameterGrid';
 import { ParameterModeToggle } from './ParameterModeToggle';
 import { ParameterIndicatorWrapper } from './ParameterIndicatorWrapper';
 import type { CategoryParameter } from '@/shared/types';
-import { PLAYER_CONSTANTS } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../../constants';
 import { useThemeColors } from '@/shared/hooks';
-import { useIndicatorPosition } from '../../hooks';
-import { useParameterCarousel } from '../../hooks';
-import { getParameterPanelStyle } from '../../utils';
-import { getRowSplit, shouldUseTwoRows } from '../../utils';
+import { useIndicatorPosition } from '../../../hooks';
+import { useParameterCarousel } from '../../../hooks';
+import { getParameterPanelStyle } from '../../../utils';
+import { getRowSplit, shouldUseTwoRows } from '../../../utils';
 import { usePlayerStore } from '@/store/playerStore';
 
 interface ParameterPanelProps {

@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ParameterSlider } from '../ParameterSlider';
 import type { CategoryParameter } from '@/shared/types';
-import { PLAYER_CONSTANTS } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../../constants';
 
 interface ParameterGridProps {
 	allParams: CategoryParameter[];

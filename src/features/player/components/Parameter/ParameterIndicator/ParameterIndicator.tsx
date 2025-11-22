@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { CategoryParameter } from '@/shared/types';
 import { useThemeColors } from '@/shared/hooks';
-import { PLAYER_CONSTANTS } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../../constants';
 
 interface ParameterIndicatorProps {
 	allParams: CategoryParameter[];

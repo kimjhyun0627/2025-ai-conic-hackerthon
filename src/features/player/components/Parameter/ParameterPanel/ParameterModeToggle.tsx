@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { LayoutGrid, LayoutList } from 'lucide-react';
-import { PLAYER_CONSTANTS } from '../../constants';
+import { PLAYER_CONSTANTS } from '../../../constants';
 import { useThemeColors } from '@/shared/hooks';
 
 interface ParameterModeToggleProps {

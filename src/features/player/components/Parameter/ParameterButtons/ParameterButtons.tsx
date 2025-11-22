@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import type { CategoryParameter } from '@/shared/types';
 import { useThemeColors } from '@/shared/hooks';
-import { getCommonParamPanelStyle, getCommonParamButtonStyle } from '../../utils';
-import { PLAYER_CONSTANTS } from '../../constants';
+import { getCommonParamPanelStyle, getCommonParamButtonStyle } from '../../../utils';
+import { PLAYER_CONSTANTS } from '../../../constants';
 
 interface ParameterButtonsProps {
 	availableCommonParams: CategoryParameter[];

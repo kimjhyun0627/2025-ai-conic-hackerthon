@@ -1,13 +1,12 @@
 import { useMemo } from 'react';
-import { motion } from 'framer-motion';
 import type { MusicGenre } from '@/shared/types';
 import { useThemeColors } from '@/shared/hooks';
-import { useAudioAnalyzer } from '../../hooks';
+import { useAudioAnalyzer } from '../../../hooks';
 import { usePlayerStore } from '@/store/playerStore';
 import { AnimatedIntensityBox } from './AnimatedBox';
 import { getIntensityBoxStyle, getTransition } from './boxUtils';
 import { useIntensityBoxSizes } from './useBoxSizes';
-import { GenreImage } from './GenreImage';
+import { GenreImage, SyncGlowContainer } from '../shared';
 import { INTENSITY_BOX_CONSTANTS } from './constants';
 
 interface SyncGlowIntensityProps {
@@ -83,67 +82,71 @@ export const SyncGlowIntensity = ({ genre, isPlaying }: SyncGlowIntensityProps) 
 	);
 
 	return (
-		<div className="fixed inset-0 z-0 flex items-center justify-center md:pt-[28px] md:pb-[28px] py-[40px] md:px-[28px] md:py-[40px]">
-			<motion.div className="w-[calc(100vw-20vh)] h-[80vh] glass-card rounded-4xl md:rounded-2rem overflow-visible shadow-2xl relative">
-				{/* Low Band Intensity 박스 (저음역대 - 가장 바깥쪽) */}
-				<AnimatedIntensityBox
-					keyValue="low"
-					trackId={currentTrack?.id || null}
-					baseSize={INTENSITY_BOX_CONSTANTS.BOX_BASE_SIZE}
-					extraPixels={lowExtraPixels}
-					opacity={lowBoxStyle.opacity}
-					background={lowBoxStyle.background}
-					border={lowBoxStyle.border}
-					boxShadow={lowBoxStyle.boxShadow}
-					backdropFilter={lowBoxStyle.backdropFilter}
-					filter={lowBoxStyle.filter}
-					initialOpacity={INTENSITY_BOX_CONSTANTS.BOX_INITIAL_OPACITY}
-					transition={lowTransition}
-					zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.LOW}
-				/>
+		<SyncGlowContainer
+			withPadding
+			className="w-[calc(100vw-20vh)] h-[80vh] glass-card rounded-4xl md:rounded-2rem overflow-visible shadow-2xl relative"
+		>
+			{/* Low Band Intensity 박스 (저음역대 - 가장 바깥쪽) */}
+			<AnimatedIntensityBox
+				keyValue="low"
+				trackId={currentTrack?.id || null}
+				baseSize={INTENSITY_BOX_CONSTANTS.BOX_BASE_SIZE}
+				extraPixels={lowExtraPixels}
+				opacity={lowBoxStyle.opacity}
+				background={lowBoxStyle.background}
+				border={lowBoxStyle.border}
+				boxShadow={lowBoxStyle.boxShadow}
+				backdropFilter={lowBoxStyle.backdropFilter}
+				filter={lowBoxStyle.filter}
+				initialOpacity={INTENSITY_BOX_CONSTANTS.BOX_INITIAL_OPACITY}
+				transition={lowTransition}
+				zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.LOW}
+			/>
 
-				{/* Mid Band Intensity 박스 (중음역대 - 중간) */}
-				<AnimatedIntensityBox
-					keyValue="mid"
-					trackId={currentTrack?.id || null}
-					baseSize={INTENSITY_BOX_CONSTANTS.BOX_BASE_SIZE}
-					extraPixels={midExtraPixels}
-					opacity={midBoxStyle.opacity}
-					background={midBoxStyle.background}
-					border={midBoxStyle.border}
-					boxShadow={midBoxStyle.boxShadow}
-					backdropFilter={midBoxStyle.backdropFilter}
-					filter={midBoxStyle.filter}
-					initialOpacity={INTENSITY_BOX_CONSTANTS.BOX_INITIAL_OPACITY}
-					transition={midTransition}
-					zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.MID}
-				/>
+			{/* Mid Band Intensity 박스 (중음역대 - 중간) */}
+			<AnimatedIntensityBox
+				keyValue="mid"
+				trackId={currentTrack?.id || null}
+				baseSize={INTENSITY_BOX_CONSTANTS.BOX_BASE_SIZE}
+				extraPixels={midExtraPixels}
+				opacity={midBoxStyle.opacity}
+				background={midBoxStyle.background}
+				border={midBoxStyle.border}
+				boxShadow={midBoxStyle.boxShadow}
+				backdropFilter={midBoxStyle.backdropFilter}
+				filter={midBoxStyle.filter}
+				initialOpacity={INTENSITY_BOX_CONSTANTS.BOX_INITIAL_OPACITY}
+				transition={midTransition}
+				zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.MID}
+			/>
 
-				{/* High Band Intensity 박스 (고음역대 - 가장 안쪽) */}
-				<AnimatedIntensityBox
-					keyValue="high"
-					trackId={currentTrack?.id || null}
-					baseSize={INTENSITY_BOX_CONSTANTS.BOX_BASE_SIZE}
-					extraPixels={highExtraPixels}
-					opacity={highBoxStyle.opacity}
-					background={highBoxStyle.background}
-					border={highBoxStyle.border}
-					boxShadow={highBoxStyle.boxShadow}
-					backdropFilter={highBoxStyle.backdropFilter}
-					filter={highBoxStyle.filter}
-					initialOpacity={INTENSITY_BOX_CONSTANTS.BOX_INITIAL_OPACITY}
-					transition={highTransition}
-					zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.HIGH}
-				/>
+			{/* High Band Intensity 박스 (고음역대 - 가장 안쪽) */}
+			<AnimatedIntensityBox
+				keyValue="high"
+				trackId={currentTrack?.id || null}
+				baseSize={INTENSITY_BOX_CONSTANTS.BOX_BASE_SIZE}
+				extraPixels={highExtraPixels}
+				opacity={highBoxStyle.opacity}
+				background={highBoxStyle.background}
+				border={highBoxStyle.border}
+				boxShadow={highBoxStyle.boxShadow}
+				backdropFilter={highBoxStyle.backdropFilter}
+				filter={highBoxStyle.filter}
+				initialOpacity={INTENSITY_BOX_CONSTANTS.BOX_INITIAL_OPACITY}
+				transition={highTransition}
+				zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.HIGH}
+			/>
 
-				{/* 이미지 컨테이너 */}
-				<GenreImage
-					genre={genre}
-					isPlaying={isPlaying}
-					imageOpacity={imageOpacity}
-					zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.IMAGE}
-				/>
-			</motion.div>
-		</div>
+			{/* 이미지 컨테이너 */}
+			<GenreImage
+				genre={genre}
+				isPlaying={isPlaying}
+				imageOpacity={imageOpacity}
+				zIndex={INTENSITY_BOX_CONSTANTS.Z_INDEX.IMAGE}
+				border="1px solid rgba(251, 113, 133, 0.8)"
+				className="overflow-hidden rounded-[inherit]"
+				opacityMultiplier={1}
+			/>
+		</SyncGlowContainer>
 	);
 };

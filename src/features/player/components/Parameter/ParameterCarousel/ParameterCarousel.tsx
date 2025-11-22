@@ -4,7 +4,7 @@ import { ChevronUp, ChevronDown } from 'lucide-react';
 import type { CategoryParameter } from '@/shared/types';
 import { ParameterSlider } from '../ParameterSlider';
 import { useThemeColors } from '@/shared/hooks';
-import { PLAYER_CONSTANTS, type NavigationDirection } from '../../constants';
+import { PLAYER_CONSTANTS, type NavigationDirection } from '../../../constants';
 
 interface ParameterCarouselProps {
 	carouselRef: RefObject<HTMLDivElement | null>;
