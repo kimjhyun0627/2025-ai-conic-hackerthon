@@ -10,20 +10,32 @@ const buildTargetUrl = (requestUrl: URL) => {
 };
 
 export default async function handler(req: Request) {
+	const requestUrl = new URL(req.url);
+
+	// 디버깅: 요청 정보 로깅
+	console.log('[FreeSound Proxy] Request received:', {
+		method: req.method,
+		pathname: requestUrl.pathname,
+		search: requestUrl.search,
+		url: req.url,
+	});
+
 	if (req.method !== 'GET') {
 		return new Response('Method Not Allowed', { status: 405 });
 	}
 
 	const apiKey = process.env.FREESOUND_API_KEY;
 	if (!apiKey) {
+		console.error('[FreeSound Proxy] FREESOUND_API_KEY is not configured');
 		return new Response(JSON.stringify({ message: 'FREESOUND_API_KEY is not configured.' }), {
 			status: 500,
 			headers: { 'Content-Type': 'application/json' },
 		});
 	}
 
-	const requestUrl = new URL(req.url);
 	const targetUrl = buildTargetUrl(requestUrl);
+	console.log('[FreeSound Proxy] Target URL:', targetUrl);
+
 	const startTime = Date.now();
 	const { signal } = req as Request & { signal?: AbortSignal };
 
