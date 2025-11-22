@@ -1,10 +1,3 @@
-// Audio Parameters for AI Generation
-export interface AudioParams {
-	energy: number; // 0-100
-	bass: number; // 0-100
-	tempo: number; // 60-200 BPM
-}
-
 // Track Status
 export type TrackStatus = 'idle' | 'loading' | 'ready' | 'playing' | 'paused' | 'error';
 
@@ -42,7 +35,7 @@ export interface PlayerState {
 // Music Generation Request
 export interface MusicGenerationRequest {
 	genre: string;
-	params: AudioParams;
+	parameters: Record<string, number>; // 테마별 파라미터 값들 (musicThemes.ts에서 정의된 파라미터들)
 }
 
 // Music Generation Response

@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import type { Track, AudioQueue, AudioParams, VisualizerType, MusicGenre } from '@/shared/types';
-import { DEFAULT_AUDIO_PARAMS } from '@/shared/constants';
+import type { Track, AudioQueue, VisualizerType, MusicGenre } from '@/shared/types';
 
 interface PlayerState {
 	// Player State
@@ -16,9 +15,6 @@ interface PlayerState {
 	// Computed
 	getCurrentTrack: () => Track | null;
 
-	// Audio Parameters
-	audioParams: AudioParams;
-
 	// Visualizer
 	visualizerType: VisualizerType;
 
@@ -26,6 +22,12 @@ interface PlayerState {
 	selectedGenre: MusicGenre | null;
 	isGenreChangeInProgress: boolean; // 장르 변경 API 요청 진행 중 플래그
 	isAutoPrefetching: boolean; // 자동 다음 노래 준비 중 플래그 (30초 전)
+
+	// Visible Additional Parameters (사용자가 추가한 파라미터 ID 목록)
+	visibleAdditionalParams: string[]; // 장르별로 사용자가 추가한 파라미터 ID 목록
+
+	// Additional Parameters (파라미터 값 저장)
+	additionalParams: Record<string, number>; // 모든 파라미터의 현재 값
 
 	// Parameter Panel Orientation
 	parameterPanelOrientation: 'horizontal' | 'vertical';
@@ -44,10 +46,6 @@ interface PlayerState {
 	moveToPrevTrack: () => void;
 	resetQueue: () => void;
 
-	// Audio Params Actions
-	setAudioParams: (params: Partial<AudioParams>) => void;
-	resetAudioParams: () => void;
-
 	// Visualizer Actions
 	setVisualizerType: (type: VisualizerType) => void;
 
@@ -55,6 +53,16 @@ interface PlayerState {
 	setSelectedGenre: (genre: MusicGenre | null) => void;
 	setIsGenreChangeInProgress: (inProgress: boolean) => void;
 	setIsAutoPrefetching: (isPrefetching: boolean) => void;
+
+	// Visible Additional Parameters Actions
+	addVisibleAdditionalParam: (paramId: string) => void;
+	removeVisibleAdditionalParam: (paramId: string) => void;
+	resetVisibleAdditionalParams: () => void;
+
+	// Additional Parameters Actions
+	setAdditionalParams: (params: Record<string, number>) => void;
+	setParamValue: (paramId: string, value: number) => void;
+	resetAdditionalParams: () => void;
 
 	// Parameter Panel Orientation
 	setParameterPanelOrientation: (orientation: 'horizontal' | 'vertical') => void;
@@ -75,11 +83,12 @@ const initialState = {
 		currentIndex: -1,
 		next: null,
 	},
-	audioParams: DEFAULT_AUDIO_PARAMS,
 	visualizerType: 'pulse' as VisualizerType,
 	selectedGenre: null,
 	isGenreChangeInProgress: false,
 	isAutoPrefetching: false,
+	visibleAdditionalParams: [],
+	additionalParams: {},
 	parameterPanelOrientation: 'horizontal' as 'horizontal' | 'vertical',
 };
 
@@ -214,21 +223,39 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 		}
 	},
 
-	// Audio Params Actions
-	setAudioParams: (params: Partial<AudioParams>) =>
-		set((state) => ({
-			audioParams: { ...state.audioParams, ...params },
-		})),
-
-	resetAudioParams: () => set({ audioParams: DEFAULT_AUDIO_PARAMS }),
-
 	// Visualizer Actions
 	setVisualizerType: (type: VisualizerType) => set({ visualizerType: type }),
 
 	// Genre Selection
-	setSelectedGenre: (genre: MusicGenre | null) => set({ selectedGenre: genre }),
+	setSelectedGenre: (genre: MusicGenre | null) => {
+		const prevGenre = get().selectedGenre;
+		set({ selectedGenre: genre });
+		// 장르가 변경되면 visibleAdditionalParams와 additionalParams 초기화
+		if (genre && prevGenre?.id !== genre.id) {
+			set({ visibleAdditionalParams: [], additionalParams: {} });
+		}
+	},
 	setIsGenreChangeInProgress: (inProgress: boolean) => set({ isGenreChangeInProgress: inProgress }),
 	setIsAutoPrefetching: (isPrefetching: boolean) => set({ isAutoPrefetching: isPrefetching }),
+
+	// Visible Additional Parameters Actions
+	addVisibleAdditionalParam: (paramId: string) =>
+		set((state) => ({
+			visibleAdditionalParams: state.visibleAdditionalParams.includes(paramId) ? state.visibleAdditionalParams : [...state.visibleAdditionalParams, paramId],
+		})),
+	removeVisibleAdditionalParam: (paramId: string) =>
+		set((state) => ({
+			visibleAdditionalParams: state.visibleAdditionalParams.filter((id) => id !== paramId),
+		})),
+	resetVisibleAdditionalParams: () => set({ visibleAdditionalParams: [] }),
+
+	// Additional Parameters Actions
+	setAdditionalParams: (params: Record<string, number>) => set({ additionalParams: params }),
+	setParamValue: (paramId: string, value: number) =>
+		set((state) => ({
+			additionalParams: { ...state.additionalParams, [paramId]: value },
+		})),
+	resetAdditionalParams: () => set({ additionalParams: {} }),
 
 	// Parameter Panel Orientation
 	setParameterPanelOrientation: (orientation: 'horizontal' | 'vertical') => set({ parameterPanelOrientation: orientation }),

@@ -29,7 +29,6 @@ export const ControlerPanel = ({ genre, isExpanded, isVisible, onToggleExpand, o
 
 	const handlePlayPause = () => {
 		const newIsPlaying = !isPlaying;
-		console.log('[ControlerPanel] 재생/일시정지 버튼 클릭:', { current: isPlaying, new: newIsPlaying });
 		setIsPlaying(newIsPlaying);
 	};
 

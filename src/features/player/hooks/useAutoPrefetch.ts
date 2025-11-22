@@ -101,9 +101,8 @@ export const useAutoPrefetch = (currentTrack: { id: string; duration?: number } 
 					setIsAutoPrefetching(false);
 				}
 			})
-			.catch((error) => {
+			.catch(() => {
 				if (!abortController.signal.aborted) {
-					console.error('다음 트랙 프리페치 실패:', error);
 					if (prefetchToastIdRef.current) {
 						removeToast(prefetchToastIdRef.current);
 						prefetchToastIdRef.current = null;

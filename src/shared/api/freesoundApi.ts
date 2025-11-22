@@ -261,17 +261,8 @@ const validateResponse = (data: unknown, genreName: string, query: string): Free
 	return searchResponse;
 };
 
-const logResponseStructure = (searchResponse: FreesoundSearchResponse, genreName: string, query: string) => {
-	console.log('[FreeSound API] Response structure:', {
-		hasData: !!searchResponse,
-		hasResults: !!searchResponse.results,
-		resultsType: typeof searchResponse.results,
-		isArray: Array.isArray(searchResponse.results),
-		resultsLength: Array.isArray(searchResponse.results) ? searchResponse.results.length : 'N/A',
-		dataKeys: Object.keys(searchResponse),
-		genreName,
-		query,
-	});
+const logResponseStructure = (_searchResponse: FreesoundSearchResponse, _genreName: string, _query: string) => {
+	// Response structure logging removed
 };
 
 const selectRandomTrack = (results: FreesoundSearchResult[]): FreesoundSearchResult => {

@@ -67,10 +67,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 
 		const audio = getSharedAudioElement();
 		if (!audio || !audio.src) {
-			console.log('[useAudioAnalyzer] 오디오 준비 안됨:', {
-				hasAudio: !!audio,
-				hasSrc: !!audio?.src,
-			});
 			return;
 		}
 
@@ -84,7 +80,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 				}
 
 				let resolved = false;
-				const startTime = Date.now();
 				const maxWait = 10000; // 최대 10초 대기
 
 				const cleanup = () => {
@@ -99,7 +94,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 					if (!resolved && !audio.paused && audio.currentTime > 0 && audio.readyState >= 2) {
 						resolved = true;
 						cleanup();
-						console.log('[useAudioAnalyzer] 폴링으로 재생 감지');
 						resolve();
 					}
 				}, 50);
@@ -109,7 +103,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 					if (!resolved) {
 						resolved = true;
 						cleanup();
-						console.log('[useAudioAnalyzer] playing 이벤트로 재생 감지');
 						resolve();
 					}
 				};
@@ -121,7 +114,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 						if (!resolved && !audio.paused && audio.currentTime > 0) {
 							resolved = true;
 							cleanup();
-							console.log('[useAudioAnalyzer] canplay 후 재생 확인');
 							resolve();
 						}
 					}, 50);
@@ -136,8 +128,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 					if (!resolved) {
 						resolved = true;
 						cleanup();
-						const waited = Date.now() - startTime;
-						console.log(`[useAudioAnalyzer] 재생 대기 타임아웃 (${waited}ms), 분석 시작 시도`);
 						resolve();
 					}
 				}, maxWait);
@@ -158,11 +148,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 			const dataArray = getSharedDataArray();
 
 			if (!source || !analyser || !dataArray) {
-				console.log('[useAudioAnalyzer] 오디오 소스/분석기 준비 안됨:', {
-					hasSource: !!source,
-					hasAnalyser: !!analyser,
-					hasDataArray: !!dataArray,
-				});
 				return;
 			}
 
@@ -196,7 +181,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 					smoothLowEnergy: 0,
 					timestamp: 0,
 				});
-				console.log('[useAudioAnalyzer] 트랙 변경 감지, 분석 초기화:', currentTrackId);
 			}
 
 			// AudioContext resume (비동기 처리, 에러 무시)
@@ -327,12 +311,6 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 
 			// 즉시 분석 시작
 			animationFrameRef.current = requestAnimationFrame(analyze);
-			console.log('[useAudioAnalyzer] 분석 시작:', {
-				trackId: currentTrackId,
-				isTrackChanged,
-				audioPaused: audio.paused,
-				hasSource: !!source,
-			});
 		});
 
 		return () => {

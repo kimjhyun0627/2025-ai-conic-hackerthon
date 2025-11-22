@@ -103,8 +103,6 @@ export const usePlayerTrack = () => {
 				return;
 			}
 
-			console.error('[usePlayerTrack] 다음 트랙 가져오기 실패:', error);
-
 			if (loadingToastIdRef.current) {
 				removeToast(loadingToastIdRef.current);
 				loadingToastIdRef.current = null;

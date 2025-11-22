@@ -18,9 +18,9 @@ export interface CategoryParameter {
 	name: string;
 	nameKo: string;
 	description?: string; // 파라미터 설명
-	min?: number; // audioParams.ts의 PARAM_RANGES에서 가져올 수 있음
-	max?: number; // audioParams.ts의 PARAM_RANGES에서 가져올 수 있음
-	default?: number; // audioParams.ts의 DEFAULT_AUDIO_PARAMS에서 가져올 수 있음
+	min?: number; // musicThemes.ts에서 직접 정의하거나 PARAM_RANGES에서 가져올 수 있음
+	max?: number; // musicThemes.ts에서 직접 정의하거나 PARAM_RANGES에서 가져올 수 있음
+	default?: number; // musicThemes.ts에서 직접 정의
 	unit: string;
 }
 

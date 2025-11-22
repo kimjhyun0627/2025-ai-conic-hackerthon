@@ -2,7 +2,6 @@ import { useCallback, useRef, useEffect } from 'react';
 import { usePlayerStore } from '@/store/playerStore';
 import { useToast } from '@/shared/components/ui';
 import { useTrackFetcher } from './useTrackFetcher';
-import { DEFAULT_AUDIO_PARAMS } from '@/shared/constants';
 import type { MusicGenre } from '@/shared/types';
 
 /**
@@ -14,7 +13,7 @@ import type { MusicGenre } from '@/shared/types';
 export const useGenreTrack = () => {
 	const { fetchTrack, cleanup } = useTrackFetcher();
 	const { selectedGenre, setSelectedGenre, setCurrentTrack, setNextTrack, moveToNextTrack, setDuration, resetQueue, setIsGenreChangeInProgress } = usePlayerStore();
-	const { showInfo, removeToast } = useToast();
+	const { showInfo, showError, removeToast } = useToast();
 
 	const toastIdRef = useRef<string | null>(null);
 
@@ -59,18 +58,18 @@ export const useGenreTrack = () => {
 					resetQueue();
 					setSelectedGenre(genre);
 					setCurrentTrack(track);
-					setDuration(track.duration || DEFAULT_AUDIO_PARAMS.tempo);
+					setDuration(track.duration || 0);
 				} else {
 					// 같은 장르 내에서: 다음 트랙으로 추가
 					if (!hasCurrentTrack) {
 						// 첫 트랙인 경우
 						setCurrentTrack(track);
-						setDuration(track.duration || DEFAULT_AUDIO_PARAMS.tempo);
+						setDuration(track.duration || 0);
 					} else {
 						// 이미 트랙이 있는 경우 다음 트랙으로 추가
 						setNextTrack(track);
 						moveToNextTrack();
-						setDuration(track.duration || DEFAULT_AUDIO_PARAMS.tempo);
+						setDuration(track.duration || 0);
 					}
 				}
 			} catch (error) {
@@ -79,7 +78,9 @@ export const useGenreTrack = () => {
 					return;
 				}
 
+				// 에러 토스트 표시
 				console.error('[useGenreTrack] 장르 변경 중 트랙 가져오기 실패:', error);
+				showError('음악을 불러오는데 실패했습니다. 다시 시도해주세요.', 5000);
 			} finally {
 				// 장르 변경 완료 플래그 해제
 				setIsGenreChangeInProgress(false);
@@ -89,7 +90,7 @@ export const useGenreTrack = () => {
 				}
 			}
 		},
-		[selectedGenre, fetchTrack, setSelectedGenre, setCurrentTrack, setNextTrack, moveToNextTrack, setDuration, resetQueue, setIsGenreChangeInProgress, showInfo, removeToast]
+		[selectedGenre, fetchTrack, setSelectedGenre, setCurrentTrack, setNextTrack, moveToNextTrack, setDuration, resetQueue, setIsGenreChangeInProgress, showInfo, showError, removeToast]
 	);
 
 	return {

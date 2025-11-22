@@ -76,8 +76,8 @@ export const getSharedAudioSource = (): MediaElementAudioSourceNode | null => {
 	try {
 		// AudioContext가 suspended 상태이면 resume
 		if (audioContext.state === 'suspended') {
-			audioContext.resume().catch((error) => {
-				console.error('AudioContext resume failed:', error);
+			audioContext.resume().catch(() => {
+				// AudioContext resume 실패 무시
 			});
 		}
 
@@ -85,13 +85,8 @@ export const getSharedAudioSource = (): MediaElementAudioSourceNode | null => {
 		audioSourceInstance.connect(analyser);
 		audioSourceInstance.connect(audioContext.destination);
 		return audioSourceInstance;
-	} catch (error) {
+	} catch {
 		// 이미 연결된 경우 - audio element가 이미 다른 AudioContext의 source에 연결되어 있음
-		if (error instanceof Error && error.name === 'InvalidStateError') {
-			console.warn('[getSharedAudioSource] audio element가 이미 다른 source에 연결됨');
-		} else {
-			console.error('[getSharedAudioSource] Failed to create audio source:', error);
-		}
 		return null;
 	}
 };
@@ -117,8 +112,8 @@ export const resumeAudioContext = async (): Promise<void> => {
 	if (audioContext.state === 'suspended') {
 		try {
 			await audioContext.resume();
-		} catch (error) {
-			console.error('AudioContext resume failed:', error);
+		} catch {
+			// AudioContext resume 실패 무시
 		}
 	}
 };
