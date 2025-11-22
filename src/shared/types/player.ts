@@ -17,7 +17,6 @@ export interface Track {
 	audioUrl?: string;
 	duration?: number; // in seconds
 	status: TrackStatus;
-	params: AudioParams;
 	createdAt: Date;
 }
 
