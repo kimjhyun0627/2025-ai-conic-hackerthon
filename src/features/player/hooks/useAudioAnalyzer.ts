@@ -3,8 +3,15 @@ import { getSharedAudioElement, getSharedAnalyser, getSharedAudioSource, getShar
 import { usePlayerStore } from '@/store/playerStore';
 
 interface AudioAnalysisResult {
-	intensity: number; // 0-1 범위의 오디오 강도
-	beatDetected: boolean; // 비트 감지 여부
+	intensity: number; // 0-1 범위의 RMS 기반 오디오 강도
+	beatLevel: number; // 0-1 범위의 저음대역 비트 강도
+	lowBandEnergy: number; // 저음대역 (60-200Hz) 에너지
+	midBandEnergy: number; // 중음대역 (200-2000Hz) 에너지
+	highBandEnergy: number; // 고음대역 (2kHz-8kHz) 에너지
+	peak: number; // Time domain peak (0-1)
+	rms: number; // Time domain RMS (0-1)
+	smoothLowEnergy: number; // 스무딩된 저음대역 에너지
+	timestamp: number; // 분석 시각 (ms)
 }
 
 /**
@@ -19,7 +26,14 @@ interface AudioAnalysisResult {
 export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult => {
 	const [analysis, setAnalysis] = useState<AudioAnalysisResult>({
 		intensity: 0,
-		beatDetected: false,
+		beatLevel: 0,
+		lowBandEnergy: 0,
+		midBandEnergy: 0,
+		highBandEnergy: 0,
+		peak: 0,
+		rms: 0,
+		smoothLowEnergy: 0,
+		timestamp: 0,
 	});
 
 	const animationFrameRef = useRef<number | null>(null);
@@ -36,7 +50,17 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 				animationFrameRef.current = null;
 			}
 			if (!isPlaying) {
-				setAnalysis({ intensity: 0, beatDetected: false });
+				setAnalysis({
+					intensity: 0,
+					beatLevel: 0,
+					lowBandEnergy: 0,
+					midBandEnergy: 0,
+					highBandEnergy: 0,
+					peak: 0,
+					rms: 0,
+					smoothLowEnergy: 0,
+					timestamp: 0,
+				});
 			}
 			return;
 		}
@@ -161,7 +185,17 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 				lastLowEnergyRef.current = 0;
 
 				// 분석 초기화
-				setAnalysis({ intensity: 0, beatDetected: false });
+				setAnalysis({
+					intensity: 0,
+					beatLevel: 0,
+					lowBandEnergy: 0,
+					midBandEnergy: 0,
+					highBandEnergy: 0,
+					peak: 0,
+					rms: 0,
+					smoothLowEnergy: 0,
+					timestamp: 0,
+				});
 				console.log('[useAudioAnalyzer] 트랙 변경 감지, 분석 초기화:', currentTrackId);
 			}
 
@@ -182,16 +216,31 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 			// 주파수 대역 정의 (Hz 기준)
 			// sampleRate는 일반적으로 44100Hz, fftSize는 2048
 			// 각 bin = sampleRate / fftSize = 약 21.5Hz
-			// 저음대역 (60-200Hz): 킥 드럼, 베이스 (beat 감지용)
-			const lowFreqStart = Math.floor((60 / (analyser.context.sampleRate / 2)) * frequencyBinCount);
-			const lowFreqEnd = Math.floor((800 / (analyser.context.sampleRate / 2)) * frequencyBinCount);
+			// 저음/중음/고음대역 (Hz)
+			const halfSampleRate = analyser.context.sampleRate / 2;
+			const lowFreqStart = Math.floor((60 / halfSampleRate) * frequencyBinCount);
+			const lowFreqEnd = Math.floor((200 / halfSampleRate) * frequencyBinCount);
+			const midFreqStart = Math.floor((200 / halfSampleRate) * frequencyBinCount);
+			const midFreqEnd = Math.floor((2000 / halfSampleRate) * frequencyBinCount);
+			const highFreqStart = Math.floor((2000 / halfSampleRate) * frequencyBinCount);
+			const highFreqEnd = Math.floor((8000 / halfSampleRate) * frequencyBinCount);
 
 			// 분석 함수 (Date.now() 기반으로 싱크 유지)
 			const analyze = () => {
 				// 최소한의 검증만 수행
 				if (!isPlaying || !audio || audio.paused || !audio.src) {
 					animationFrameRef.current = null;
-					setAnalysis({ intensity: 0, beatDetected: false });
+					setAnalysis({
+						intensity: 0,
+						beatLevel: 0,
+						lowBandEnergy: 0,
+						midBandEnergy: 0,
+						highBandEnergy: 0,
+						peak: 0,
+						rms: 0,
+						smoothLowEnergy: 0,
+						timestamp: 0,
+					});
 					return;
 				}
 
@@ -218,6 +267,7 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 				// RMS 기반 intensity (0-1 범위)
 				const rms = Math.sqrt(sumSquares * invArrayLength);
 				const rawIntensity = Math.min(rms * 4.0, 1.0); // 민감도 조정
+				const peak = (max - min) * 0.00392156862745098; // 255로 나누기
 
 				// ========== Frequency Domain 분석 (주파수 대역별 에너지) ==========
 				// 저음대역 에너지 (60-200Hz: 킥 드럼, 베이스) - beat 감지용
@@ -233,6 +283,18 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 				lowEnergy = lowEnergy / (lowFreqEnd - lowFreqStart) / 255; // 0-1 정규화
 				lowEnergyPeak = lowEnergyPeak / 255; // 0-1 정규화
 
+				// 중/고음대역 에너지
+				let midEnergy = 0;
+				let highEnergy = 0;
+				for (let i = midFreqStart; i < midFreqEnd; i++) {
+					midEnergy += frequencyDataArray[i];
+				}
+				for (let i = highFreqStart; i < Math.min(highFreqEnd, frequencyBinCount); i++) {
+					highEnergy += frequencyDataArray[i];
+				}
+				midEnergy = midFreqEnd > midFreqStart ? midEnergy / (midFreqEnd - midFreqStart) / 255 : 0;
+				highEnergy = highFreqEnd > highFreqStart ? highEnergy / (highFreqEnd - highFreqStart) / 255 : 0;
+
 				// 저음대역 에너지 기반 intensity 계산 (평균 + 피크)
 				const rawLowEnergy = lowEnergy * 0.75 + lowEnergyPeak * 0.25;
 
@@ -240,9 +302,9 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 				const smoothedLowEnergy = rawLowEnergy * 0.95 + lastLowEnergyRef.current * 0.05;
 				lastLowEnergyRef.current = smoothedLowEnergy;
 
-				// beatDetected: 저음역대 에너지가 특정 임계값을 넘으면 true
-				const beatThreshold = 0.45; // 저음역대 에너지 임계값
-				const beatDetected = smoothedLowEnergy > beatThreshold;
+				// beatLevel: 저음대역 에너지를 0-1 범위로 정규화
+				const beatThreshold = 0.1; // 저음대역 에너지 임계값
+				const beatLevel = Math.min(Math.max((smoothedLowEnergy - beatThreshold) / Math.max(1 - beatThreshold, 0.0001), 0), 1);
 
 				// 최소 스무딩 (즉각 반응) - 스무딩 비율 증가로 지연 최소화
 				const smoothedIntensity = rawIntensity * 0.95 + lastIntensity * 0.05;
@@ -250,7 +312,14 @@ export const useAudioAnalyzer = (enabled: boolean = true): AudioAnalysisResult =
 
 				setAnalysis({
 					intensity: smoothedIntensity,
-					beatDetected,
+					beatLevel,
+					lowBandEnergy: lowEnergy,
+					midBandEnergy: midEnergy,
+					highBandEnergy: highEnergy,
+					peak,
+					rms,
+					smoothLowEnergy: smoothedLowEnergy,
+					timestamp: audio.currentTime * 1000,
 				});
 
 				animationFrameRef.current = requestAnimationFrame(analyze);

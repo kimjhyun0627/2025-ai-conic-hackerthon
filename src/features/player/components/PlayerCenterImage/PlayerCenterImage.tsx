@@ -33,13 +33,14 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 	const intensityExtraPixelsX = intensityExtraPixels;
 	const intensityExtraPixelsY = intensityExtraPixels;
 
-	// beat 기반 추가 픽셀 계산
-	const beatExtraPixels = isPlaying && audioAnalysis.beatDetected ? 4 : 3;
+	// beat 기반 추가 픽셀 계산 (연속 값)
+	const beatLevel = Math.min(Math.max(audioAnalysis.beatLevel ?? 0, 0), 1);
+	const beatExtraPixels = isPlaying ? 2 + beatLevel * 6 : 2;
 	const beatExtraPixelsX = beatExtraPixels;
 	const beatExtraPixelsY = beatExtraPixels;
 
-	// beat 박스 투명도 (더 진하게)
-	const beatOpacity = 0.9;
+	// beat 박스 투명도 (연속 값)
+	const beatOpacity = 0.5 + beatLevel * 0.4;
 
 	// 크기 변화 방향에 따른 transition duration 계산
 	const intensityIsGrowing = intensityExtraPixels > prevIntensityExtraPixelsRef.current;
@@ -150,20 +151,13 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 							left: `-${beatExtraPixelsX / 2}vh`,
 							top: `-${beatExtraPixelsY / 2}vh`,
 							opacity: beatOpacity,
-							boxShadow: audioAnalysis.beatDetected
-								? `
-									0 0 50px rgba(${boxColorRgb}, 0.8),
-									0 0 100px rgba(${boxColorRgb}, 0.5),
-									0 0 150px rgba(${boxColorRgb}, 0.2),
-									inset 0 0 50px rgba(${boxColorRgb}, 0.3)
-								`
-								: `
-									0 0 30px rgba(${boxColorRgb}, 0.5),
-									0 0 60px rgba(${boxColorRgb}, 0.3),
-									0 0 90px rgba(${boxColorRgb}, 0.1),
-									inset 0 0 30px rgba(${boxColorRgb}, 0.2)
-								`,
-							filter: audioAnalysis.beatDetected ? 'blur(4px) brightness(1.3)' : 'blur(2px) brightness(1)', // 블러 추가
+							boxShadow: `
+								0 0 ${30 + beatLevel * 20}px rgba(${boxColorRgb}, ${0.5 + beatLevel * 0.3}),
+								0 0 ${60 + beatLevel * 40}px rgba(${boxColorRgb}, ${0.3 + beatLevel * 0.2}),
+								0 0 ${90 + beatLevel * 60}px rgba(${boxColorRgb}, ${0.1 + beatLevel * 0.2}),
+								inset 0 0 ${30 + beatLevel * 20}px rgba(${boxColorRgb}, ${0.2 + beatLevel * 0.2})
+							`,
+							filter: `blur(${2 + beatLevel * 2}px) brightness(${1 + beatLevel * 0.4})`, // 블러 + 밝기 조절
 						}}
 						exit={{
 							width: 'calc(100% + 3vh)',

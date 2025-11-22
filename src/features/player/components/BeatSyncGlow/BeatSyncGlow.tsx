@@ -5,16 +5,17 @@ import { getGlowStyle } from './glowUtils';
 interface BeatSyncGlowProps {
 	category: ThemeCategory;
 	intensity: number; // 0-1 범위의 오디오 강도
-	beatDetected: boolean; // 비트 감지 여부
-	peakValue: number; // 피크 값
+	beatLevel: number; // 0-1 범위의 비트 강도
 }
 
 /**
  * 비트 싱크 글로우 효과 컴포넌트
  * 오디오 분석 데이터를 기반으로 이미지 주변에 글로우 효과를 적용합니다.
  */
-export const BeatSyncGlow = ({ category, intensity, beatDetected }: BeatSyncGlowProps) => {
-	const glowStyle = getGlowStyle(category, intensity, beatDetected);
+export const BeatSyncGlow = ({ category, intensity, beatLevel }: BeatSyncGlowProps) => {
+	const clampedBeat = Math.max(0, Math.min(1, beatLevel || 0));
+	const glowStyle = getGlowStyle(category, intensity, clampedBeat);
+	const transitionDuration = Math.max(0.1, 0.3 - clampedBeat * 0.15);
 
 	return (
 		<motion.div
@@ -33,8 +34,8 @@ export const BeatSyncGlow = ({ category, intensity, beatDetected }: BeatSyncGlow
 					boxShadow: glowStyle.boxShadow,
 				}}
 				transition={{
-					duration: beatDetected ? 0.15 : 0.3,
-					ease: beatDetected ? 'easeOut' : 'easeInOut',
+					duration: transitionDuration,
+					ease: clampedBeat > 0.3 ? 'easeOut' : 'easeInOut',
 				}}
 			/>
 		</motion.div>
