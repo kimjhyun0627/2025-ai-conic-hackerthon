@@ -4,7 +4,7 @@ import { fetchFreesoundPreviewByGenre } from './freesoundApi';
 
 export const fetchTrackForGenre = async (genre: MusicGenre, signal?: AbortSignal): Promise<Track> => {
 	const preview = await fetchFreesoundPreviewByGenre(genre.name, signal);
-	const tempo = preview.bpm ?? DEFAULT_AUDIO_PARAMS.tempo;
+	const tempo = DEFAULT_AUDIO_PARAMS.tempo;
 
 	return {
 		id: `freesound-${preview.id}-${Date.now()}`,
