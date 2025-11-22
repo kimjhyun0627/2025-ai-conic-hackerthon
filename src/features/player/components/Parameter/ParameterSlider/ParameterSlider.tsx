@@ -111,34 +111,61 @@ export const ParameterSlider = ({ param, value, onChange, onRemove, isRemovable 
 										zIndex: 5,
 									}),
 						}}
-						animate={{
-							...(isVertical
+						animate={
+							bpmPercentage === null
 								? {
-										height: bpmPercentage !== null ? `calc(200px * ${bpmPercentage / 100})` : '60px',
-									}
-								: {
-										width: bpmPercentage !== null ? `${bpmPercentage}%` : '30%',
-									}),
-							...(bpmPercentage === null
-								? {
+										// 측정 중: 고정 크기 + pulse 애니메이션
+										...(isVertical
+											? {
+													height: '60px',
+												}
+											: {
+													width: '30%',
+												}),
 										scale: [1, 1.05, 1],
 									}
-								: {}),
-						}}
-						transition={{
-							...(bpmPercentage === null
+								: {
+										// 측정 완료: BPM 값에 따른 크기 애니메이션
+										...(isVertical
+											? {
+													height: `calc(200px * ${bpmPercentage / 100})`,
+												}
+											: {
+													width: `${bpmPercentage}%`,
+												}),
+										scale: 1,
+									}
+						}
+						transition={
+							bpmPercentage === null
 								? {
+										// 측정 중: pulse 애니메이션만
 										scale: {
 											duration: 2,
 											repeat: Infinity,
 											ease: [0.4, 0, 0.6, 1],
 										},
+										...(isVertical
+											? {
+													height: {
+														duration: 0,
+													},
+												}
+											: {
+													width: {
+														duration: 0,
+													},
+												}),
 									}
 								: {
+										// 측정 완료: 크기 변경 애니메이션
 										duration: 0.3,
 										ease: [0.4, 0, 0.2, 1],
-									}),
-						}}
+										scale: {
+											duration: 0,
+										},
+									}
+						}
 					/>
 				)}
 			</div>
