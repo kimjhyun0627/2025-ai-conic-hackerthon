@@ -21,7 +21,7 @@ export const PlayerCenterImage = ({ genre, isPlaying }: PlayerCenterImageProps) 
 	return (
 		<div className="fixed inset-0 z-0 flex items-center justify-center md:pt-[28px] md:pb-[28px] py-[40px] md:px-[28px] md:py-[40px]">
 			<motion.div
-				className="w-full h-full glass-card rounded-xl md:rounded-2rem overflow-hidden shadow-2xl relative"
+				className="w-[80vh] h-[80vh] glass-card rounded-4xl md:rounded-2rem overflow-hidden shadow-2xl relative"
 				// animate={
 				// 	isPlaying
 				// 		? {
