@@ -1,17 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Pause } from 'lucide-react';
 import { PREPLAY_CONSTANTS, generatePreplayGradients } from '../../constants';
 import { CAROUSEL_CONSTANTS } from '@/features/landing/constants';
+import { useSampleAudio, getSampleAudioUrl } from '../../hooks/useSampleAudio';
+import type { ThemeCategory } from '@/shared/types';
 
 interface PreplayProps {
 	imageUrl: string;
 	onPause: (e?: React.MouseEvent) => void;
+	/** 카테고리 ID (테마 카테고리 또는 장르 ID) */
+	categoryOrGenreId: string;
+	/** 테마 카테고리 (장르인 경우 필수) */
+	category?: ThemeCategory;
 }
 
-export const Preplay = ({ imageUrl, onPause }: PreplayProps) => {
+export const Preplay = ({ imageUrl, onPause, categoryOrGenreId, category }: PreplayProps) => {
 	const gradients = generatePreplayGradients();
 	const [isHovered, setIsHovered] = useState(false);
+
+	// 샘플 오디오 URL 가져오기
+	const audioUrl = getSampleAudioUrl(categoryOrGenreId, category);
+
+	// 샘플 오디오 재생 훅
+	const {
+		play,
+		pause: pauseAudio,
+		stop,
+		isPlaying: isAudioPlaying,
+	} = useSampleAudio(audioUrl, {
+		volume: 0.5,
+		loop: true,
+	});
+
+	// 컴포넌트가 마운트되면 자동 재생
+	useEffect(() => {
+		if (audioUrl) {
+			play().catch((error) => {
+				console.error('[Preplay] 오디오 재생 실패:', error);
+			});
+		}
+
+		// 언마운트 시 정리
+		return () => {
+			stop();
+		};
+	}, [audioUrl, play, stop]);
+
+	// 일시정지 핸들러
+	const handlePause = (e?: React.MouseEvent) => {
+		pauseAudio();
+		stop();
+		onPause(e);
+	};
 
 	return (
 		<motion.div
@@ -29,7 +70,7 @@ export const Preplay = ({ imageUrl, onPause }: PreplayProps) => {
 			<motion.div
 				onClick={(e) => {
 					e.stopPropagation();
-					onPause(e);
+					handlePause(e);
 				}}
 				onMouseEnter={() => setIsHovered(true)}
 				onMouseLeave={() => setIsHovered(false)}
@@ -58,15 +99,15 @@ export const Preplay = ({ imageUrl, onPause }: PreplayProps) => {
 						position: 'relative',
 					}}
 				>
-					{/* 배경 이미지 - 회전 */}
+					{/* 배경 이미지 - 회전 (재생 중일 때만) */}
 					<motion.div
 						className="absolute inset-0 rounded-full overflow-hidden"
 						animate={{
-							rotate: 360,
+							rotate: isAudioPlaying ? 360 : 0,
 						}}
 						transition={{
 							duration: CAROUSEL_CONSTANTS.ANIMATION.ROTATION_DURATION,
-							repeat: Infinity,
+							repeat: isAudioPlaying ? Infinity : 0,
 							ease: 'linear',
 						}}
 						style={{
@@ -83,15 +124,15 @@ export const Preplay = ({ imageUrl, onPause }: PreplayProps) => {
 							bottom: 0,
 						}}
 					/>
-					{/* 레코드판 패턴 (원형 그루브) - 회전 */}
+					{/* 레코드판 패턴 (원형 그루브) - 회전 (재생 중일 때만) */}
 					<motion.div
 						className="absolute inset-0 rounded-full pointer-events-none"
 						animate={{
-							rotate: 360,
+							rotate: isAudioPlaying ? 360 : 0,
 						}}
 						transition={{
 							duration: CAROUSEL_CONSTANTS.ANIMATION.ROTATION_DURATION,
-							repeat: Infinity,
+							repeat: isAudioPlaying ? Infinity : 0,
 							ease: 'linear',
 						}}
 						style={{

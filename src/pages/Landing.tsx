@@ -22,7 +22,9 @@ const Landing = () => {
 	const visibleRange = useVisibleRange(windowWidth, 2);
 	const genreVisibleRange = useVisibleRange(windowWidth, 1);
 	const indicatorRef = useRef<HTMLDivElement | null>(null);
+	const backButtonRef = useRef<HTMLDivElement | null>(null);
 	const [indicatorBottom, setIndicatorBottom] = useState<number | null>(null);
+	const [backButtonBottom, setBackButtonBottom] = useState<number | null>(null);
 
 	// 장르 선택 및 음악 생성 훅
 	const { handleGenreSelect, handleCancelApiCall } = useGenreSelection();
@@ -62,6 +64,19 @@ const Landing = () => {
 		setIndicatorBottom(distanceFromViewportBottom);
 	}, []);
 
+	// "테마 다시 선택하기" 버튼 위치 업데이트 함수
+	const updateBackButtonPosition = useCallback(() => {
+		if (!backButtonRef.current) {
+			setBackButtonBottom(null);
+			return;
+		}
+
+		const rect = backButtonRef.current.getBoundingClientRect();
+		// 버튼의 하단이 뷰포트 하단에서 얼마나 떨어져 있는지 계산
+		const distanceFromViewportBottom = window.innerHeight - rect.bottom;
+		setBackButtonBottom(distanceFromViewportBottom);
+	}, []);
+
 	// 인디케이터 ref 콜백
 	const handleIndicatorRef = useCallback(
 		(ref: HTMLDivElement | null) => {
@@ -71,21 +86,44 @@ const Landing = () => {
 		[updateIndicatorPosition]
 	);
 
+	// "테마 다시 선택하기" 버튼 ref 콜백
+	const handleBackButtonRef = useCallback(
+		(ref: HTMLDivElement | null) => {
+			backButtonRef.current = ref;
+			updateBackButtonPosition();
+		},
+		[updateBackButtonPosition]
+	);
+
 	// 인디케이터 위치 업데이트 (리사이즈 및 스크롤 시)
 	useEffect(() => {
-		updateIndicatorPosition();
-		window.addEventListener('resize', updateIndicatorPosition);
-		window.addEventListener('scroll', updateIndicatorPosition);
+		const updatePositions = () => {
+			updateIndicatorPosition();
+			updateBackButtonPosition();
+		};
+
+		updatePositions();
+		window.addEventListener('resize', updatePositions);
+		window.addEventListener('scroll', updatePositions);
 
 		return () => {
-			window.removeEventListener('resize', updateIndicatorPosition);
-			window.removeEventListener('scroll', updateIndicatorPosition);
+			window.removeEventListener('resize', updatePositions);
+			window.removeEventListener('scroll', updatePositions);
 		};
-	}, [updateIndicatorPosition, selectedCategory, categoryCarousel.currentIndex, genreCarousel.currentIndex]);
+	}, [updateIndicatorPosition, updateBackButtonPosition, selectedCategory, categoryCarousel.currentIndex, genreCarousel.currentIndex]);
 
-	// Footer 위치 계산: 인디케이터가 화면 하단에 보일 때는 인디케이터 아래, 그 외에는 화면 하단 고정
+	// Footer 위치 계산: "테마 다시 선택하기" 버튼이 있으면 버튼 아래, 인디케이터가 화면 하단에 보일 때는 인디케이터 아래, 그 외에는 화면 하단 고정
+	const shouldFollowBackButton = useMemo(() => {
+		if (!selectedCategory || backButtonBottom === null) {
+			return false;
+		}
+		// 버튼이 화면 하단 근처에 있거나 그 아래로 내려갔을 때
+		const threshold = 50; // 50px 이내면 버튼을 따라감
+		return backButtonBottom <= threshold;
+	}, [selectedCategory, backButtonBottom]);
+
 	const shouldFollowIndicator = useMemo(() => {
-		if (indicatorBottom === null) {
+		if (shouldFollowBackButton || indicatorBottom === null) {
 			return false;
 		}
 
@@ -96,7 +134,7 @@ const Landing = () => {
 		// footer 높이 + 간격(12px)을 고려하여 약 50px 이내면 인디케이터를 따라감
 		const threshold = 50; // 50px 이내면 인디케이터를 따라감
 		return indicatorBottom <= threshold;
-	}, [indicatorBottom]);
+	}, [shouldFollowBackButton, indicatorBottom]);
 
 	const theme = useThemeStore((state) => state.theme);
 	const isDark = theme === 'dark';
@@ -292,12 +330,33 @@ const Landing = () => {
 								onPlayGenre={setPlayingGenre}
 								onPauseGenre={() => setPlayingGenre(null)}
 								onIndicatorRef={handleIndicatorRef}
+								onBackButtonRef={handleBackButtonRef}
 							/>
 						)}
 					</AnimatePresence>
 
+					{/* Footer - "테마 다시 선택하기" 버튼 아래에 배치 (스크롤과 함께 움직임) */}
+					{shouldFollowBackButton && (
+						<motion.div
+							className="text-center w-full pointer-events-none"
+							style={{ marginTop: '12px' }}
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 0.8 }}
+						>
+							<p
+								className="pointer-events-auto"
+								style={{
+									fontSize: navTextSize,
+									color: isDark ? 'rgba(255, 200, 120, 0.7)' : 'rgba(139, 38, 53, 0.7)', // 웜톤 색상
+								}}
+							>
+								AI가 생성하는 나만의 음악 경험, MOODWAVE
+							</p>
+						</motion.div>
+					)}
 					{/* Footer - 인디케이터 아래에 배치 (스크롤과 함께 움직임) */}
-					{shouldFollowIndicator && (
+					{shouldFollowIndicator && !shouldFollowBackButton && (
 						<motion.div
 							className="text-center w-full pointer-events-none"
 							style={{ marginTop: '12px' }}
@@ -319,7 +378,7 @@ const Landing = () => {
 				</div>
 
 				{/* Footer - 화면 하단에 고정 (화면이 클 때) */}
-				{!shouldFollowIndicator && (
+				{!shouldFollowIndicator && !shouldFollowBackButton && (
 					<motion.div
 						className="fixed left-1/2 transform -translate-x-1/2 text-center w-full z-10 pointer-events-none"
 						style={{ bottom: '12px' }}

@@ -15,6 +15,7 @@ interface GenreSectionProps {
 	onPlayGenre: (genreId: string) => void;
 	onPauseGenre: () => void;
 	onIndicatorRef?: (ref: HTMLDivElement | null) => void;
+	onBackButtonRef?: (ref: HTMLDivElement | null) => void;
 }
 
 export const GenreSection = ({
@@ -30,6 +31,7 @@ export const GenreSection = ({
 	onPlayGenre,
 	onPauseGenre,
 	onIndicatorRef,
+	onBackButtonRef,
 }: GenreSectionProps) => {
 	if (!selectedTheme) return null;
 
@@ -63,6 +65,7 @@ export const GenreSection = ({
 				titleSize="text-3xl md:text-4xl"
 				nameSize="text-base md:text-lg"
 				onIndicatorRef={onIndicatorRef}
+				onBackButtonRef={onBackButtonRef}
 			/>
 		</motion.div>
 	);

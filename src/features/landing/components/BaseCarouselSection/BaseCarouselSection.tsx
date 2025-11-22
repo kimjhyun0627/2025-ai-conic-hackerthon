@@ -34,6 +34,7 @@ interface CarouselSectionProps<T extends CarouselItem> {
 	nameSize?: string;
 	getPlayingId?: (item: T) => string | ThemeCategory;
 	onIndicatorRef?: (ref: HTMLDivElement | null) => void;
+	onBackButtonRef?: (ref: HTMLDivElement | null) => void;
 }
 
 export const BaseCarouselSection = <T extends CarouselItem>({
@@ -54,6 +55,7 @@ export const BaseCarouselSection = <T extends CarouselItem>({
 	nameSize = 'text-lg md:text-xl',
 	getPlayingId,
 	onIndicatorRef,
+	onBackButtonRef,
 }: CarouselSectionProps<T>) => {
 	const windowWidth = useWindowWidth();
 	const effectiveRange = Math.max(0, visibleRange);
@@ -175,6 +177,7 @@ export const BaseCarouselSection = <T extends CarouselItem>({
 			{/* Back Button */}
 			{onBack && (
 				<motion.div
+					ref={onBackButtonRef}
 					className="flex items-center justify-center mb-4 mt-4 px-6 md:px-12"
 					initial={{ opacity: 0, y: -20 }}
 					animate={{ opacity: 1, y: 0 }}

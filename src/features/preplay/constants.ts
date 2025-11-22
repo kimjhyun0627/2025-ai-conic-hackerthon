@@ -77,3 +77,6 @@ export const generatePreplayGradients = () => {
 		conic: `repeating-conic-gradient(from 0deg at center, ${conicStops})`,
 	};
 };
+
+// 샘플 오디오 관련 export
+export * from './constants/sampleAudio';

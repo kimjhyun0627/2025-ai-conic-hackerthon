@@ -1,12 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Preplay, SamplePlayButton } from '@/features/preplay/components';
+import { Preplay, SamplePlayButton } from '../PrePlay/components';
 import { CAROUSEL_CONSTANTS } from '../../constants';
 
+import type { ThemeCategory } from '@/shared/types';
+
 interface CardContentData {
+	id?: string;
 	nameKo: string;
 	name: string;
 	description?: string;
 	image?: string;
+	category?: ThemeCategory;
 }
 
 interface CardContentProps {
@@ -40,6 +44,8 @@ export const CardContent = ({ data, isPlaying, onPlayClick, onPauseClick, titleT
 					<Preplay
 						imageUrl={data.image || ''}
 						onPause={onPauseClick}
+						categoryOrGenreId={data.id || data.name}
+						category={data.category}
 					/>
 				</motion.div>
 			) : (

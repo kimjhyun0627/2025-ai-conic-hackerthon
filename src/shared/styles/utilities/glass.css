@@ -37,7 +37,7 @@
 		-webkit-backdrop-filter: var(--glass-blur-card);
 		border: 0.5px solid rgba(255, 255, 255, 0.2);
 		box-shadow:
-			0 10px 30px 0 rgba(0, 0, 0, 0.35),
+			0 10px 30px 0 rgba(251, 113, 133, 0.4),
 			inset 0 2px 4px 0 rgba(255, 255, 255, 0.15);
 	}
 }
