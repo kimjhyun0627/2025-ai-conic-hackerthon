@@ -234,7 +234,7 @@ export const WaveformCanvas = ({ isPlaying, isDark }: WaveformCanvasProps) => {
 					const avgValue = sum / (endBin - startBin);
 					const normalizedValue = avgValue / 255;
 					// 고음역대는 가중치를 높여서 시각적 밸런스 조정
-					const weightedValue = normalizedValue * 1.8; // 고음 가중치 증가
+					const weightedValue = normalizedValue * 1.5; // 고음 가중치 증가
 					const targetHeight = weightedValue * maxBarHeight;
 
 					// 스무딩 적용

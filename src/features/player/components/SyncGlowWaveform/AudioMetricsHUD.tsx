@@ -81,17 +81,17 @@ export const AudioMetricsHUD = ({ rms, bpm, spectralCentroid, lowEnergy, midEner
 					<div className="space-y-1.5">
 						<EnergyBar
 							label="저음"
-							value={lowEnergy}
+							value={lowEnergy * 0.6}
 							color="#ff5050"
 						/>
 						<EnergyBar
 							label="중음"
-							value={midEnergy}
+							value={midEnergy * 0.8}
 							color="#ffc832"
 						/>
 						<EnergyBar
 							label="고음"
-							value={highEnergy}
+							value={highEnergy * 1.5}
 							color="#6496ff"
 						/>
 					</div>
