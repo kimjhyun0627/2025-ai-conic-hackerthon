@@ -34,8 +34,7 @@ export const useTrackFetcher = () => {
 				throw error;
 			}
 
-			// 다른 에러는 로깅 후 재던지기
-			console.error('[useTrackFetcher] 트랙 가져오기 실패:', error);
+			// 다른 에러는 재던지기
 			throw error;
 		} finally {
 			// signal이 제공되지 않은 경우에만 ref 정리

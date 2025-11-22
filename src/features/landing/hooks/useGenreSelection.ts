@@ -55,8 +55,7 @@ export const useGenreSelection = () => {
 				try {
 					await audio.play();
 					setIsPlaying(true);
-				} catch (playError) {
-					console.warn('초기 재생이 차단되었습니다:', playError);
+				} catch {
 					setIsPlaying(false);
 				}
 
@@ -79,7 +78,6 @@ export const useGenreSelection = () => {
 					return;
 				}
 
-				console.error('FreeSound API 호출 실패:', error);
 				setIsTransitioning(false);
 				cancelApiCallRef.current = null;
 

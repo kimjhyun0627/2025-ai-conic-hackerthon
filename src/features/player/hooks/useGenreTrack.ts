@@ -78,8 +78,6 @@ export const useGenreTrack = () => {
 				if (error instanceof DOMException && error.name === 'AbortError') {
 					return;
 				}
-
-				console.error('[useGenreTrack] 장르 변경 중 트랙 가져오기 실패:', error);
 			} finally {
 				// 장르 변경 완료 플래그 해제
 				setIsGenreChangeInProgress(false);
