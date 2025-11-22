@@ -189,34 +189,36 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 		transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
 		padding: isPlayerStyle ? '0.6875rem' : showLabel ? '0.5rem 1rem' : '0.75rem',
 		borderRadius: className?.includes('rounded-2xl') ? '1rem' : '0.75rem',
-		border: className?.includes('border-white')
-			? `1px solid ${isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.3)'}`
-			: `1px solid ${isDark ? 'rgba(51, 65, 85, 0.5)' : 'rgba(226, 232, 240, 0.5)'}`,
-		background: className?.includes('bg-white/20')
-			? isHovered
-				? isDark
-					? 'rgba(28, 25, 23, 0.55)'
-					: 'rgba(254, 248, 242, 0.4)'
-				: isDark
-					? 'rgba(28, 25, 23, 0.4)'
-					: 'rgba(254, 248, 242, 0.3)'
+		border: 'none', // 외부 div의 border 사용
+		background: isPlayerStyle
+			? 'transparent' // PlayerTopBar에서 사용할 때는 투명하게
+			: className?.includes('bg-white/20')
+				? isHovered
+					? isDark
+						? 'rgba(28, 25, 23, 0.1)'
+						: 'rgba(254, 248, 242, 0.1)'
+					: isDark
+						? 'rgba(28, 25, 23, 0.1)'
+						: 'rgba(254, 248, 242, 0.1)'
+				: isHovered
+					? isDark
+						? 'rgba(28, 25, 23, 0.1)'
+						: 'rgba(254, 248, 242, 0.1)'
+					: isDark
+						? 'rgba(28, 25, 23, 0.1)'
+						: 'rgba(254, 248, 242, 0.1)',
+		backdropFilter: isPlayerStyle ? 'none' : 'blur(12px)',
+		WebkitBackdropFilter: isPlayerStyle ? 'none' : 'blur(12px)',
+		boxShadow: isPlayerStyle
+			? 'none' // PlayerTopBar에서 사용할 때는 외부 div의 shadow 사용
 			: isHovered
 				? isDark
-					? 'rgba(28, 25, 23, 0.9)'
-					: 'rgba(254, 248, 242, 0.95)'
+					? '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
+					: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.05)'
 				: isDark
-					? 'rgba(28, 25, 23, 0.85)'
-					: 'rgba(254, 248, 242, 0.85)',
-		backdropFilter: 'blur(12px)',
-		WebkitBackdropFilter: 'blur(12px)',
-		boxShadow: isHovered
-			? isDark
-				? '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)'
-				: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.05)'
-			: isDark
-				? '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)'
-				: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-		transform: isHovered ? 'scale(1.05)' : 'scale(1)',
+					? '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)'
+					: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+		transform: isPlayerStyle ? 'scale(1)' : isHovered ? 'scale(1.05)' : 'scale(1)',
 		display: 'flex',
 		alignItems: 'center',
 		justifyContent: 'center',
@@ -244,18 +246,20 @@ const ThemeToggleButton = ({ theme = 'light', showLabel = false, variant = 'circ
 			aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
 		>
 			{/* 배경 그라데이션 효과 */}
-			<div
-				style={{
-					position: 'absolute',
-					inset: 0,
-					background: isHovered
-						? `linear-gradient(to bottom right, ${isDark ? 'rgba(148, 163, 184, 0.08)' : 'rgba(148, 163, 184, 0.05)'}, ${isDark ? 'rgba(203, 213, 225, 0.05)' : 'rgba(203, 213, 225, 0.03)'})`
-						: `linear-gradient(to bottom right, rgba(168, 85, 247, 0), rgba(217, 70, 239, 0))`,
-					transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-					borderRadius: '0.75rem',
-					pointerEvents: 'none',
-				}}
-			/>
+			{!isPlayerStyle && (
+				<div
+					style={{
+						position: 'absolute',
+						inset: 0,
+						background: isHovered
+							? `linear-gradient(to bottom right, ${isDark ? 'rgba(148, 163, 184, 0.08)' : 'rgba(148, 163, 184, 0.05)'}, ${isDark ? 'rgba(203, 213, 225, 0.05)' : 'rgba(203, 213, 225, 0.03)'})`
+							: `linear-gradient(to bottom right, rgba(168, 85, 247, 0), rgba(217, 70, 239, 0))`,
+						transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+						borderRadius: '0.75rem',
+						pointerEvents: 'none',
+					}}
+				/>
+			)}
 
 			{/* 아이콘 */}
 			<div

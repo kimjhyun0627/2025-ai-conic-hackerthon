@@ -56,6 +56,9 @@ const ConfirmModal = ({ isOpen, title = '확인', message, confirmText = '확인
 						transition={{ duration: 0.2 }}
 						className="fixed inset-0 bg-black/50 backdrop-blur-sm z-10000"
 						onClick={onCancel}
+						style={{
+							background: isDark ? 'rgba(28, 25, 23, 0.1)' : 'rgba(254, 248, 242, 0.1)',
+						}}
 					/>
 
 					{/* Modal */}

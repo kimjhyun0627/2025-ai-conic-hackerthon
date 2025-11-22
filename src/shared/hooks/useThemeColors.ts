@@ -25,16 +25,16 @@ export const useThemeColors = (): ThemeColors => {
 	return useMemo(
 		() => ({
 			isDark,
-			iconColor: isDark ? '#cbd5e1' : '#334155', // slate-300 : slate-700
-			textSecondaryColor: isDark ? '#cbd5e1' : '#475569', // slate-300 : slate-600
-			textMutedColor: isDark ? '#e2e8f0' : '#334155', // slate-200 : slate-700
-			glassBackground: isDark ? 'rgba(28, 25, 23, 0.2)' : 'rgba(254, 248, 242, 0.3)',
+			iconColor: isDark ? '#cbd5e1' : '#1e293b', // slate-300 : slate-800
+			textSecondaryColor: isDark ? '#cbd5e1' : '#334155', // slate-300 : slate-700
+			textMutedColor: isDark ? '#e2e8f0' : '#1e293b', // slate-200 : slate-800
+			glassBackground: isDark ? 'rgba(28, 25, 23, 0.2)' : 'rgba(254, 248, 242, 0.4)',
 			glassBorder: isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.12)',
 			glassButtonBg: isDark ? 'rgba(28, 25, 23, 0.4)' : 'rgba(254, 248, 242, 0.5)',
 			glassButtonBgHover: isDark ? 'rgba(28, 25, 23, 0.55)' : 'rgba(254, 248, 242, 0.5)',
 			playButtonGradient: isDark ? 'linear-gradient(to bottom right, #f43f5e, #e11d48)' : 'linear-gradient(to bottom right, #fb7185, #f43f5e)',
-			parameterPanelBg: isDark ? 'rgba(28, 25, 23, 0.8)' : 'rgba(254, 248, 242, 0.3)',
-			parameterButtonBg: isDark ? 'rgba(28, 25, 23, 0.4)' : 'rgba(254, 248, 242, 0.2)',
+			parameterPanelBg: isDark ? 'rgba(28, 25, 23, 0.4)' : 'rgba(254, 248, 242, 0.4)',
+			parameterButtonBg: isDark ? 'rgba(28, 25, 23, 0.4)' : 'rgba(254, 248, 242, 0.4)',
 		}),
 		[isDark]
 	);

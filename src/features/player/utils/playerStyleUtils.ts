@@ -21,7 +21,7 @@ export const getParameterPanelStyle = (colors: ThemeColors) => ({
  * 공통 파라미터 버튼 패널 스타일 생성
  */
 export const getCommonParamPanelStyle = (colors: ThemeColors) => ({
-	background: colors.isDark ? 'rgba(28, 25, 23, 0.55)' : 'rgba(254, 248, 242, 0.65)',
+	background: colors.isDark ? 'rgba(28, 25, 23, 0.1)' : 'rgba(254, 248, 242, 0.2)',
 	backdropFilter: 'blur(30px) saturate(200%)',
 	WebkitBackdropFilter: 'blur(30px) saturate(200%)',
 	border: `1px solid ${colors.isDark ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.15)'}`,
@@ -34,7 +34,7 @@ export const getCommonParamPanelStyle = (colors: ThemeColors) => ({
  * 공통 파라미터 버튼 스타일 생성
  */
 export const getCommonParamButtonStyle = (colors: ThemeColors) => ({
-	background: colors.isDark ? 'rgba(28, 25, 23, 0.65)' : 'rgba(254, 248, 242, 0.75)',
+	background: colors.isDark ? 'rgba(28, 25, 23, 0.2)' : 'rgba(254, 248, 242, 0.2)',
 	backdropFilter: 'blur(20px) saturate(180%)',
 	WebkitBackdropFilter: 'blur(20px) saturate(180%)',
 	border: `1px solid ${colors.isDark ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.15)'}`,

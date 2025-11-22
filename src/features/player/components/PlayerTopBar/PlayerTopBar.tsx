@@ -147,7 +147,20 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 										variant="ghost"
 										size="sm"
 										onClick={() => setIsGenreDropdownOpen(!isGenreDropdownOpen)}
-										className={PLAYER_CONSTANTS.STYLES.glassButton.homeButton}
+										className="btn-glass rounded-2xl backdrop-blur-md border shadow-lg hover:shadow-xl transition-all duration-300 h-11 px-4 py-0 flex items-center"
+										style={{
+											background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
+											borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+											color: isGenreButtonHovered || isGenreDropdownOpen ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+										}}
+										onMouseEnter={(e) => {
+											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
+											e.currentTarget.style.color = '#fb7185';
+										}}
+										onMouseLeave={(e) => {
+											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
+											e.currentTarget.style.color = colors.isDark ? '#f1f5f9' : '#0f172a';
+										}}
 									>
 										<Grid3x3
 											className="w-5 h-5 mr-2"
@@ -155,7 +168,13 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 												color: isGenreButtonHovered || isGenreDropdownOpen ? '#fb7185' : undefined,
 											}}
 										/>
-										장르 선택
+										<span
+											style={{
+												color: isGenreButtonHovered || isGenreDropdownOpen ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+											}}
+										>
+											장르 선택
+										</span>
 										<ChevronDown
 											className={`w-4 h-4 ml-2 transition-transform duration-200 ${isGenreDropdownOpen ? 'rotate-180' : ''}`}
 											style={{
@@ -276,13 +295,32 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 										variant="ghost"
 										size="sm"
 										onClick={onHomeClick}
-										className={PLAYER_CONSTANTS.STYLES.glassButton.homeButton}
+										className="btn-glass rounded-2xl backdrop-blur-md border shadow-lg hover:shadow-xl transition-all duration-300 h-11 px-4 py-0 flex items-center"
+										style={{
+											background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
+											borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+											color: isHomeButtonHovered ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+										}}
+										onMouseEnter={(e) => {
+											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
+											e.currentTarget.style.color = '#fb7185';
+										}}
+										onMouseLeave={(e) => {
+											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
+											e.currentTarget.style.color = colors.isDark ? '#f1f5f9' : '#0f172a';
+										}}
 									>
 										<Home
 											className="w-5 h-5 mr-2"
 											style={{ color: isHomeButtonHovered ? '#fb7185' : undefined }}
 										/>
-										홈으로
+										<span
+											style={{
+												color: isHomeButtonHovered ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+											}}
+										>
+											홈으로
+										</span>
 									</Button>
 								</div>
 							</motion.div>
@@ -315,7 +353,21 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 									},
 								}}
 							>
-								<ThemeToggle className="h-11 rounded-2xl backdrop-blur-md bg-white/20 dark:bg-slate-800/30 border border-white/30 dark:border-white/20 shadow-lg hover:bg-white/30 dark:hover:bg-slate-800/40 hover:shadow-xl transition-all duration-300" />
+								<div
+									className="h-11 rounded-2xl backdrop-blur-md border shadow-lg hover:shadow-xl transition-all duration-300"
+									style={{
+										background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
+										borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+									}}
+									onMouseEnter={(e) => {
+										e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
+									}}
+									onMouseLeave={(e) => {
+										e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
+									}}
+								>
+									<ThemeToggle />
+								</div>
 							</motion.div>
 						</>
 					)}
@@ -325,9 +377,19 @@ export const PlayerTopBar = ({ onHomeClick, isVisible = true }: PlayerTopBarProp
 				<motion.div {...PLAYER_CONSTANTS.ANIMATIONS.topBar}>
 					<button
 						onClick={toggleFullscreen}
-						onMouseEnter={() => setIsFullscreenHovered(true)}
-						onMouseLeave={() => setIsFullscreenHovered(false)}
-						className={PLAYER_CONSTANTS.STYLES.glassButton.base}
+						onMouseEnter={(e) => {
+							setIsFullscreenHovered(true);
+							e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
+						}}
+						onMouseLeave={(e) => {
+							setIsFullscreenHovered(false);
+							e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
+						}}
+						className="p-3 rounded-2xl btn-glass hover:glow-secondary transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-secondary-500 backdrop-blur-md border shadow-lg"
+						style={{
+							background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
+							borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+						}}
 						aria-label={isFullscreen ? '전체화면 해제' : '전체화면'}
 					>
 						{isFullscreen ? (

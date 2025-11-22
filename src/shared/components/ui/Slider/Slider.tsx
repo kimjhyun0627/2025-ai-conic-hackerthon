@@ -18,7 +18,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 		const isDark = theme === 'dark';
 		const labelColor = isDark ? '#cbd5e1' : '#0f172a'; // slate-300 : slate-900
 		const valueColor = isDark ? '#fb7185' : '#f43f5e'; // primary-500 : primary-600
-		const descColor = isDark ? '#94a3b8' : '#64748b'; // slate-400 : slate-500
+		const descColor = isDark ? '#94a3b8' : '#475569'; // slate-400 : slate-600
 
 		// 프로그래스 퍼센티지 계산 (썸의 중앙 위치에 맞춤)
 		const numValue = Number(value);
@@ -179,7 +179,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 											right: '0',
 											width: '4px',
 											height: '1px',
-											backgroundColor: isDark ? 'rgba(148, 163, 184, 0.6)' : 'rgba(100, 116, 139, 0.6)',
+											backgroundColor: isDark ? 'rgba(148, 163, 184, 0.6)' : 'rgba(71, 85, 105, 0.7)',
 										}}
 									/>
 								);
@@ -261,7 +261,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 										transform: 'translateX(-50%)',
 										width: '1px',
 										height: '6px',
-										backgroundColor: isDark ? 'rgba(148, 163, 184, 0.5)' : 'rgba(100, 116, 139, 0.5)',
+										backgroundColor: isDark ? 'rgba(148, 163, 184, 0.5)' : 'rgba(71, 85, 105, 0.6)',
 									}}
 								/>
 							);
@@ -274,7 +274,7 @@ const Slider = forwardRef<HTMLInputElement, SliderProps>(
 						max={max}
 						step={step}
 						value={value}
-						className="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb relative z-10"
+						className="w-full h-2 bg-slate-300 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer slider-thumb relative z-10"
 						style={
 							{
 								'--progress': `${percentage}%`,

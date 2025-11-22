@@ -8,16 +8,16 @@
 		/* Glass Effects */
 		--glass-bg-light: rgba(254, 248, 242, 0.75);
 		--glass-bg-dark: rgba(28, 25, 23, 0.65);
-		--glass-bg-card-light: rgba(254, 248, 242, 0.85);
-		--glass-bg-card-dark: rgba(28, 25, 23, 0.75);
+		--glass-bg-card-light: rgba(254, 248, 242, 0.4);
+		--glass-bg-card-dark: rgba(28, 25, 23, 0.3);
 		--glass-blur: blur(20px) saturate(180%);
 		--glass-blur-card: blur(24px) saturate(200%);
 		--glass-border-light: rgba(0, 0, 0, 0.12);
 		--glass-border-dark: rgba(255, 255, 255, 0.25);
 
 		/* Background Colors */
-		--bg-light: linear-gradient(135deg, #fef8f2 0%, #f9f0e6 100%);
-		--bg-dark: linear-gradient(135deg, #1c1917 0%, #2a2521 100%);
+		--bg-light: linear-gradient(135deg, #f5f3f0 0%, #e8e4df 100%);
+		--bg-dark: linear-gradient(135deg, #2a2521 0%, #1c1917 100%);
 		--text-light: #1e293b;
 		--text-dark: #f1f5f9;
 
