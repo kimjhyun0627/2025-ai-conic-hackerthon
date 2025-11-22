@@ -2,6 +2,7 @@ export { TopBar } from './TopBar';
 export { GenreInfo } from './GenreInfo';
 export { SyncGlowBeat } from './SyncGlowBeat';
 export { SyncGlowIntensity } from './SyncGlowIntensity';
+export { SyncGlowWaveform } from './SyncGlowWaveform';
 export { ControlerPanel } from './ControlerPanel';
 export { ParameterPanel } from './ParameterPanel';
 export { ParameterSlider } from './ParameterSlider';

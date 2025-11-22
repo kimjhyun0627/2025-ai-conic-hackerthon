@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronUp } from 'lucide-react';
 import { usePlayerStore } from '@/store/playerStore';
 import { ConfirmModal } from '@/shared/components/ui';
-import { TopBar, GenreInfo, SyncGlowBeat, SyncGlowIntensity, ControlerPanel, ParameterPanel, GradientOverlay, AudioEngine } from '@/features/player/components';
+import { TopBar, GenreInfo, SyncGlowBeat, SyncGlowIntensity, SyncGlowWaveform, ControlerPanel, ParameterPanel, GradientOverlay, AudioEngine } from '@/features/player/components';
 import { usePlayerParams, useGenreChangeAnimation, usePlayerExit, usePlayerTrack } from '@/features/player/hooks';
 import { useThemeColors } from '@/shared/hooks';
 import { PLAYER_CONSTANTS } from '@/features/player/constants';
@@ -14,7 +14,7 @@ const Player = () => {
 	const [isExpanded, setIsExpanded] = useState(false);
 	const [isControlsVisible, setIsControlsVisible] = useState(true);
 	const [showConfirmModal, setShowConfirmModal] = useState(false);
-	const [visualizationMode, setVisualizationMode] = useState<'box' | 'intensity'>('box');
+	const [visualizationMode, setVisualizationMode] = useState<'box' | 'intensity' | 'waveform'>('box');
 
 	const { selectedGenre, isPlaying, moveToPrevTrack, resetQueue } = usePlayerStore();
 	const { selectedTheme, themeBaseParams, themeAdditionalParams, activeCommonParamsList, availableCommonParams, getParamValue, setParamValue, addCommonParam, removeCommonParam, removeThemeParam } =
@@ -92,8 +92,13 @@ const Player = () => {
 						genre={selectedGenre}
 						isPlaying={isPlaying}
 					/>
-				) : (
+				) : visualizationMode === 'intensity' ? (
 					<SyncGlowIntensity
+						genre={selectedGenre}
+						isPlaying={isPlaying}
+					/>
+				) : (
+					<SyncGlowWaveform
 						genre={selectedGenre}
 						isPlaying={isPlaying}
 					/>

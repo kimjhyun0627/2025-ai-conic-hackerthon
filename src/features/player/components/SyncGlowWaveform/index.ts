@@ -1,0 +1,1 @@
+export { SyncGlowWaveform } from './SyncGlowWaveform';

@@ -12,8 +12,8 @@ import type { MusicGenre } from '@/shared/types';
 interface TopBarProps {
 	onHomeClick: () => void;
 	isVisible?: boolean;
-	visualizationMode?: 'box' | 'intensity';
-	onVisualizationModeChange?: (mode: 'box' | 'intensity') => void;
+	visualizationMode?: 'box' | 'intensity' | 'waveform';
+	onVisualizationModeChange?: (mode: 'box' | 'intensity' | 'waveform') => void;
 }
 
 export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box', onVisualizationModeChange }: TopBarProps) => {
@@ -24,15 +24,39 @@ export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box
 	const colors = useThemeColors();
 	const { handleGenreSelect } = useGenreTrack();
 	const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
+	const [isVisualizationDropdownOpen, setIsVisualizationDropdownOpen] = useState(false);
 	const [hoveredGenreId, setHoveredGenreId] = useState<string | null>(null);
+	const [hoveredVisualizationMode, setHoveredVisualizationMode] = useState<string | null>(null);
 	const [isFullscreenHovered, setIsFullscreenHovered] = useState(false);
 	const [isGenreButtonHovered, setIsGenreButtonHovered] = useState(false);
 	const [isHomeButtonHovered, setIsHomeButtonHovered] = useState(false);
 	const [isVisualizationModeHovered, setIsVisualizationModeHovered] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const visualizationDropdownRef = useRef<HTMLDivElement>(null);
 
 	// 현재 카테고리의 장르 목록 가져오기
 	const currentGenres = selectedTheme?.genres || [];
+
+	// 시각화 모드 옵션 정의
+	const visualizationModes = [
+		{ id: 'box', name: '박스 모드', description: '비트 싱크 글로우 효과' },
+		{ id: 'intensity', name: '주파수 모드', description: '주파수 대역별 색상' },
+		{ id: 'waveform', name: '파형 모드', description: '주파수 분석 파형 + 오디오 지표' },
+	] as const;
+
+	const onVisualizationModeSelect = (mode: 'box' | 'intensity' | 'waveform') => {
+		// 같은 모드를 재선택한 경우 아무 액션도 하지 않음
+		if (visualizationMode === mode) {
+			setIsVisualizationDropdownOpen(false);
+			return;
+		}
+
+		// 드롭다운 닫기
+		setIsVisualizationDropdownOpen(false);
+
+		// 모드 변경 처리
+		onVisualizationModeChange?.(mode);
+	};
 
 	// 드롭다운 외부 클릭 시 닫기
 	useEffect(() => {
@@ -40,16 +64,19 @@ export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 				setIsGenreDropdownOpen(false);
 			}
+			if (visualizationDropdownRef.current && !visualizationDropdownRef.current.contains(event.target as Node)) {
+				setIsVisualizationDropdownOpen(false);
+			}
 		};
 
-		if (isGenreDropdownOpen) {
+		if (isGenreDropdownOpen || isVisualizationDropdownOpen) {
 			document.addEventListener('mousedown', handleClickOutside);
 		}
 
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [isGenreDropdownOpen]);
+	}, [isGenreDropdownOpen, isVisualizationDropdownOpen]);
 
 	const onGenreSelect = async (genre: MusicGenre) => {
 		// 같은 장르를 재선택한 경우 아무 액션도 하지 않음
@@ -288,7 +315,7 @@ export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box
 								</div>
 							</motion.div>
 
-							{/* 시각화 모드 토글 버튼 */}
+							{/* 시각화 모드 선택 드롭다운 */}
 							{onVisualizationModeChange && (
 								<motion.div
 									initial="hidden"
@@ -317,33 +344,133 @@ export const TopBar = ({ onHomeClick, isVisible = true, visualizationMode = 'box
 											},
 										},
 									}}
+									className="relative"
+									ref={visualizationDropdownRef}
 								>
-									<button
-										onClick={() => onVisualizationModeChange(visualizationMode === 'box' ? 'intensity' : 'box')}
-										onMouseEnter={(e) => {
-											setIsVisualizationModeHovered(true);
-											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
-											e.currentTarget.style.color = '#fb7185';
-										}}
-										onMouseLeave={(e) => {
-											setIsVisualizationModeHovered(false);
-											e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
-											e.currentTarget.style.color = visualizationMode === 'intensity' ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a';
-										}}
-										className="h-11 px-4 rounded-2xl backdrop-blur-md border shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
-										style={{
-											background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
-											borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-											color: isVisualizationModeHovered || visualizationMode === 'intensity' ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
-										}}
-										aria-label="시각화 모드 전환"
+									<div
+										onMouseEnter={() => setIsVisualizationModeHovered(true)}
+										onMouseLeave={() => setIsVisualizationModeHovered(false)}
 									>
-										<Layers
-											className="w-5 h-5"
-											style={{ color: visualizationMode === 'intensity' || isVisualizationModeHovered ? '#fb7185' : undefined }}
-										/>
-										<span>{visualizationMode === 'box' ? '박스' : '주파수'}</span>
-									</button>
+										<Button
+											variant="ghost"
+											size="sm"
+											onClick={() => setIsVisualizationDropdownOpen(!isVisualizationDropdownOpen)}
+											className="btn-glass rounded-2xl backdrop-blur-md border shadow-lg hover:shadow-xl transition-all duration-300 h-11 px-4 py-0 flex items-center"
+											style={{
+												background: colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)',
+												borderColor: colors.isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+												color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+											}}
+											onMouseEnter={(e) => {
+												e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.4)' : 'rgba(255, 255, 255, 0.7)';
+												e.currentTarget.style.color = '#fb7185';
+											}}
+											onMouseLeave={(e) => {
+												e.currentTarget.style.background = colors.isDark ? 'rgba(30, 41, 59, 0.3)' : 'rgba(255, 255, 255, 0.6)';
+												e.currentTarget.style.color = colors.isDark ? '#f1f5f9' : '#0f172a';
+											}}
+										>
+											<Layers
+												className="w-5 h-5 mr-2"
+												style={{
+													color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : undefined,
+												}}
+											/>
+											<span
+												style={{
+													color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+												}}
+											>
+												{visualizationModes.find((m) => m.id === visualizationMode)?.name || '시각화 모드'}
+											</span>
+											<ChevronDown
+												className={`w-4 h-4 ml-2 transition-transform duration-200 ${isVisualizationDropdownOpen ? 'rotate-180' : ''}`}
+												style={{
+													color: isVisualizationModeHovered || isVisualizationDropdownOpen ? '#fb7185' : undefined,
+												}}
+											/>
+										</Button>
+									</div>
+
+									{/* 드롭다운 메뉴 */}
+									<AnimatePresence>
+										{isVisualizationDropdownOpen && visualizationModes.length > 0 && (
+											<motion.div
+												initial={{ opacity: 0, y: -10, scale: 0.95 }}
+												animate={{ opacity: 1, y: 0, scale: 1 }}
+												exit={{ opacity: 0, y: -10, scale: 0.95 }}
+												transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+												className="absolute top-full right-0 mt-2 w-64 rounded-2xl shadow-2xl border backdrop-blur-xl"
+												style={{
+													background: colors.glassBackground,
+													borderColor: colors.glassBorder,
+													zIndex: 110000, // 파라미터 패널(z-100)보다 위에 표시
+												}}
+											>
+												<div className="p-2">
+													{visualizationModes.map((mode) => (
+														<motion.button
+															key={mode.id}
+															onClick={() => onVisualizationModeSelect(mode.id)}
+															onMouseEnter={() => setHoveredVisualizationMode(mode.id)}
+															onMouseLeave={() => setHoveredVisualizationMode(null)}
+															className={`w-full flex items-center gap-3 p-3 rounded-xl mb-2 last:mb-0 transition-all ${visualizationMode === mode.id ? 'bg-primary-500/20 border-2' : 'hover:bg-white/10 dark:hover:bg-white/5 border-2 border-transparent'}`}
+															style={
+																visualizationMode === mode.id
+																	? { borderColor: 'rgba(251, 113, 133, 0.5)' } // primary-500/50
+																	: undefined
+															}
+															whileHover={{ scale: 1.02 }}
+															whileTap={{ scale: 0.98 }}
+														>
+															{/* 아이콘 */}
+															<div
+																className="shrink-0 w-10 h-10 rounded-lg flex items-center justify-center"
+																style={{ background: colors.isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)' }}
+															>
+																<Layers
+																	className="w-5 h-5"
+																	style={{
+																		color:
+																			hoveredVisualizationMode === mode.id || visualizationMode === mode.id ? '#fb7185' : colors.isDark ? '#f1f5f9' : '#0f172a',
+																	}}
+																/>
+															</div>
+															{/* 모드 정보 */}
+															<div className="flex-1 text-left min-w-0">
+																<div
+																	className="font-semibold text-base mb-1 truncate"
+																	style={{
+																		color:
+																			hoveredVisualizationMode === mode.id || visualizationMode === mode.id
+																				? '#fb7185' // primary-500 (호버 시 프라이머리 컬러)
+																				: theme === 'dark'
+																					? '#f1f5f9'
+																					: '#0f172a',
+																	}}
+																>
+																	{mode.name}
+																</div>
+																{mode.description && (
+																	<div
+																		className="text-sm line-clamp-2"
+																		style={{
+																			color:
+																				hoveredVisualizationMode === mode.id || visualizationMode === mode.id
+																					? 'rgba(251, 113, 133, 0.8)' // primary-500 with opacity
+																					: colors.textSecondaryColor,
+																		}}
+																	>
+																		{mode.description}
+																	</div>
+																)}
+															</div>
+														</motion.button>
+													))}
+												</div>
+											</motion.div>
+										)}
+									</AnimatePresence>
 								</motion.div>
 							)}
 
