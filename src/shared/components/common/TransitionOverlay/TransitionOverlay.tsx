@@ -96,6 +96,17 @@ export const TransitionOverlay = ({ isVisible, onCancel }: TransitionOverlayProp
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ delay: 0.3, duration: 0.4 }}
 							>
+								첫 트랙 생성에는 10초 정도 걸려요.
+							</motion.p>
+							<motion.p
+								className="text-base md:text-lg font-medium"
+								style={{
+									color: colors.textMutedColor,
+								}}
+								initial={{ opacity: 0, y: 10 }}
+								animate={{ opacity: 1, y: 0 }}
+								transition={{ delay: 0.3, duration: 0.4 }}
+							>
 								잠시만 기다려주세요
 							</motion.p>
 						</div>
