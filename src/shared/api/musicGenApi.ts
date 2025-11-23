@@ -4,8 +4,6 @@ import type { MusicGenre } from '../types';
 const MUSICGEN_API_URL = 'http://218.155.211.101:58000/generate';
 const DEFAULT_MUSIC_LENGTH_SEC = 47;
 const DEFAULT_TEMPERATURE = 1.0;
-const DEFAULT_TOP_K = 250;
-const DEFAULT_TOP_P = 0.0;
 const DEFAULT_SEED = -1;
 
 const requestQueue = new RequestQueue();
@@ -64,8 +62,6 @@ export const generateSoundByGenre = async (genre: MusicGenre, signal?: AbortSign
 		const queryParams = new URLSearchParams({
 			prompt: prompt,
 			temperature: DEFAULT_TEMPERATURE.toString(),
-			top_k: DEFAULT_TOP_K.toString(),
-			top_p: DEFAULT_TOP_P.toString(),
 			seed: DEFAULT_SEED.toString(),
 		});
 

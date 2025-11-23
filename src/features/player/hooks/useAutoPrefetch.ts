@@ -3,11 +3,11 @@ import { usePlayerStore } from '@/store/playerStore';
 import { useToast } from '@/shared/components/ui';
 import { useTrackFetcher } from './useTrackFetcher';
 
-const PREFETCH_THRESHOLD_SECONDS = 30;
+const PREFETCH_THRESHOLD_SECONDS = 10;
 
 /**
  * 자동 프리페치 훅
- * - 현재 트랙이 30초 이하 남았을 때 다음 트랙을 자동으로 가져옵니다.
+ * - 현재 트랙이 10초 이하 남았을 때 다음 트랙을 자동으로 가져옵니다.
  */
 export const useAutoPrefetch = (currentTrack: { id: string; duration?: number } | null, currentTime: number, audioRef: React.RefObject<HTMLAudioElement | null>) => {
 	const { selectedGenre, queue, isGenreChangeInProgress, setNextTrack, setIsAutoPrefetching } = usePlayerStore();
